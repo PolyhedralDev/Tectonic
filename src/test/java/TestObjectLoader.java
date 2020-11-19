@@ -1,11 +1,11 @@
 import com.dfsek.polyconfig.Configuration;
 import com.dfsek.polyconfig.loading.ConfigLoader;
-import com.dfsek.polyconfig.loading.ClassLoader;
+import com.dfsek.polyconfig.loading.TypeLoader;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class TestObjectLoader implements ClassLoader<TestObject> {
+public class TestObjectLoader implements TypeLoader<TestObject> {
     @SuppressWarnings("unchecked")
     @Override
     public TestObject load(Type t, Object c, ConfigLoader loader) {

@@ -1,7 +1,8 @@
 package com.dfsek.polyconfig.loading.loaders.generic;
 
+import com.dfsek.polyconfig.exception.LoadException;
 import com.dfsek.polyconfig.loading.ConfigLoader;
-import com.dfsek.polyconfig.loading.ClassLoader;
+import com.dfsek.polyconfig.loading.TypeLoader;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -13,9 +14,9 @@ import java.util.List;
  * any parameters.
  */
 @SuppressWarnings("unchecked")
-public class ArrayListLoader implements ClassLoader<ArrayList<Object>> {
+public class ArrayListLoader implements TypeLoader<ArrayList<Object>> {
     @Override
-    public ArrayList<Object> load(Type t, Object c, ConfigLoader loader) {
+    public ArrayList<Object> load(Type t, Object c, ConfigLoader loader) throws LoadException {
         List<Object> objectList = (List<Object>) c;
         ArrayList<Object> list = new ArrayList<>();
         if(t instanceof ParameterizedType) {
@@ -24,7 +25,7 @@ public class ArrayListLoader implements ClassLoader<ArrayList<Object>> {
             for(Object o : objectList) {
                 list.add(loader.loadType(generic, o));
             }
-        } else throw new IllegalArgumentException(); // TODO: Dedicated exception
+        } else throw new LoadException("Unable to load config");
         return list;
     }
 }

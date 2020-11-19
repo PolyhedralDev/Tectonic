@@ -1,5 +1,7 @@
 package com.dfsek.polyconfig.loading;
 
+import com.dfsek.polyconfig.exception.LoadException;
+
 import java.lang.reflect.Type;
 
 /**
@@ -7,6 +9,6 @@ import java.lang.reflect.Type;
  *
  * @param <T> Type to load
  */
-public interface ClassLoader<T> {
-    T load(Type t, Object c, ConfigLoader loader);
+public interface TypeLoader<T> {
+    T load(Type t, Object c, ConfigLoader loader) throws LoadException;
 }

@@ -38,7 +38,7 @@ import java.util.Set;
  * Class to load a config using reflection magic.
  */
 public class ConfigLoader {
-    private final Map<Type, ClassLoader<?>> loaders = new HashMap<>();
+    private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
     private static final Map<Class<?>, Class<?>> primitives = new HashMap<>(); // Map of primitives to their wrapper classes.
 
     static {
@@ -98,7 +98,7 @@ public class ConfigLoader {
      * @param loader Loader to load type with
      * @return This config loader
      */
-    public ConfigLoader registerLoader(Type t, ClassLoader<?> loader) {
+    public ConfigLoader registerLoader(Type t, TypeLoader<?> loader) {
         loaders.put(t, loader);
         return this;
     }

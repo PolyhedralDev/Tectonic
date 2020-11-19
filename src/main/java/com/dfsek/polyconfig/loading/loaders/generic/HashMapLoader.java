@@ -1,7 +1,8 @@
 package com.dfsek.polyconfig.loading.loaders.generic;
 
+import com.dfsek.polyconfig.exception.LoadException;
 import com.dfsek.polyconfig.loading.ConfigLoader;
-import com.dfsek.polyconfig.loading.ClassLoader;
+import com.dfsek.polyconfig.loading.TypeLoader;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -9,10 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
-public class HashMapLoader implements ClassLoader<HashMap<Object, Object>> {
+public class HashMapLoader implements TypeLoader<HashMap<Object, Object>> {
     @Override
-    public HashMap<Object, Object> load(Type t, Object c, ConfigLoader loader) {
-        System.out.println("fsdfgjhsdfgkjdhfgdjfhg");
+    public HashMap<Object, Object> load(Type t, Object c, ConfigLoader loader) throws LoadException {
         Map<String, Object> config = (Map<String, Object>) c;
         HashMap<Object, Object> map = new HashMap<>();
         if(t instanceof ParameterizedType) {
@@ -22,7 +22,7 @@ public class HashMapLoader implements ClassLoader<HashMap<Object, Object>> {
             for(Map.Entry<String, Object> entry : config.entrySet()) {
                 map.put(loader.loadType(key, entry.getKey()), loader.loadType(value, entry.getValue()));
             }
-        } else throw new IllegalArgumentException(); // TODO: Dedicated exception
+        } else throw new LoadException("Unable to load config");
 
         return map;
     }
