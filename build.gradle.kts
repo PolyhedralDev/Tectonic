@@ -31,6 +31,7 @@ dependencies {
     compileOnly("org.jetbrains:annotations:20.1.0")
 
     implementation("org.yaml:snakeyaml:1.27")
+    implementation("commons-io:commons-io:2.8.0")
 
     // JUnit.
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")

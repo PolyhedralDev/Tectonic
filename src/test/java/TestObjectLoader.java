@@ -1,4 +1,5 @@
 import com.dfsek.polyconfig.Configuration;
+import com.dfsek.polyconfig.exception.LoadException;
 import com.dfsek.polyconfig.loading.ConfigLoader;
 import com.dfsek.polyconfig.loading.TypeLoader;
 
@@ -8,7 +9,7 @@ import java.util.Map;
 public class TestObjectLoader implements TypeLoader<TestObject> {
     @SuppressWarnings("unchecked")
     @Override
-    public TestObject load(Type t, Object c, ConfigLoader loader) {
+    public TestObject load(Type t, Object c, ConfigLoader loader) throws LoadException {
         Configuration configuration = new Configuration((Map<String, Object>) c);
         return new TestObject((String) loader.loadType(String.class, configuration.get("string")), (int) loader.loadType(int.class, configuration.get("number")));
     }

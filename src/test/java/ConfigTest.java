@@ -10,7 +10,7 @@ public class ConfigTest {
         ConfigLoader loader = new ConfigLoader();
         loader.registerLoader(TestObject.class, new TestObjectLoader());
         ExampleConfig example = new ExampleConfig();
-        loader.load(this.getClass().getResourceAsStream("/test.yml"), example);
+        loader.load(example, this.getClass().getResourceAsStream("/test.yml"));
         System.out.println(example.getString1());
         System.out.println(example.getString());
         System.out.println(example.getNestedString());

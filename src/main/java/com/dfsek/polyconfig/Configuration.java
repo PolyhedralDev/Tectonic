@@ -10,9 +10,10 @@ public class Configuration {
 
     public Configuration(InputStream is) {
         config = new Yaml().load(is);
-        for(Map.Entry<String, Object> e : config.entrySet()) {
-            System.out.println(e.getKey() + ": " + e.getValue());
-        }
+    }
+
+    public Configuration(String yaml) {
+        config = new Yaml().load(yaml);
     }
 
     public Configuration(Map<String, Object> map) {

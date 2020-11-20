@@ -2,10 +2,12 @@ package com.dfsek.polyconfig.loading;
 
 import com.dfsek.polyconfig.ConfigTemplate;
 import com.dfsek.polyconfig.Configuration;
+import com.dfsek.polyconfig.abstraction.AbstractValueProvider;
 import com.dfsek.polyconfig.annotations.Abstractable;
 import com.dfsek.polyconfig.annotations.Default;
 import com.dfsek.polyconfig.annotations.Value;
 import com.dfsek.polyconfig.exception.ConfigException;
+import com.dfsek.polyconfig.exception.LoadException;
 import com.dfsek.polyconfig.exception.ReflectiveAccessException;
 import com.dfsek.polyconfig.exception.ValueMissingException;
 import com.dfsek.polyconfig.loading.loaders.StringLoader;
@@ -37,9 +39,10 @@ import java.util.Set;
 /**
  * Class to load a config using reflection magic.
  */
-public class ConfigLoader {
+public class ConfigLoader implements TypeRegistry {
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
     private static final Map<Class<?>, Class<?>> primitives = new HashMap<>(); // Map of primitives to their wrapper classes.
+    private AbstractValueProvider provider;
 
     static {
         primitives.put(boolean.class, Boolean.class);
@@ -106,11 +109,35 @@ public class ConfigLoader {
     /**
      * Load a config from an InputStream and put it on a ConfigTemplate object.
      *
-     * @param i      InputStream to load from
-     * @param config ConfigTemplate object to put the config on
+     * @param config ConfigTemplate object to put the config on.
+     * @param i      InputStream to load from.
+     * @throws ConfigException If config cannot be loaded.
      */
-    public void load(InputStream i, ConfigTemplate config) throws ConfigException {
+    public void load(ConfigTemplate config, InputStream i) throws ConfigException {
         Configuration configuration = new Configuration(i);
+        load(config, configuration);
+    }
+
+    /**
+     * Load a config from an InputStream and put it on a ConfigTemplate object.
+     *
+     * @param config ConfigTemplate object to put the config on.
+     * @param yaml   YAML string to load from.
+     * @throws ConfigException If config cannot be loaded.
+     */
+    public void load(ConfigTemplate config, String yaml) throws ConfigException {
+        Configuration configuration = new Configuration(yaml);
+        load(config, configuration);
+    }
+
+    /**
+     * Put a {@link Configuration} on a ConfigTemplate object.
+     *
+     * @param config        ConfigTemplate to put config on.
+     * @param configuration Configuration to load from.
+     * @throws ConfigException If config cannot be loaded.
+     */
+    public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
         for(Field field : config.getClass().getDeclaredFields()) {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
@@ -150,7 +177,11 @@ public class ConfigLoader {
         }
     }
 
-    public Object loadType(Type t, Object o) {
+    public void registerAbstractValueProvider(AbstractValueProvider provider) {
+        this.provider = provider;
+    }
+
+    public Object loadType(Type t, Object o) throws LoadException {
         Type raw = t;
         if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
         return loaders.get(raw).load(t, o, this);

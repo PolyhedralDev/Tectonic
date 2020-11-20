@@ -1,0 +1,4 @@
+id: "TWO"
+extends: "ONE"
+b: "Hello 2 (a)"
+c: "Hello 3 (a) "
