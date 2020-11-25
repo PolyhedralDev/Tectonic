@@ -4,6 +4,8 @@ package com.dfsek.polyconfig.abstraction.exception;
  * Thrown when a parent (super) config cannot be found.
  */
 public class ParentNotFoundException extends AbstractionException {
+    private static final long serialVersionUID = 6754141573771927677L;
+
     public ParentNotFoundException(String message) {
         super(message);
     }

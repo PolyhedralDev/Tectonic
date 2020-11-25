@@ -1,6 +1,8 @@
 package com.dfsek.polyconfig.exception;
 
 public class ConfigIOException extends ConfigException {
+    private static final long serialVersionUID = -7617584453224503966L;
+
     public ConfigIOException(String message) {
         super(message);
     }

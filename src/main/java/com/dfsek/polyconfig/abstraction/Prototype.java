@@ -17,7 +17,10 @@ import java.util.List;
 public class Prototype implements ConfigTemplate {
     private final List<Prototype> children = new ArrayList<>();
     private final List<Integer> UIDs = new ArrayList<>();
+
+
     private Prototype parent;
+    private ConfigTemplate config;
     private boolean isRoot = false;
     @Value("id")
     private String id;
@@ -43,12 +46,20 @@ public class Prototype implements ConfigTemplate {
         } else isRoot = true;
     }
 
+    public ConfigTemplate getConfig() {
+        return config;
+    }
+
     public String getId() {
         return id;
     }
 
     public String getExtend() {
         return extend;
+    }
+
+    protected void setConfig(ConfigTemplate config) {
+        this.config = config;
     }
 
     public Prototype getParent() {

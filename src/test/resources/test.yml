@@ -15,6 +15,13 @@ list:
   - "b"
   - "c"
   - "d"
+numbers:
+  - type: one
+    string: "hello"
+  - type: two
+    int: 4
+  - type: three
+    double: 2.3
 map:
   a: "a value"
   b: "another value"

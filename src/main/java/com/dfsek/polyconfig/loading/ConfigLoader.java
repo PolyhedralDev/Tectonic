@@ -3,6 +3,7 @@ package com.dfsek.polyconfig.loading;
 import com.dfsek.polyconfig.ConfigTemplate;
 import com.dfsek.polyconfig.Configuration;
 import com.dfsek.polyconfig.abstraction.AbstractValueProvider;
+import com.dfsek.polyconfig.abstraction.exception.ProviderMissingException;
 import com.dfsek.polyconfig.annotations.Abstractable;
 import com.dfsek.polyconfig.annotations.Default;
 import com.dfsek.polyconfig.annotations.Value;
@@ -145,9 +146,7 @@ public class ConfigLoader implements TypeRegistry {
             boolean abstractable = false;
             boolean defaultable = false;
             Value value = null;
-            System.out.println(field);
             for(Annotation annotation : field.getAnnotations()) {
-                System.out.println(annotation);
                 if(annotation instanceof Abstractable) abstractable = true;
                 if(annotation instanceof Default) defaultable = true;
                 if(annotation instanceof Value) value = (Value) annotation;
@@ -157,7 +156,6 @@ public class ConfigLoader implements TypeRegistry {
                 Type type = field.getGenericType();
                 Type raw = type;
                 if(type instanceof ParameterizedType) raw = ((ParameterizedType) type).getRawType();
-                System.out.println(type);
 
                 Object o;
                 if(configuration.contains(value.value())) {
@@ -169,10 +167,17 @@ public class ConfigLoader implements TypeRegistry {
                     } catch(IllegalAccessException e) {
                         throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
                     }
-                } else if(!defaultable)
-                    throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config.");
-                System.out.println();
-
+                } else if(!defaultable) {
+                    if(!abstractable)
+                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
+                    if(provider == null)
+                        throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
+                    try {
+                        field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(provider.get(value.value()))); // Use primitive wrapper classes if available.
+                    } catch(IllegalAccessException e) {
+                        throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
+                    }
+                }
             }
         }
     }
@@ -184,6 +189,7 @@ public class ConfigLoader implements TypeRegistry {
     public Object loadType(Type t, Object o) throws LoadException {
         Type raw = t;
         if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
-        return loaders.get(raw).load(t, o, this);
+        if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
+        else return o;
     }
 }

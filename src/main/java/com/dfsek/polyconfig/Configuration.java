@@ -25,7 +25,6 @@ public class Configuration {
         String[] levels = key.split("\\.");
         Object level = config;
         for(String keyLevel : levels) {
-            System.out.println(keyLevel);
             if(!(level instanceof Map)) throw new IllegalArgumentException();
             level = ((Map<String, Object>) level).get(keyLevel);
         }

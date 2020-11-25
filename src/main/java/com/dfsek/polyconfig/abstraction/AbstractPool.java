@@ -3,7 +3,9 @@ package com.dfsek.polyconfig.abstraction;
 import com.dfsek.polyconfig.abstraction.exception.AbstractionException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Pool holding all abstract configs that can be grouped together.
@@ -24,5 +26,9 @@ public class AbstractPool {
         for(Map.Entry<String, Prototype> entry : pool.entrySet()) {
             entry.getValue().build(this, i++);
         }
+    }
+
+    Set<Prototype> getPrototypes() {
+        return new HashSet<>(pool.values());
     }
 }
