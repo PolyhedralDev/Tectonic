@@ -43,7 +43,6 @@ import java.util.Set;
 public class ConfigLoader implements TypeRegistry {
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
     private static final Map<Class<?>, Class<?>> primitives = new HashMap<>(); // Map of primitives to their wrapper classes.
-    private AbstractValueProvider provider;
 
     static {
         primitives.put(boolean.class, Boolean.class);
@@ -54,6 +53,7 @@ public class ConfigLoader implements TypeRegistry {
         primitives.put(long.class, Long.class);
         primitives.put(float.class, Float.class);
         primitives.put(double.class, Double.class);
+        primitives.put(void.class, Void.class);
     }
 
     {
@@ -138,7 +138,7 @@ public class ConfigLoader implements TypeRegistry {
      * @param configuration Configuration to load from.
      * @throws ConfigException If config cannot be loaded.
      */
-    public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
+    public void load(ConfigTemplate config, Configuration configuration, AbstractValueProvider provider) throws ConfigException {
         for(Field field : config.getClass().getDeclaredFields()) {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
@@ -182,8 +182,8 @@ public class ConfigLoader implements TypeRegistry {
         }
     }
 
-    public void registerAbstractValueProvider(AbstractValueProvider provider) {
-        this.provider = provider;
+    public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
+        load(config, configuration, null);
     }
 
     public Object loadType(Type t, Object o) throws LoadException {
