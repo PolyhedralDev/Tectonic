@@ -172,7 +172,10 @@ public class ConfigLoader implements TypeRegistry {
                     if(provider == null)
                         throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
                     try {
-                        field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(provider.get(value.value()))); // Use primitive wrapper classes if available.
+                        Object abs = provider.get(value.value());
+                        if(abs == null)
+                            throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
+                        field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(abs)); // Use primitive wrapper classes if available.
                     } catch(IllegalAccessException e) {
                         throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
                     }

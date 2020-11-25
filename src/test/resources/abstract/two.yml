@@ -1,4 +1,4 @@
 id: "TWO"
 extends: "ONE"
-b: "Hello 2 (a)"
-c: "Hello 3 (a) "
+b: "value b (config 2)"
+c: "value c (config 2)"

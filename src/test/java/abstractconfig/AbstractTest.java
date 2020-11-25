@@ -17,9 +17,10 @@ public class AbstractTest {
         InputStream one = AbstractTest.class.getResourceAsStream("/abstract/one.yml");
         InputStream two = AbstractTest.class.getResourceAsStream("/abstract/two.yml");
         InputStream three = AbstractTest.class.getResourceAsStream("/abstract/three.yml");
+        InputStream abs = AbstractTest.class.getResourceAsStream("/abstract/abstract.yml");
         AbstractConfigLoader loader = new AbstractConfigLoader();
         System.out.println("building...");
-        List<Template> templateList = loader.load(Arrays.asList(one, two, three), Template::new);
+        List<Template> templateList = loader.load(Arrays.asList(one, two, three, abs), Template::new);
         System.out.println("built...");
 
         for(Template t : templateList) {
