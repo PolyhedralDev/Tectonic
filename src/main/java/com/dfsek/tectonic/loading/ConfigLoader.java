@@ -184,10 +184,25 @@ public class ConfigLoader implements TypeRegistry {
         }
     }
 
+    /**
+     * Put a {@link Configuration} on a ConfigTemplate object.
+     *
+     * @param config        ConfigTemplate to put config on.
+     * @param configuration Configuration to load from.
+     * @throws ConfigException If config cannot be loaded.
+     */
     public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
         load(config, configuration, null);
     }
 
+    /**
+     * Load an Object using the {@link TypeLoader}s registered with this ConfigTemplate.
+     *
+     * @param t Type of object to load
+     * @param o Object to pass to TypeLoader
+     * @return Loaded object.
+     * @throws LoadException If object could not be loaded.
+     */
     public Object loadType(Type t, Object o) throws LoadException {
         Type raw = t;
         if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();

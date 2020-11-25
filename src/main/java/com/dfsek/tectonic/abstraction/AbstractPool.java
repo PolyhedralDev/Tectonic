@@ -13,6 +13,11 @@ import java.util.Set;
 public class AbstractPool {
     private final Map<String, Prototype> pool = new HashMap<>();
 
+    /**
+     * Add a {@link Prototype} to the pool.
+     *
+     * @param prototype Prototype to add.
+     */
     public void add(Prototype prototype) {
         pool.put(prototype.getId(), prototype);
     }
@@ -21,6 +26,11 @@ public class AbstractPool {
         return pool.get(id);
     }
 
+    /**
+     * Build all the {@link Prototype}s in this pool.
+     *
+     * @throws AbstractionException If there are errors in the configs.
+     */
     public void loadAll() throws AbstractionException {
         int i = 0;
         for(Map.Entry<String, Prototype> entry : pool.entrySet()) {
@@ -28,6 +38,11 @@ public class AbstractPool {
         }
     }
 
+    /**
+     * Get the Set of Prototypes contained in this pool.
+     *
+     * @return Set of Prototypes.
+     */
     Set<Prototype> getPrototypes() {
         return new HashSet<>(pool.values());
     }

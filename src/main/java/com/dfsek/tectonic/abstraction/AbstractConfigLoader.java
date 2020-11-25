@@ -12,6 +12,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to load several configs that may depend on each other.
+ */
 public class AbstractConfigLoader implements TypeRegistry {
     private final ConfigLoader delegate = new ConfigLoader();
 
@@ -21,16 +24,17 @@ public class AbstractConfigLoader implements TypeRegistry {
         return this;
     }
 
+    /**
+     * @param inputStreams List of InputStreams to load configs from.
+     * @param provider     TemplateProvide to get ConfigTemplate instances from.
+     * @param <E>          ConfigTemplate type.
+     * @return List of loaded ConfigTemplates.
+     * @throws ConfigException If configs contain errors.
+     */
     public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, TemplateProvider<E> provider) throws ConfigException {
         AbstractPool pool = new AbstractPool();
-        List<Configuration> configurations = new ArrayList<>();
-
         for(InputStream stream : inputStreams) {
-            configurations.add(new Configuration(stream));
-        }
-
-        for(Configuration cfg : configurations) {
-            Prototype p = new Prototype(cfg);
+            Prototype p = new Prototype(new Configuration(stream));
             pool.add(p);
         }
         pool.loadAll();
@@ -43,7 +47,7 @@ public class AbstractConfigLoader implements TypeRegistry {
             System.out.println("Loading " + p.getId());
             AbstractValueProvider valueProvider = new AbstractValueProvider();
             Prototype current = p;
-            while(!current.isRoot()) {
+            while(current != null && !current.isRoot()) {
                 valueProvider.add(current.getParent());
                 current = current.getParent();
             }
@@ -51,25 +55,6 @@ public class AbstractConfigLoader implements TypeRegistry {
             delegate.load(template, p.getConfig(), valueProvider);
             fnlList.add(template);
         }
-
         return fnlList;
-    }
-
-    private static final class Pair<A, B> {
-        private final A a;
-        private final B b;
-
-        public Pair(A a, B b) {
-            this.a = a;
-            this.b = b;
-        }
-
-        public A getA() {
-            return a;
-        }
-
-        public B getB() {
-            return b;
-        }
     }
 }
