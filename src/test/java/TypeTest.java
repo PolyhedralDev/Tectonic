@@ -1,9 +1,9 @@
-import com.dfsek.polyconfig.ConfigTemplate;
-import com.dfsek.polyconfig.annotations.Value;
-import com.dfsek.polyconfig.exception.ConfigException;
-import com.dfsek.polyconfig.exception.LoadException;
-import com.dfsek.polyconfig.loading.ConfigLoader;
-import com.dfsek.polyconfig.loading.TypeLoader;
+import com.dfsek.tectonic.ConfigTemplate;
+import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.exception.LoadException;
+import com.dfsek.tectonic.loading.ConfigLoader;
+import com.dfsek.tectonic.loading.TypeLoader;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;

@@ -1,5 +1,5 @@
-import com.dfsek.polyconfig.exception.ConfigException;
-import com.dfsek.polyconfig.loading.ConfigLoader;
+import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.loading.ConfigLoader;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

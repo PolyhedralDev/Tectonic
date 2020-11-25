@@ -1,7 +1,7 @@
-import com.dfsek.polyconfig.Configuration;
-import com.dfsek.polyconfig.exception.LoadException;
-import com.dfsek.polyconfig.loading.ConfigLoader;
-import com.dfsek.polyconfig.loading.TypeLoader;
+import com.dfsek.tectonic.Configuration;
+import com.dfsek.tectonic.exception.LoadException;
+import com.dfsek.tectonic.loading.ConfigLoader;
+import com.dfsek.tectonic.loading.TypeLoader;
 
 import java.lang.reflect.Type;
 import java.util.Map;

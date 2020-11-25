@@ -1,2 +1,2 @@
-rootProject.name = "PolyConfig"
+rootProject.name = "Tectonic"
 

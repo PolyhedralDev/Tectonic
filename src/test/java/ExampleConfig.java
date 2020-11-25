@@ -1,6 +1,6 @@
-import com.dfsek.polyconfig.ConfigTemplate;
-import com.dfsek.polyconfig.annotations.Default;
-import com.dfsek.polyconfig.annotations.Value;
+import com.dfsek.tectonic.ConfigTemplate;
+import com.dfsek.tectonic.annotations.Default;
+import com.dfsek.tectonic.annotations.Value;
 
 import java.util.List;
 import java.util.Map;

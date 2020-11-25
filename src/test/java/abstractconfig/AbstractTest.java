@@ -1,9 +1,9 @@
 package abstractconfig;
 
-import com.dfsek.polyconfig.ConfigTemplate;
-import com.dfsek.polyconfig.abstraction.AbstractConfigLoader;
-import com.dfsek.polyconfig.annotations.Value;
-import com.dfsek.polyconfig.exception.ConfigException;
+import com.dfsek.tectonic.ConfigTemplate;
+import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
+import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.exception.ConfigException;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
