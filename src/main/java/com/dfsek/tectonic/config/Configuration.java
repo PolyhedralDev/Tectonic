@@ -1,4 +1,4 @@
-package com.dfsek.tectonic;
+package com.dfsek.tectonic.config;
 
 import org.yaml.snakeyaml.Yaml;
 

@@ -1,12 +1,12 @@
 package com.dfsek.tectonic.loading;
 
-import com.dfsek.tectonic.ConfigTemplate;
-import com.dfsek.tectonic.Configuration;
 import com.dfsek.tectonic.abstraction.AbstractValueProvider;
 import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
 import com.dfsek.tectonic.annotations.Abstractable;
 import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.config.ConfigTemplate;
+import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.exception.ReflectiveAccessException;

@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.abstraction;
 
-import com.dfsek.tectonic.ConfigTemplate;
+import com.dfsek.tectonic.config.ConfigTemplate;
 
 /**
  * Functional interface to provide instances of {@link ConfigTemplate} to use in {@link AbstractConfigLoader}.

@@ -1,9 +1,9 @@
 package abstractconfig;
 
-import com.dfsek.tectonic.ConfigTemplate;
 import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
 import com.dfsek.tectonic.annotations.Abstractable;
 import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import org.junit.jupiter.api.Test;
 
