@@ -11,7 +11,9 @@ import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a partially loaded config. A Prototype config has its ID and Extension keys (required by abstraction)
@@ -20,7 +22,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Prototype implements ConfigTemplate {
     private final List<Prototype> children = new ArrayList<>();
-    private final List<Integer> UIDs = new ArrayList<>();
+    private final Set<Integer> UIDs = new HashSet<>();
 
 
     private Prototype parent;
@@ -57,8 +59,9 @@ public class Prototype implements ConfigTemplate {
      * @param chainUID Unique identifier for this inheritance tree. Used to check for circular inheritance.
      */
     protected void build(AbstractPool pool, int chainUID) throws AbstractionException {
+        System.out.println(getId() + ": " + chainUID);
         if(UIDs.contains(chainUID))
-            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getId() + "\", extending \"" + getExtend() + "\"");
+            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getId() + "\", extending \"" + getExtend() + "\", UID: " + chainUID);
         UIDs.add(chainUID);
         if(extend != null) {
             Prototype p = pool.get(extend);
@@ -67,6 +70,7 @@ public class Prototype implements ConfigTemplate {
             this.parent = p;
             parent.build(pool, chainUID); // Build the parent, to recursively build the entire tree.
         } else isRoot = true;
+        System.out.println(getId() + " root: " + isRoot);
     }
 
     public String getId() {

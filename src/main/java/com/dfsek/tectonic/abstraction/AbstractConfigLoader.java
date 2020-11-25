@@ -35,11 +35,6 @@ public class AbstractConfigLoader implements TypeRegistry {
         }
         pool.loadAll();
 
-        int i = 0;
-        for(Prototype p : pool.getPrototypes()) { // Build all and store root configs.
-            p.build(pool, i++);
-        }
-
         List<E> fnlList = new ArrayList<>();
 
         for(Prototype p : pool.getPrototypes()) {
@@ -47,9 +42,10 @@ public class AbstractConfigLoader implements TypeRegistry {
             Prototype current = p;
             while(!current.isRoot()) {
                 valueProvider.add(current);
-                current = p.getParent();
+                current = current.getParent();
             }
             E template = provider.getInstance();
+            System.out.println("Loading " + p.getId());
             delegate.load(template, p.getConfig(), valueProvider);
             fnlList.add(template);
         }

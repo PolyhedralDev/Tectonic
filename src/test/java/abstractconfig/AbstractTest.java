@@ -2,6 +2,7 @@ package abstractconfig;
 
 import com.dfsek.tectonic.ConfigTemplate;
 import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
+import com.dfsek.tectonic.annotations.Abstractable;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.exception.ConfigException;
 import org.junit.jupiter.api.Test;
@@ -17,15 +18,20 @@ public class AbstractTest {
         InputStream two = AbstractTest.class.getResourceAsStream("/abstract/two.yml");
         InputStream three = AbstractTest.class.getResourceAsStream("/abstract/three.yml");
         AbstractConfigLoader loader = new AbstractConfigLoader();
-        List<Template> templateList = loader.load(Arrays.asList(one, two, three), Template.class);
+        System.out.println("building...");
+        List<Template> templateList = loader.load(Arrays.asList(one, two, three), Template::new);
+        System.out.println("built...");
     }
 
     private static class Template implements ConfigTemplate {
         @Value("a")
+        @Abstractable
         public String a;
         @Value("b")
+        @Abstractable
         public String b;
         @Value("c")
+        @Abstractable
         public String c;
     }
 }

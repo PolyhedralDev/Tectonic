@@ -152,7 +152,6 @@ public class ConfigLoader implements TypeRegistry {
                 if(annotation instanceof Value) value = (Value) annotation;
             }
             if(value != null) {
-                System.out.println("Loading value...");
                 Type type = field.getGenericType();
                 Type raw = type;
                 if(type instanceof ParameterizedType) raw = ((ParameterizedType) type).getRawType();

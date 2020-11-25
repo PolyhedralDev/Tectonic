@@ -10,7 +10,7 @@ public class AbstractValueProvider {
 
     public Object get(String key) throws AbstractionException {
         for(Prototype p : tree) {
-            //if(p.get)
+            if(p.getConfig().contains(key)) return p.getConfig().get(key);
         }
         return null;
     }
