@@ -15,6 +15,7 @@ import com.dfsek.tectonic.loading.loaders.StringLoader;
 import com.dfsek.tectonic.loading.loaders.generic.ArrayListLoader;
 import com.dfsek.tectonic.loading.loaders.generic.HashMapLoader;
 import com.dfsek.tectonic.loading.loaders.generic.HashSetLoader;
+import com.dfsek.tectonic.loading.loaders.other.DurationLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.BooleanLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.ByteLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.CharLoader;
@@ -30,6 +31,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,6 +95,8 @@ public class ConfigLoader implements TypeRegistry {
 
         registerLoader(HashSet.class, new HashSetLoader());
         registerLoader(Set.class, new HashSetLoader()); // Sets will default to HashSet.
+
+        registerLoader(Duration.class, new DurationLoader());
     }
 
     /**
