@@ -21,9 +21,20 @@ public class AbstractTest {
         System.out.println("building...");
         List<Template> templateList = loader.load(Arrays.asList(one, two, three), Template::new);
         System.out.println("built...");
+
+        for(Template t : templateList) {
+            System.out.println(t.id + ":");
+            System.out.println(t.a);
+            System.out.println(t.b);
+            System.out.println(t.c);
+            System.out.println();
+        }
     }
 
     private static class Template implements ConfigTemplate {
+
+        @Value("id")
+        public String id;
         @Value("a")
         @Abstractable
         public String a;

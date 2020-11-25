@@ -38,14 +38,15 @@ public class AbstractConfigLoader implements TypeRegistry {
         List<E> fnlList = new ArrayList<>();
 
         for(Prototype p : pool.getPrototypes()) {
+
+            System.out.println("Loading " + p.getId());
             AbstractValueProvider valueProvider = new AbstractValueProvider();
             Prototype current = p;
             while(!current.isRoot()) {
-                valueProvider.add(current);
+                valueProvider.add(current.getParent());
                 current = current.getParent();
             }
             E template = provider.getInstance();
-            System.out.println("Loading " + p.getId());
             delegate.load(template, p.getConfig(), valueProvider);
             fnlList.add(template);
         }

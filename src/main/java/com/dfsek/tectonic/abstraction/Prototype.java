@@ -59,7 +59,6 @@ public class Prototype implements ConfigTemplate {
      * @param chainUID Unique identifier for this inheritance tree. Used to check for circular inheritance.
      */
     protected void build(AbstractPool pool, int chainUID) throws AbstractionException {
-        System.out.println(getId() + ": " + chainUID);
         if(UIDs.contains(chainUID))
             throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getId() + "\", extending \"" + getExtend() + "\", UID: " + chainUID);
         UIDs.add(chainUID);
@@ -70,7 +69,6 @@ public class Prototype implements ConfigTemplate {
             this.parent = p;
             parent.build(pool, chainUID); // Build the parent, to recursively build the entire tree.
         } else isRoot = true;
-        System.out.println(getId() + " root: " + isRoot);
     }
 
     public String getId() {
