@@ -180,6 +180,7 @@ public class ConfigLoader implements TypeRegistry {
                             Object abs = provider.get(value.value());
                             if(abs == null)
                                 throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
+                            abs = loadType(type, abs);
                             field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(abs)); // Use primitive wrapper classes if available.
                         } catch(IllegalAccessException e) {
                             throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
