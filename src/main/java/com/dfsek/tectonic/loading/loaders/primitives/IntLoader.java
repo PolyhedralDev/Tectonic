@@ -11,6 +11,6 @@ import java.lang.reflect.Type;
 public class IntLoader implements TypeLoader<Integer> {
     @Override
     public Integer load(Type t, Object c, ConfigLoader loader) {
-        return (Integer) c;
+        return ((Number) c).intValue();
     }
 }

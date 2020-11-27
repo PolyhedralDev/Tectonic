@@ -8,6 +8,6 @@ import java.lang.reflect.Type;
 public class ByteLoader implements TypeLoader<Byte> {
     @Override
     public Byte load(Type t, Object c, ConfigLoader loader) {
-        return (Byte) c;
+        return ((Number) c).byteValue();
     }
 }

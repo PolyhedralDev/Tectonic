@@ -11,6 +11,6 @@ import java.lang.reflect.Type;
 public class DoubleLoader implements TypeLoader<Double> {
     @Override
     public Double load(Type t, Object c, ConfigLoader loader) {
-        return (Double) c;
+        return ((Number) c).doubleValue();
     }
 }

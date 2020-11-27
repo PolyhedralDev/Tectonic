@@ -8,6 +8,6 @@ import java.lang.reflect.Type;
 public class FloatLoader implements TypeLoader<Float> {
     @Override
     public Float load(Type t, Object c, ConfigLoader loader) {
-        return (Float) c;
+        return ((Number) c).floatValue();
     }
 }

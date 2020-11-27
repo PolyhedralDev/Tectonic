@@ -8,6 +8,6 @@ import java.lang.reflect.Type;
 public class LongLoader implements TypeLoader<Long> {
     @Override
     public Long load(Type t, Object c, ConfigLoader loader) {
-        return (Long) c;
+        return ((Number) c).longValue();
     }
 }
