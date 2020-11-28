@@ -146,7 +146,7 @@ public class ConfigLoader implements TypeRegistry {
         for(Field field : config.getClass().getDeclaredFields()) {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
-            if(!field.isAccessible()) field.setAccessible(true); // Make field accessible if it isn't.
+            field.setAccessible(true); // Make field accessible so we can mess with it.
             boolean abstractable = false;
             boolean defaultable = false;
             Value value = null;
@@ -171,20 +171,22 @@ public class ConfigLoader implements TypeRegistry {
                         } catch(IllegalAccessException e) {
                             throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
                         }
-                    } else if(!defaultable) {
-                        if(!abstractable)
-                            throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
+                    } else if(abstractable) {
                         if(provider == null)
                             throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
                         try {
                             Object abs = provider.get(value.value());
-                            if(abs == null)
+                            if(abs == null) {
+                                if(defaultable) continue;
                                 throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
+                            }
                             abs = loadType(type, abs);
                             field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(abs)); // Use primitive wrapper classes if available.
                         } catch(IllegalAccessException e) {
                             throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
                         }
+                    } else if(!defaultable) {
+                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
                     }
                 } catch(Exception e) {
                     throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\": " + e.getMessage(), e);
