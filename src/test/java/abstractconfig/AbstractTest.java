@@ -36,8 +36,8 @@ public class AbstractTest {
 
         @Value("id")
         public String id;
-        @Value("a")
         @Abstractable
+        @Value("a")
         public String a;
         @Value("b")
         @Abstractable

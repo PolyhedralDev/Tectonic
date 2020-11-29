@@ -114,7 +114,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     /**
-     * Load a config from an InputStream and put it on a ConfigTemplate object.
+     * Load a config from an InputStream to a ConfigTemplate object.
      *
      * @param config ConfigTemplate object to put the config on.
      * @param i      InputStream to load from.
@@ -126,7 +126,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     /**
-     * Load a config from an InputStream and put it on a ConfigTemplate object.
+     * Load a config from an InputStream to a ConfigTemplate object.
      *
      * @param config ConfigTemplate object to put the config on.
      * @param yaml   YAML string to load from.
@@ -138,7 +138,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     /**
-     * Put a {@link Configuration} on a ConfigTemplate object.
+     * Load a {@link Configuration} to a ConfigTemplate object.
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.
@@ -200,7 +200,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     /**
-     * Put a {@link Configuration} on a ConfigTemplate object.
+     * Load a {@link Configuration} to a ConfigTemplate object.
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.

@@ -5,6 +5,9 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.util.Map;
 
+/**
+ * Object representation of a YAML configuration.
+ */
 public class Configuration {
     private final Map<String, Object> config;
 
