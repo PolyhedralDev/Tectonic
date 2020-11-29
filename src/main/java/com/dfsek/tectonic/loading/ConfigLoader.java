@@ -7,9 +7,11 @@ import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.exception.ReflectiveAccessException;
+import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.exception.ValueMissingException;
 import com.dfsek.tectonic.loading.loaders.StringLoader;
 import com.dfsek.tectonic.loading.loaders.generic.ArrayListLoader;
@@ -193,6 +195,8 @@ public class ConfigLoader implements TypeRegistry {
                 }
             }
         }
+        if(config instanceof ValidatedConfigTemplate && !((ValidatedConfigTemplate) config).validate())
+            throw new ValidationException("Failed to validate config. Reason unspecified.");
     }
 
     /**
