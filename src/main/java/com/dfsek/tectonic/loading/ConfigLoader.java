@@ -26,6 +26,7 @@ import com.dfsek.tectonic.loading.loaders.primitives.FloatLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.IntLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.LongLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.ShortLoader;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -121,8 +122,12 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public void load(ConfigTemplate config, InputStream i) throws ConfigException {
-        Configuration configuration = new Configuration(i);
-        load(config, configuration);
+        try {
+            Configuration configuration = new Configuration(i);
+            load(config, configuration);
+        } catch(YAMLException e) {
+            throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -133,8 +138,12 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public void load(ConfigTemplate config, String yaml) throws ConfigException {
-        Configuration configuration = new Configuration(yaml);
-        load(config, configuration);
+        try {
+            Configuration configuration = new Configuration(yaml);
+            load(config, configuration);
+        } catch(YAMLException e) {
+            throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
+        }
     }
 
     /**
