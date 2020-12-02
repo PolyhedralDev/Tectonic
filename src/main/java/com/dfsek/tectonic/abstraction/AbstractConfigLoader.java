@@ -2,15 +2,21 @@ package com.dfsek.tectonic.abstraction;
 
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.exception.LoadException;
+import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 import com.dfsek.tectonic.loading.TypeRegistry;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class to load several configs that may depend on each other.
@@ -34,17 +40,21 @@ public class AbstractConfigLoader implements TypeRegistry {
     public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, TemplateProvider<E> provider) throws ConfigException {
         AbstractPool pool = new AbstractPool();
         for(InputStream stream : inputStreams) {
-            Prototype p = new Prototype(new Configuration(stream));
-            pool.add(p);
+            try {
+                Prototype p = new Prototype(new Configuration(stream));
+                pool.add(p);
+            } catch(YAMLException e) {
+                throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
+            }
         }
         pool.loadAll();
 
-        List<E> fnlList = new ArrayList<>();
+        Map<Prototype, E> fnlList = new HashMap<>();
 
         for(Prototype p : pool.getPrototypes()) {
             if(p.isAbstract())
                 continue; // Don't directly load abstract configs. They will be loaded indirectly via inheritance tree building.
-            System.out.println("Loading " + p.getId());
+            System.out.println("Loading " + p.getID());
             AbstractValueProvider valueProvider = new AbstractValueProvider();
             Prototype current = p;
             while(current != null && !current.isRoot()) {
@@ -53,8 +63,15 @@ public class AbstractConfigLoader implements TypeRegistry {
             }
             E template = provider.getInstance();
             delegate.load(template, p.getConfig(), valueProvider);
-            fnlList.add(template);
+            fnlList.put(p, template);
         }
-        return fnlList;
+
+        for(Map.Entry<Prototype, E> entry : fnlList.entrySet()) {
+            if(entry.getValue() instanceof ValidatedConfigTemplate && !((ValidatedConfigTemplate) entry.getValue()).validate()) {
+                throw new ValidationException("Failed to validate config \"" + entry.getKey().getID() + ". Reason unspecified.");
+            }
+        }
+
+        return new ArrayList<>(fnlList.values());
     }
 }

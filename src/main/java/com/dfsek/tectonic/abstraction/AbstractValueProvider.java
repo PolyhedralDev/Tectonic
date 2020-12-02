@@ -1,10 +1,12 @@
 package com.dfsek.tectonic.abstraction;
 
+import com.dfsek.tectonic.loading.ConfigLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to provide abstracted values to a {@link com.dfsek.tectonic.loading.ConfigLoader}.
+ * Class to provide abstracted values to a {@link ConfigLoader}.
  * <p>
  * This class holds an inheritance tree of {@link Prototype}s, and gets values from them, for loading.
  */

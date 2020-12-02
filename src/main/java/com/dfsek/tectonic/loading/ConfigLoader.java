@@ -169,33 +169,25 @@ public class ConfigLoader implements TypeRegistry {
             if(value != null) {
                 Type type = field.getGenericType();
                 Type raw = type;
-                if(type instanceof ParameterizedType) raw = ((ParameterizedType) type).getRawType();
+                if(type instanceof ParameterizedType)
+                    raw = ((ParameterizedType) type).getRawType(); // If type is parameterized, get raw type to check loaders against.
 
-                Object o;
                 try {
-                    if(configuration.contains(value.value())) {
-                        if(loaders.containsKey(raw)) o = loadType(type, configuration.get(value.value()));
-                        else o = configuration.get(value.value());
-
-                        try {
-                            field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(o)); // Use primitive wrapper classes if available.
-                        } catch(IllegalAccessException e) {
-                            throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
-                        }
-                    } else if(abstractable) {
+                    if(configuration.contains(value.value())) { // If config contains value, load it.
+                        Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
+                        if(loaders.containsKey(raw))
+                            loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
+                        setField(field, config, cast(field.getType(), loadedObject)); // Set the field to the loaded value.
+                    } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
                         if(provider == null)
                             throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
-                        try {
-                            Object abs = provider.get(value.value());
-                            if(abs == null) {
-                                if(defaultable) continue;
-                                throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
-                            }
-                            abs = loadType(type, abs);
-                            field.set(config, primitives.getOrDefault(field.getType(), field.getType()).cast(abs)); // Use primitive wrapper classes if available.
-                        } catch(IllegalAccessException e) {
-                            throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
+                        Object abs = provider.get(value.value());
+                        if(abs == null) {
+                            if(defaultable) continue;
+                            throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
                         }
+                        abs = loadType(type, abs);
+                        setField(field, config, cast(field.getType(), abs));
                     } else if(!defaultable) {
                         throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
                     }
@@ -204,8 +196,36 @@ public class ConfigLoader implements TypeRegistry {
                 }
             }
         }
-        if(config instanceof ValidatedConfigTemplate && !((ValidatedConfigTemplate) config).validate())
+        if(config instanceof ValidatedConfigTemplate
+                && provider == null // Validation is handled separately by AbstractConfigLoader.
+                && !((ValidatedConfigTemplate) config).validate())
             throw new ValidationException("Failed to validate config. Reason unspecified.");
+    }
+
+    /**
+     * Cast an object to a class, using primitive wrappers if available.
+     *
+     * @param clazz  Class to cast to
+     * @param object Object to cast
+     * @return Cast object.
+     */
+    private Object cast(Class<?> clazz, Object object) {
+        return primitives.getOrDefault(clazz, clazz).cast(object);
+    }
+
+    /**
+     * Set a field on an object to a value, and wrap any exceptions in a {@link ReflectiveAccessException}
+     *
+     * @param field  Field to set.
+     * @param target Object to set field on.
+     * @param value  Value of field.
+     */
+    private void setField(Field field, Object target, Object value) throws ReflectiveAccessException {
+        try {
+            field.set(target, value);
+        } catch(IllegalAccessException e) {
+            throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
+        }
     }
 
     /**
@@ -228,9 +248,15 @@ public class ConfigLoader implements TypeRegistry {
      * @throws LoadException If object could not be loaded.
      */
     public Object loadType(Type t, Object o) throws LoadException {
-        Type raw = t;
-        if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
-        if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
-        else return o;
+        try {
+            Type raw = t;
+            if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
+            if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
+            else return o;
+        } catch(LoadException e) { // Rethrow LoadExceptions.
+            throw e;
+        } catch(Exception e) { // Catch, wrap, and rethrow exception.
+            throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e);
+        }
     }
 }

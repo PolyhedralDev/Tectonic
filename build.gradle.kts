@@ -4,7 +4,7 @@ plugins {
     java
 }
 
-val versionObj = Version("0", "1", "0", true)
+val versionObj = Version("1", "0", "0", false)
 
 group = "com.dfsek"
 version = versionObj

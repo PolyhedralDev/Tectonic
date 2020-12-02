@@ -80,7 +80,7 @@ public class Prototype implements ConfigTemplate {
      */
     protected void build(AbstractPool pool, int chainUID) throws AbstractionException {
         if(UIDs.contains(chainUID))
-            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getId() + "\", extending \"" + extend + "\", UID: " + chainUID);
+            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getID() + "\", extending \"" + extend + "\", UID: " + chainUID);
         UIDs.add(chainUID);
         if(extend != null) {
             Prototype parent = pool.get(extend);
@@ -97,7 +97,7 @@ public class Prototype implements ConfigTemplate {
      * @return ID of Prototype.
      */
     @NotNull
-    public String getId() {
+    public String getID() {
         return id;
     }
 

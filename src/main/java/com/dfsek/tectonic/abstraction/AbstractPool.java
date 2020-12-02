@@ -19,7 +19,7 @@ public class AbstractPool {
      * @param prototype Prototype to add.
      */
     public void add(Prototype prototype) {
-        pool.put(prototype.getId(), prototype);
+        pool.put(prototype.getID(), prototype);
     }
 
     public Prototype get(String id) {
