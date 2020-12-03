@@ -2,6 +2,7 @@ import java.io.ByteArrayOutputStream
 
 plugins {
     java
+    `maven-publish`
 }
 
 val versionObj = Version("1", "0", "1", false)
@@ -38,6 +39,25 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }
 
+val sourcesJar by tasks.registering(Jar::class) {
+    classifier = "sources"
+    from(sourceSets.main.get().allSource)
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri("https://repo.codemc.io/repository/maven-releases/")
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+            artifact(sourcesJar.get())
+        }
+    }
+}
+
 /**
  * Version class that does version stuff.
  */
@@ -60,3 +80,4 @@ fun getGitHash(): String {
     }
     return stdout.toString().trim()
 }
+
