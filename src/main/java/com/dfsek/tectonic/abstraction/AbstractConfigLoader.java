@@ -62,7 +62,11 @@ public class AbstractConfigLoader implements TypeRegistry {
                 current = current.getParent();
             }
             E template = provider.getInstance();
-            delegate.load(template, p.getConfig(), valueProvider);
+            try {
+                delegate.load(template, p.getConfig(), valueProvider);
+            } catch(ConfigException e) {
+                throw new LoadException("Failed to load config with ID \"" + p.getID() + "\": " + e.getMessage());
+            }
             fnlList.put(p, template);
         }
 
