@@ -48,8 +48,8 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-            artifact(tasks["universal"])
-            artifact(tasks["sourceJar"])
+            artifact(tasks["sourcesJar"])
+            artifact(tasks["jar"])
         }
     }
 
