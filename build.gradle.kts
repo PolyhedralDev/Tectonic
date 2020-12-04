@@ -45,15 +45,29 @@ val sourcesJar by tasks.registering(Jar::class) {
 }
 
 publishing {
-    repositories {
-        maven {
-            url = uri("https://repo.codemc.io/repository/maven-releases/")
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifact(tasks["universal"])
+            artifact(tasks["sourceJar"])
         }
     }
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-            artifact(sourcesJar.get())
+
+    repositories {
+        val mavenUrl: String? by project
+        val mavenSnapshotUrl: String? by project
+
+        (if (version.toString().endsWith("-SNAPSHOT")) mavenSnapshotUrl else mavenUrl)?.let { url ->
+            maven(url) {
+                val mavenUsername: String? by project
+                val mavenPassword: String? by project
+                if (mavenUsername != null && mavenPassword != null) {
+                    credentials {
+                        username = mavenUsername
+                        password = mavenPassword
+                    }
+                }
+            }
         }
     }
 }
