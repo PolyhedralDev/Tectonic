@@ -6,6 +6,5 @@ Tectonic allows you to easily create and load YAML configurations, with extensiv
 reducing boilerplate within similar configs. Tectonic is useful for data-driven applications in which users may be
 creating many very similar configurations.
 
-Tectonic is* the base of [Terra's](https://github.com/PolyhedralDev/Terra) extensive config system.  
+Tectonic is the base of [Terra's](https://github.com/PolyhedralDev/Terra) extensive config system.  
 <br>  
-\* will be
