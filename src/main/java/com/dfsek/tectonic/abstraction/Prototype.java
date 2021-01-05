@@ -5,9 +5,10 @@ import com.dfsek.tectonic.abstraction.exception.CircularInheritanceException;
 import com.dfsek.tectonic.abstraction.exception.ParentNotFoundException;
 import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Value;
-import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,7 @@ import java.util.Set;
  * abstraction) loaded, and nothing more.
  */
 @SuppressWarnings("unused")
-public class Prototype implements ConfigTemplate {
+public class Prototype implements ValidatedConfigTemplate {
     private final List<Prototype> children = new ArrayList<>();
     private final Set<Integer> UIDs = new HashSet<>();
     private final Configuration config;
@@ -119,5 +120,12 @@ public class Prototype implements ConfigTemplate {
      */
     public boolean isRoot() {
         return isRoot;
+    }
+
+    @Override
+    public boolean validate() throws ValidationException {
+        if(!id.matches("^[a-zA-Z0-9_-]*$"))
+            throw new ValidationException("ID must only contain alphanumeric characters, hyphens, and underscores. \"" + id + "\" is not a valid ID.");
+        return true;
     }
 }
