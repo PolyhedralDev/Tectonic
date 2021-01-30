@@ -29,6 +29,7 @@ import com.dfsek.tectonic.loading.loaders.primitives.LongLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.ShortLoader;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
+import com.dfsek.tectonic.util.ReflectionUtil;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
@@ -162,7 +163,7 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public void load(ConfigTemplate config, Configuration configuration, AbstractValueProvider provider) throws ConfigException {
-        for(Field field : config.getClass().getDeclaredFields()) {
+        for(Field field : ReflectionUtil.getFields(config.getClass())) {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
             field.setAccessible(true); // Make field accessible so we can mess with it.

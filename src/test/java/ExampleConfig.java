@@ -6,16 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class ExampleConfig implements ConfigTemplate {
+public class ExampleConfig extends InheritTest implements ConfigTemplate {
     @Default
     @Value("value2")
     private final String string = "test value";
-
-    @Value("value1")
-    private String string1;
-
-    @Value("a.b.c.d.e.f")
-    private String nestedString;
 
     @Value("number")
     private int number;
@@ -31,14 +25,6 @@ public class ExampleConfig implements ConfigTemplate {
 
     @Value("objectMap")
     private Map<String, TestObject> objectHashMap;
-
-    public String getString1() {
-        return string1;
-    }
-
-    public String getNestedString() {
-        return nestedString;
-    }
 
     public String getString() {
         return string;
@@ -63,4 +49,5 @@ public class ExampleConfig implements ConfigTemplate {
     public Map<String, TestObject> getObjectHashMap() {
         return objectHashMap;
     }
+
 }
