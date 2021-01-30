@@ -1,6 +1,7 @@
 package com.dfsek.tectonic.loading;
 
 import com.dfsek.tectonic.abstraction.AbstractValueProvider;
+import com.dfsek.tectonic.abstraction.TemplateProvider;
 import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
 import com.dfsek.tectonic.annotations.Abstractable;
 import com.dfsek.tectonic.annotations.Default;
@@ -26,6 +27,8 @@ import com.dfsek.tectonic.loading.loaders.primitives.FloatLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.IntLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.LongLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.ShortLoader;
+import com.dfsek.tectonic.loading.object.ObjectTemplate;
+import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
@@ -47,18 +50,18 @@ import java.util.Set;
  */
 public class ConfigLoader implements TypeRegistry {
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
-    private static final Map<Class<?>, Class<?>> primitives = new HashMap<>(); // Map of primitives to their wrapper classes.
+    private static final Map<Class<?>, Class<?>> PRIMITIVES = new HashMap<>(); // Map of primitives to their wrapper classes.
 
     static {
-        primitives.put(boolean.class, Boolean.class);
-        primitives.put(byte.class, Byte.class);
-        primitives.put(short.class, Short.class);
-        primitives.put(char.class, Character.class);
-        primitives.put(int.class, Integer.class);
-        primitives.put(long.class, Long.class);
-        primitives.put(float.class, Float.class);
-        primitives.put(double.class, Double.class);
-        primitives.put(void.class, Void.class);
+        PRIMITIVES.put(boolean.class, Boolean.class);
+        PRIMITIVES.put(byte.class, Byte.class);
+        PRIMITIVES.put(short.class, Short.class);
+        PRIMITIVES.put(char.class, Character.class);
+        PRIMITIVES.put(int.class, Integer.class);
+        PRIMITIVES.put(long.class, Long.class);
+        PRIMITIVES.put(float.class, Float.class);
+        PRIMITIVES.put(double.class, Double.class);
+        PRIMITIVES.put(void.class, Void.class);
     }
 
     {
@@ -114,6 +117,11 @@ public class ConfigLoader implements TypeRegistry {
         return this;
     }
 
+    public <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
+        loaders.put(t, new ObjectTemplateLoader<>(provider));
+        return this;
+    }
+
     /**
      * Load a config from an InputStream to a ConfigTemplate object.
      *
@@ -166,34 +174,35 @@ public class ConfigLoader implements TypeRegistry {
                 if(annotation instanceof Default) defaultable = true;
                 if(annotation instanceof Value) value = (Value) annotation;
             }
-            if(value != null) {
-                Type type = field.getGenericType();
-                Type raw = type;
-                if(type instanceof ParameterizedType)
-                    raw = ((ParameterizedType) type).getRawType(); // If type is parameterized, get raw type to check loaders against.
 
-                try {
-                    if(configuration.contains(value.value())) { // If config contains value, load it.
-                        Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
-                        if(loaders.containsKey(raw))
-                            loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
-                        setField(field, config, cast(field.getType(), loadedObject)); // Set the field to the loaded value.
-                    } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
-                        if(provider == null)
-                            throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
-                        Object abs = provider.get(value.value());
-                        if(abs == null) {
-                            if(defaultable) continue;
-                            throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
-                        }
-                        abs = loadType(type, abs);
-                        setField(field, config, cast(field.getType(), abs));
-                    } else if(!defaultable) {
-                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
+            if(value == null) continue;
+
+            Type type = field.getGenericType();
+            Type raw = type;
+            if(type instanceof ParameterizedType)
+                raw = ((ParameterizedType) type).getRawType(); // If type is parameterized, get raw type to check loaders against.
+
+            try {
+                if(configuration.contains(value.value())) { // If config contains value, load it.
+                    Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
+                    if(loaders.containsKey(raw))
+                        loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
+                    setField(field, config, cast(field.getType(), loadedObject)); // Set the field to the loaded value.
+                } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
+                    if(provider == null)
+                        throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
+                    Object abs = provider.get(value.value());
+                    if(abs == null) {
+                        if(defaultable) continue;
+                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
                     }
-                } catch(Exception e) {
-                    throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\": " + e.getMessage(), e);
+                    abs = loadType(type, abs);
+                    setField(field, config, cast(field.getType(), abs));
+                } else if(!defaultable) {
+                    throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
                 }
+            } catch(Exception e) {
+                throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\": " + e.getMessage(), e);
             }
         }
         if(config instanceof ValidatedConfigTemplate
@@ -210,7 +219,7 @@ public class ConfigLoader implements TypeRegistry {
      * @return Cast object.
      */
     private Object cast(Class<?> clazz, Object object) {
-        return primitives.getOrDefault(clazz, clazz).cast(object);
+        return PRIMITIVES.getOrDefault(clazz, clazz).cast(object);
     }
 
     /**
