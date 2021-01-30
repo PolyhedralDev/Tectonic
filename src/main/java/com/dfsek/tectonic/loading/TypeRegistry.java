@@ -1,5 +1,8 @@
 package com.dfsek.tectonic.loading;
 
+import com.dfsek.tectonic.abstraction.TemplateProvider;
+import com.dfsek.tectonic.loading.object.ObjectTemplate;
+
 import java.lang.reflect.Type;
 
 /**
@@ -10,4 +13,6 @@ import java.lang.reflect.Type;
  */
 public interface TypeRegistry {
     TypeRegistry registerLoader(Type t, TypeLoader<?> loader);
+
+    <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider);
 }
