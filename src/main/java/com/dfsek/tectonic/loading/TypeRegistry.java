@@ -14,5 +14,5 @@ import java.lang.reflect.Type;
 public interface TypeRegistry {
     TypeRegistry registerLoader(Type t, TypeLoader<?> loader);
 
-    <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider);
+    <T> TypeRegistry registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider);
 }

@@ -26,14 +26,15 @@ public class AbstractConfigLoader implements TypeRegistry {
     private final ConfigLoader delegate = new ConfigLoader();
 
     @Override
-    public TypeRegistry registerLoader(Type t, TypeLoader<?> loader) {
+    public AbstractConfigLoader registerLoader(Type t, TypeLoader<?> loader) {
         delegate.registerLoader(t, loader);
         return this;
     }
 
     @Override
-    public <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
-        return delegate.registerLoader(t, provider);
+    public <T> AbstractConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
+        delegate.registerLoader(t, provider);
+        return this;
     }
 
     /**
