@@ -9,6 +9,7 @@ import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 import com.dfsek.tectonic.loading.TypeRegistry;
+import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
@@ -28,6 +29,11 @@ public class AbstractConfigLoader implements TypeRegistry {
     public TypeRegistry registerLoader(Type t, TypeLoader<?> loader) {
         delegate.registerLoader(t, loader);
         return this;
+    }
+
+    @Override
+    public <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
+        return delegate.registerLoader(t, provider);
     }
 
     /**

@@ -218,8 +218,9 @@ public class ConfigLoader implements TypeRegistry {
      * @param object Object to cast
      * @return Cast object.
      */
-    private Object cast(Class<?> clazz, Object object) {
-        return PRIMITIVES.getOrDefault(clazz, clazz).cast(object);
+    @SuppressWarnings("unchecked")
+    private <T> T cast(Class<T> clazz, Object object) {
+        return (T) PRIMITIVES.getOrDefault(clazz, clazz).cast(object);
     }
 
     /**
@@ -262,6 +263,17 @@ public class ConfigLoader implements TypeRegistry {
             if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
             if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
             else return o;
+        } catch(LoadException e) { // Rethrow LoadExceptions.
+            throw e;
+        } catch(Exception e) { // Catch, wrap, and rethrow exception.
+            throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e);
+        }
+    }
+
+    public <T> T loadClass(Class<T> clazz, Object o) throws LoadException {
+        try {
+            if(loaders.containsKey(clazz)) return cast(clazz, loaders.get(clazz).load(clazz, o, this));
+            else return cast(clazz, o);
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
