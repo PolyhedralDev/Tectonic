@@ -5,6 +5,7 @@ import com.dfsek.tectonic.abstraction.TemplateProvider;
 import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
 import com.dfsek.tectonic.annotations.Abstractable;
 import com.dfsek.tectonic.annotations.Default;
+import com.dfsek.tectonic.annotations.Merge;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
@@ -40,11 +41,13 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Class to load a config using reflection magic.
@@ -169,11 +172,13 @@ public class ConfigLoader implements TypeRegistry {
             field.setAccessible(true); // Make field accessible so we can mess with it.
             boolean abstractable = false;
             boolean defaultable = false;
+            Merge merge = null;
             Value value = null;
             for(Annotation annotation : field.getAnnotations()) {
                 if(annotation instanceof Abstractable) abstractable = true;
                 if(annotation instanceof Default) defaultable = true;
                 if(annotation instanceof Value) value = (Value) annotation;
+                if(annotation instanceof Merge) merge = (Merge) annotation;
             }
 
             if(value == null) continue;
@@ -186,8 +191,9 @@ public class ConfigLoader implements TypeRegistry {
             try {
                 if(configuration.contains(value.value())) { // If config contains value, load it.
                     Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
-                    if(loaders.containsKey(raw))
-                        loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
+                    if(loaders.containsKey(raw)){
+                        loadedObject = mergeInherited(provider, merge, value, type, loadedObject);
+                    } // Re-assign if type is found in registry.
                     setField(field, config, cast(field.getType(), loadedObject)); // Set the field to the loaded value.
                 } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
                     if(provider == null)
@@ -197,7 +203,9 @@ public class ConfigLoader implements TypeRegistry {
                         if(defaultable) continue;
                         throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
                     }
-                    abs = loadType(type, abs);
+
+                    abs = mergeInherited(provider, merge, value, type, abs);
+
                     setField(field, config, cast(field.getType(), abs));
                 } else if(!defaultable) {
                     throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
@@ -210,6 +218,15 @@ public class ConfigLoader implements TypeRegistry {
                 && provider == null // Validation is handled separately by AbstractConfigLoader.
                 && !((ValidatedConfigTemplate) config).validate())
             throw new ValidationException("Failed to validate config. Reason unspecified.");
+    }
+
+    private Object mergeInherited(AbstractValueProvider provider, Merge merge, Value value, Type type, Object loadedObject) throws LoadException {
+        if(merge != null) {
+            List<Object> parents = provider.getAll(value.value());
+            parents.add(0, loadedObject);
+            loadedObject = loadType(type, merge.value(), parents);
+        } else loadedObject = loadType(type, loadedObject);
+        return loadedObject;
     }
 
     /**
@@ -259,12 +276,27 @@ public class ConfigLoader implements TypeRegistry {
      * @throws LoadException If object could not be loaded.
      */
     public Object loadType(Type t, Object o) throws LoadException {
+        return loadType(t, null, Collections.singletonList(o));
+    }
+
+    public Object loadType(Type t, Merge.Type merge, List<Object> parents) throws LoadException {
         try {
             Type raw = t;
             if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
-            if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
-            else return o;
-        } catch(LoadException e) { // Rethrow LoadExceptions.
+            Collections.reverse(parents);
+
+            Object running = loaders.get(raw).load(t, parents.get(0), this);
+            if(loaders.containsKey(raw) && parents.size() > 1) {
+                parents.remove(0);
+                if(merge != null) {
+                    while(!parents.isEmpty()) {
+                        running = loaders.get(raw).loadMerged(t, parents.remove(0), this, running, merge);
+                    }
+                }
+            }
+
+            return running;
+        } catch(ConfigException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
             throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e);
