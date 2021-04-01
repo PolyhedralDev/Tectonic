@@ -26,7 +26,6 @@ map:
   a: "a value"
   b: "another value"
   c: "a third value"
-  _SUPER:
 objectMap:
   object:
     string: "one"
