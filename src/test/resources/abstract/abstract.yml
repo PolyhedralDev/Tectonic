@@ -2,5 +2,3 @@ id: "ABS"
 abstract: true
 a: "value a"
 b: "value b"
-map:
-  abstractThing: gdfsgsdgdsfg

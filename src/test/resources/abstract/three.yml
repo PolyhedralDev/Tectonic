@@ -1,7 +1,3 @@
 id: "THREE"
 extends: "TWO"
 c: "value c (config 3)"
-map:
-  thing3: three
-  thing3_2: three!
-  _SUPER:
