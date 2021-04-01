@@ -27,19 +27,6 @@ public class AbstractValueProvider {
     }
 
     /**
-     * Get a value in all configs it is defined in.
-     * @param key Key to search for
-     * @return List containing all results.
-     */
-    public List<Object> getAll(String key) {
-        List<Object> results = new ArrayList<>();
-        for(Prototype p : tree) {
-            if(p.getConfig().contains(key)) results.add(p.getConfig().get(key));
-        }
-        return results;
-    }
-
-    /**
      * Add a prototype to the top of the inheritance tree.
      *
      * @param prototype Prototype to add
