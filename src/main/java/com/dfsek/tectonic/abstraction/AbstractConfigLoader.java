@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Class to load several configs that may depend on each other.
@@ -45,10 +46,21 @@ public class AbstractConfigLoader implements TypeRegistry {
      * @throws ConfigException If configs contain errors.
      */
     public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, TemplateProvider<E> provider) throws ConfigException {
+        return loadConfigs(inputStreams.stream().map(Configuration::new).collect(Collectors.toList()), provider);
+    }
+
+    /**
+     * @param configurations List of Configurations to load configs from.
+     * @param provider       TemplateProvide to get ConfigTemplate instances from.
+     * @param <E>            ConfigTemplate type.
+     * @return List of loaded ConfigTemplates.
+     * @throws ConfigException If configs contain errors.
+     */
+    public <E extends ConfigTemplate> List<E> loadConfigs(List<Configuration> configurations, TemplateProvider<E> provider) throws ConfigException {
         AbstractPool pool = new AbstractPool();
-        for(InputStream stream : inputStreams) {
+        for(Configuration config : configurations) {
             try {
-                Prototype p = new Prototype(new Configuration(stream));
+                Prototype p = new Prototype(config);
                 pool.add(p);
             } catch(YAMLException e) {
                 throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
