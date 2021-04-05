@@ -195,21 +195,21 @@ public class ConfigLoader implements TypeRegistry {
                     Object abs = provider.get(value.value());
                     if(abs == null) {
                         if(defaultable) continue;
-                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents."); // Throw exception if value is not provided, and isn't in parents.
+                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents: " + configuration.getName()); // Throw exception if value is not provided, and isn't in parents.
                     }
                     abs = loadType(type, abs);
                     setField(field, config, cast(field.getType(), abs));
                 } else if(!defaultable) {
-                    throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config."); // Throw exception if value is not provided, and isn't abstractable
+                    throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config: " + configuration.getName()); // Throw exception if value is not provided, and isn't abstractable
                 }
             } catch(Exception e) {
-                throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\": " + e.getMessage(), e);
+                throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\" in config \"" + configuration.getName() + "\": " + e.getMessage(), e);
             }
         }
         if(config instanceof ValidatedConfigTemplate
                 && provider == null // Validation is handled separately by AbstractConfigLoader.
                 && !((ValidatedConfigTemplate) config).validate())
-            throw new ValidationException("Failed to validate config. Reason unspecified.");
+            throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
     }
 
     /**

@@ -11,7 +11,15 @@ import java.util.Map;
 public class Configuration {
     private final Map<String, Object> config;
 
+    private String name;
+
     public Configuration(InputStream is) {
+        this.name = is.toString();
+        config = new Yaml().load(is);
+    }
+
+    public Configuration(InputStream is, String name) {
+        this.name = name;
         config = new Yaml().load(is);
     }
 
@@ -19,7 +27,17 @@ public class Configuration {
         config = new Yaml().load(yaml);
     }
 
+    public Configuration(String yaml, String name) {
+        this.name = name;
+        config = new Yaml().load(yaml);
+    }
+
     public Configuration(Map<String, Object> map) {
+        this.config = map;
+    }
+
+    public Configuration(Map<String, Object> map, String name) {
+        this.name = name;
         this.config = map;
     }
 
@@ -43,5 +61,9 @@ public class Configuration {
             level = ((Map<String, Object>) level).get(keyLevel);
         }
         return !(level == null);
+    }
+
+    public String getName() {
+        return name;
     }
 }
