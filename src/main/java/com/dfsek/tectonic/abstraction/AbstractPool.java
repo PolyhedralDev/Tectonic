@@ -2,6 +2,7 @@ package com.dfsek.tectonic.abstraction;
 
 import com.dfsek.tectonic.abstraction.exception.AbstractionException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,9 +33,8 @@ public class AbstractPool {
      * @throws AbstractionException If there are errors in the configs.
      */
     public void loadAll() throws AbstractionException {
-        int i = 0;
         for(Map.Entry<String, Prototype> entry : pool.entrySet()) {
-            entry.getValue().build(this, i++);
+            entry.getValue().build(this, Collections.emptySet());
         }
     }
 

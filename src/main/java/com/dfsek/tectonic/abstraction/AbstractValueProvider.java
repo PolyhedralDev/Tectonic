@@ -11,7 +11,12 @@ import java.util.List;
  * This class holds an inheritance tree of {@link Prototype}s, and gets values from them, for loading.
  */
 public class AbstractValueProvider {
-    private final List<Prototype> tree = new ArrayList<>();
+    private final List<Layer> tree = new ArrayList<>();
+    private int layer = 0;
+
+    public AbstractValueProvider() {
+        tree.add(new Layer());
+    }
 
     /**
      * Get a value from its lowest point in the inheritance tree.
@@ -20,8 +25,9 @@ public class AbstractValueProvider {
      * @return Object loaded from the key. (Raw config object, not type adapted!)
      */
     public Object get(String key) {
-        for(Prototype p : tree) {
-            if(p.getConfig().contains(key)) return p.getConfig().get(key);
+        for(Layer p : tree) {
+            Object l = p.get(key);
+            if(l != null) return l;
         }
         return null;
     }
@@ -32,6 +38,32 @@ public class AbstractValueProvider {
      * @param prototype Prototype to add
      */
     protected void add(Prototype prototype) {
-        tree.add(prototype);
+        tree.get(layer).add(prototype);
+    }
+
+    protected int next() {
+        int l0 = layer;
+        layer++;
+        tree.add(new Layer());
+        return l0;
+    }
+
+    protected void reset(int layer) {
+        this.layer = layer;
+    }
+
+    private static final class Layer {
+        private final List<Prototype> items = new ArrayList<>();
+
+        public void add(Prototype item) {
+            items.add(item);
+        }
+
+        public Object get(String key) {
+            for(Prototype p : items) {
+                if(p.getConfig().contains(key)) return p.getConfig().get(key);
+            }
+            return null;
+        }
     }
 }
