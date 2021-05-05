@@ -33,7 +33,6 @@ import com.dfsek.tectonic.util.ReflectionUtil;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -65,7 +64,7 @@ public class ConfigLoader implements TypeRegistry {
         PRIMITIVES.put(void.class, Void.class);
     }
 
-    {
+    public ConfigLoader() {
         // Default primitive/wrapper loaders
         registerLoader(boolean.class, new BooleanLoader());
         registerLoader(Boolean.class, new BooleanLoader());
@@ -167,15 +166,9 @@ public class ConfigLoader implements TypeRegistry {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
             field.setAccessible(true); // Make field accessible so we can mess with it.
-            boolean abstractable = false;
-            boolean defaultable = false;
-            Value value = null;
-            for(Annotation annotation : field.getAnnotations()) {
-                if(annotation instanceof Abstractable) abstractable = true;
-                if(annotation instanceof Default) defaultable = true;
-                if(annotation instanceof Value) value = (Value) annotation;
-            }
-
+            boolean abstractable = field.isAnnotationPresent(Abstractable.class);
+            boolean defaultable = field.isAnnotationPresent(Default.class);
+            Value value = field.getAnnotation(Value.class);
             if(value == null) continue;
 
             Type type = field.getGenericType();
