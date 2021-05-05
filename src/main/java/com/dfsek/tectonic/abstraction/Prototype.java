@@ -29,6 +29,8 @@ public class Prototype implements ValidatedConfigTemplate {
     private final Configuration config;
     private Prototype parent;
     private boolean isRoot = false;
+
+
     @Value("id")
     private String id;
     @SuppressWarnings("FieldMayBeFinal")
