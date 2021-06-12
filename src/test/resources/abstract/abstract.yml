@@ -1,4 +1,4 @@
-id: "ABS"
-abstract: true
-a: "value a"
-b: "value b"
+id : "ABS"
+abstract : true
+extends : "DIAMOND"
+#a: "value a"

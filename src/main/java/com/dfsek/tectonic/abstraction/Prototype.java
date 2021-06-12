@@ -11,9 +11,9 @@ import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,16 +25,17 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class Prototype implements ValidatedConfigTemplate {
     private final List<Prototype> children = new ArrayList<>();
-    private final Set<Integer> UIDs = new HashSet<>();
     private final Configuration config;
-    private Prototype parent;
+    private final List<Prototype> parents = new ArrayList<>();
     private boolean isRoot = false;
+
+
     @Value("id")
     private String id;
     @SuppressWarnings("FieldMayBeFinal")
     @Value("extends")
     @Default
-    private String extend = null;
+    private List<String> extend = Collections.emptyList();
     @SuppressWarnings("FieldMayBeFinal")
     @Value("abstract")
     @Default
@@ -75,21 +76,28 @@ public class Prototype implements ValidatedConfigTemplate {
     /**
      * Build this Prototype's inheritance from an AbstractPool
      *
-     * @param pool     AbstractPool to search for parent configs.
-     * @param chainUID Unique identifier for this inheritance tree. Used to check for circular inheritance.
+     * @param pool    AbstractPool to search for parent configs.
+     * @param parents Set of parents, to check for circular inheritance.
      * @throws AbstractionException if invalid abstraction data is found.
      */
-    protected void build(AbstractPool pool, int chainUID) throws AbstractionException {
-        if(UIDs.contains(chainUID))
-            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getID() + "\", extending \"" + extend + "\", UID: " + chainUID);
-        UIDs.add(chainUID);
-        if(extend != null) {
-            Prototype parent = pool.get(extend);
+    protected void build(AbstractPool pool, Set<Prototype> parents) throws AbstractionException {
+        if(parents.contains(this))
+            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getID() + "\", extending \"" + extend + "\"");
+
+        Set<Prototype> newParents = new HashSet<>(parents);
+        newParents.add(this);
+        int index = 0;
+        for(String parentID : extend) {
+            Prototype parent = pool.get(parentID);
             if(parent == null)
-                throw new ParentNotFoundException("No such config \"" + extend + "\". Specified as parent of \"" + id + "\"");
-            this.parent = parent;
-            this.parent.build(pool, chainUID); // Build the parent, to recursively build the entire tree.
-        } else isRoot = true;
+                throw new ParentNotFoundException("No such config \"" + parentID + "\". Specified as parent of \"" + id + "\" at index " + index);
+            this.parents.add(parent);
+            parent.build(pool, newParents); // Build the parent, to recursively build the entire tree.
+            index++;
+        }
+        if(extend.size() == 0) {
+            isRoot = true;
+        }
     }
 
     /**
@@ -108,9 +116,9 @@ public class Prototype implements ValidatedConfigTemplate {
      * @return This Prototype's parent. {@code null} if the parent does not exist, or has not been loaded.
      * @see #build
      */
-    @Nullable
-    public Prototype getParent() {
-        return parent;
+    @NotNull
+    public List<Prototype> getParents() {
+        return parents;
     }
 
     /**

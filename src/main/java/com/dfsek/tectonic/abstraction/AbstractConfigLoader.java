@@ -15,6 +15,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,11 +75,7 @@ public class AbstractConfigLoader implements TypeRegistry {
             if(p.isAbstract())
                 continue; // Don't directly load abstract configs. They will be loaded indirectly via inheritance tree building.
             AbstractValueProvider valueProvider = new AbstractValueProvider();
-            Prototype current = p;
-            while(current != null && !current.isRoot()) {
-                valueProvider.add(current.getParent());
-                current = current.getParent();
-            }
+            build(valueProvider, Collections.singletonList(p));
             E template = provider.getInstance();
             try {
                 delegate.load(template, p.getConfig(), valueProvider);
@@ -95,5 +92,16 @@ public class AbstractConfigLoader implements TypeRegistry {
         }
 
         return new ArrayList<>(fnlList.values());
+    }
+
+    private void build(AbstractValueProvider provider, List<Prototype> prototypes) {
+        for(Prototype prototype : prototypes) {
+            provider.add(prototype);
+            if(!prototype.isRoot()) {
+                int layer = provider.next();
+                build(provider, prototype.getParents());
+                provider.reset(layer);
+            }
+        }
     }
 }

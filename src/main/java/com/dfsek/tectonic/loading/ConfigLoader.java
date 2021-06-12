@@ -11,7 +11,6 @@ import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
-import com.dfsek.tectonic.exception.ReflectiveAccessException;
 import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.exception.ValueMissingException;
 import com.dfsek.tectonic.loading.loaders.StringLoader;
@@ -33,7 +32,6 @@ import com.dfsek.tectonic.util.ReflectionUtil;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -51,21 +49,8 @@ import java.util.Set;
  */
 public class ConfigLoader implements TypeRegistry {
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
-    private static final Map<Class<?>, Class<?>> PRIMITIVES = new HashMap<>(); // Map of primitives to their wrapper classes.
 
-    static {
-        PRIMITIVES.put(boolean.class, Boolean.class);
-        PRIMITIVES.put(byte.class, Byte.class);
-        PRIMITIVES.put(short.class, Short.class);
-        PRIMITIVES.put(char.class, Character.class);
-        PRIMITIVES.put(int.class, Integer.class);
-        PRIMITIVES.put(long.class, Long.class);
-        PRIMITIVES.put(float.class, Float.class);
-        PRIMITIVES.put(double.class, Double.class);
-        PRIMITIVES.put(void.class, Void.class);
-    }
-
-    {
+    public ConfigLoader() {
         // Default primitive/wrapper loaders
         registerLoader(boolean.class, new BooleanLoader());
         registerLoader(Boolean.class, new BooleanLoader());
@@ -167,15 +152,9 @@ public class ConfigLoader implements TypeRegistry {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
             field.setAccessible(true); // Make field accessible so we can mess with it.
-            boolean abstractable = false;
-            boolean defaultable = false;
-            Value value = null;
-            for(Annotation annotation : field.getAnnotations()) {
-                if(annotation instanceof Abstractable) abstractable = true;
-                if(annotation instanceof Default) defaultable = true;
-                if(annotation instanceof Value) value = (Value) annotation;
-            }
-
+            boolean abstractable = field.isAnnotationPresent(Abstractable.class);
+            boolean defaultable = field.isAnnotationPresent(Default.class);
+            Value value = field.getAnnotation(Value.class);
             if(value == null) continue;
 
             Type type = field.getGenericType();
@@ -188,7 +167,7 @@ public class ConfigLoader implements TypeRegistry {
                     Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
                     if(loaders.containsKey(raw))
                         loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
-                    setField(field, config, cast(field.getType(), loadedObject)); // Set the field to the loaded value.
+                    ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
                 } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
                     if(provider == null)
                         throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
@@ -198,7 +177,7 @@ public class ConfigLoader implements TypeRegistry {
                         throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents: " + configuration.getName()); // Throw exception if value is not provided, and isn't in parents.
                     }
                     abs = loadType(type, abs);
-                    setField(field, config, cast(field.getType(), abs));
+                    ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), abs));
                 } else if(!defaultable) {
                     throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config: " + configuration.getName()); // Throw exception if value is not provided, and isn't abstractable
                 }
@@ -210,33 +189,6 @@ public class ConfigLoader implements TypeRegistry {
                 && provider == null // Validation is handled separately by AbstractConfigLoader.
                 && !((ValidatedConfigTemplate) config).validate())
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
-    }
-
-    /**
-     * Cast an object to a class, using primitive wrappers if available.
-     *
-     * @param clazz  Class to cast to
-     * @param object Object to cast
-     * @return Cast object.
-     */
-    @SuppressWarnings("unchecked")
-    private <T> T cast(Class<T> clazz, Object object) {
-        return (T) PRIMITIVES.getOrDefault(clazz, clazz).cast(object);
-    }
-
-    /**
-     * Set a field on an object to a value, and wrap any exceptions in a {@link ReflectiveAccessException}
-     *
-     * @param field  Field to set.
-     * @param target Object to set field on.
-     * @param value  Value of field.
-     */
-    private void setField(Field field, Object target, Object value) throws ReflectiveAccessException {
-        try {
-            field.set(target, value);
-        } catch(IllegalAccessException e) {
-            throw new ReflectiveAccessException("Failed to set field " + field + ".", e);
-        }
     }
 
     /**
@@ -273,8 +225,8 @@ public class ConfigLoader implements TypeRegistry {
 
     public <T> T loadClass(Class<T> clazz, Object o) throws LoadException {
         try {
-            if(loaders.containsKey(clazz)) return cast(clazz, loaders.get(clazz).load(clazz, o, this));
-            else return cast(clazz, o);
+            if(loaders.containsKey(clazz)) return ReflectionUtil.cast(clazz, loaders.get(clazz).load(clazz, o, this));
+            else return ReflectionUtil.cast(clazz, o);
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
