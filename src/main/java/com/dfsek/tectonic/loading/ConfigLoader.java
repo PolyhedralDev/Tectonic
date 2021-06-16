@@ -52,41 +52,52 @@ public class ConfigLoader implements TypeRegistry {
 
     public ConfigLoader() {
         // Default primitive/wrapper loaders
-        registerLoader(boolean.class, new BooleanLoader());
-        registerLoader(Boolean.class, new BooleanLoader());
+        BooleanLoader booleanLoader = new BooleanLoader();
+        registerLoader(boolean.class, booleanLoader);
+        registerLoader(Boolean.class, booleanLoader);
 
-        registerLoader(byte.class, new ByteLoader());
-        registerLoader(Byte.class, new ByteLoader());
+        ByteLoader byteLoader = new ByteLoader();
+        registerLoader(byte.class, byteLoader);
+        registerLoader(Byte.class, byteLoader);
 
-        registerLoader(short.class, new ShortLoader());
-        registerLoader(Short.class, new ShortLoader());
+        ShortLoader shortLoader = new ShortLoader();
+        registerLoader(short.class, shortLoader);
+        registerLoader(Short.class, shortLoader);
 
-        registerLoader(char.class, new CharLoader());
-        registerLoader(Character.class, new CharLoader());
+        CharLoader charLoader = new CharLoader();
+        registerLoader(char.class, charLoader);
+        registerLoader(Character.class, charLoader);
 
-        registerLoader(int.class, new IntLoader());
-        registerLoader(Integer.class, new IntLoader());
+        IntLoader intLoader = new IntLoader();
+        registerLoader(int.class, intLoader);
+        registerLoader(Integer.class, intLoader);
 
-        registerLoader(long.class, new LongLoader());
-        registerLoader(Long.class, new LongLoader());
+        LongLoader longLoader = new LongLoader();
+        registerLoader(long.class, longLoader);
+        registerLoader(Long.class, longLoader);
 
-        registerLoader(float.class, new FloatLoader());
-        registerLoader(Float.class, new FloatLoader());
+        FloatLoader floatLoader = new FloatLoader();
+        registerLoader(float.class, floatLoader);
+        registerLoader(Float.class, floatLoader);
 
-        registerLoader(double.class, new DoubleLoader());
-        registerLoader(Double.class, new DoubleLoader());
+        DoubleLoader doubleLoader = new DoubleLoader();
+        registerLoader(double.class, doubleLoader);
+        registerLoader(Double.class, doubleLoader);
 
         // Default class loaders
         registerLoader(String.class, new StringLoader());
 
-        registerLoader(ArrayList.class, new ArrayListLoader());
-        registerLoader(List.class, new ArrayListLoader()); // Lists will default to ArrayList.
+        ArrayListLoader arrayListLoader = new ArrayListLoader();
+        registerLoader(ArrayList.class, arrayListLoader);
+        registerLoader(List.class, arrayListLoader); // Lists will default to ArrayList.
 
-        registerLoader(HashMap.class, new HashMapLoader());
-        registerLoader(Map.class, new HashMapLoader()); // Maps will default to HashMap.
+        HashMapLoader hashMapLoader = new HashMapLoader();
+        registerLoader(HashMap.class, hashMapLoader);
+        registerLoader(Map.class, hashMapLoader); // Maps will default to HashMap.
 
-        registerLoader(HashSet.class, new HashSetLoader());
-        registerLoader(Set.class, new HashSetLoader()); // Sets will default to HashSet.
+        HashSetLoader hashSetLoader = new HashSetLoader();
+        registerLoader(HashSet.class, hashSetLoader);
+        registerLoader(Set.class, hashSetLoader); // Sets will default to HashSet.
 
         registerLoader(Duration.class, new DurationLoader());
     }
@@ -159,18 +170,21 @@ public class ConfigLoader implements TypeRegistry {
 
             Type type = field.getGenericType();
             Type raw = type;
-            if(type instanceof ParameterizedType)
+            if(type instanceof ParameterizedType) {
                 raw = ((ParameterizedType) type).getRawType(); // If type is parameterized, get raw type to check loaders against.
+            }
 
             try {
                 if(configuration.contains(value.value())) { // If config contains value, load it.
                     Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
-                    if(loaders.containsKey(raw))
+                    if(loaders.containsKey(raw)) {
                         loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
+                    }
                     ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
                 } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
-                    if(provider == null)
+                    if(provider == null) {
                         throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
+                    }
                     Object abs = provider.get(value.value());
                     if(abs == null) {
                         if(defaultable) continue;
@@ -187,8 +201,9 @@ public class ConfigLoader implements TypeRegistry {
         }
         if(config instanceof ValidatedConfigTemplate
                 && provider == null // Validation is handled separately by AbstractConfigLoader.
-                && !((ValidatedConfigTemplate) config).validate())
+                && !((ValidatedConfigTemplate) config).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
+        }
     }
 
     /**
