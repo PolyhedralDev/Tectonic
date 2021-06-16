@@ -28,10 +28,12 @@ import com.dfsek.tectonic.loading.loaders.primitives.LongLoader;
 import com.dfsek.tectonic.loading.loaders.primitives.ShortLoader;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
+import com.dfsek.tectonic.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.util.ReflectionUtil;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -49,6 +51,7 @@ import java.util.Set;
  */
 public class ConfigLoader implements TypeRegistry {
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
+    private final Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> preprocessors = new HashMap<>();
 
     public ConfigLoader() {
         // Default primitive/wrapper loaders
@@ -116,6 +119,11 @@ public class ConfigLoader implements TypeRegistry {
 
     public <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
         loaders.put(t, new ObjectTemplateLoader<>(provider));
+        return this;
+    }
+
+    public <T extends Annotation> ConfigLoader registerPreprocessor(Class<? extends T> clazz, ValuePreprocessor<T> processor) {
+        preprocessors.computeIfAbsent(clazz, c -> new ArrayList<>()).add(processor);
         return this;
     }
 
