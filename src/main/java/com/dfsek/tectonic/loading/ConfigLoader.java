@@ -14,6 +14,7 @@ import com.dfsek.tectonic.exception.InvalidTemplateException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.exception.ValueMissingException;
+import com.dfsek.tectonic.loading.loaders.EnumLoader;
 import com.dfsek.tectonic.loading.loaders.StringLoader;
 import com.dfsek.tectonic.loading.loaders.generic.ArrayListLoader;
 import com.dfsek.tectonic.loading.loaders.generic.HashMapLoader;
@@ -54,6 +55,7 @@ import java.util.function.Supplier;
  * Class to load a config using reflection magic.
  */
 public class ConfigLoader implements TypeRegistry {
+    private static final EnumLoader ENUM_LOADER = new EnumLoader();
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
     private final Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> preprocessors = new HashMap<>();
 
@@ -107,6 +109,8 @@ public class ConfigLoader implements TypeRegistry {
         registerLoader(Set.class, hashSetLoader); // Sets will default to HashSet.
 
         registerLoader(Duration.class, new DurationLoader());
+
+        registerLoader(Enum.class, ENUM_LOADER);
     }
 
     /**
@@ -207,10 +211,7 @@ public class ConfigLoader implements TypeRegistry {
 
             try {
                 if(configuration.contains(value.value())) { // If config contains value, load it.
-                    Object loadedObject = getFinal(configuration, value.value()); // Assign raw config object retrieved.
-                    if(loaders.containsKey(raw)) {
-                        loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
-                    }
+                    Object loadedObject = loadType(type, getFinal(configuration, value.value())); // Re-assign if type is found in registry.
                     ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
                 } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
                     if(!(config instanceof AbstractConfiguration)) {
@@ -247,10 +248,16 @@ public class ConfigLoader implements TypeRegistry {
      */
     public Object loadType(AnnotatedType t, Object o) throws LoadException {
         try {
+            System.out.println(t);
             Type raw = t.getType();
             if(t instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) t.getType()).getRawType();
             if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
-            else return o;
+
+            if(raw instanceof Class && ((Class<?>) raw).isEnum()) {
+                return ENUM_LOADER.load(t, o, this); // Special enum loader if enum doesn't already have loader defined.
+            }
+
+            return o;
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
