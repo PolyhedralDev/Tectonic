@@ -10,7 +10,6 @@ import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 import com.dfsek.tectonic.loading.TypeRegistry;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
-import org.yaml.snakeyaml.error.YAMLException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -48,12 +47,8 @@ public class AbstractConfigLoader implements TypeRegistry {
     public <E extends ConfigTemplate> List<E> loadConfigs(List<Configuration> configurations, Supplier<E> provider) throws ConfigException {
         AbstractPool pool = new AbstractPool();
         for(Configuration config : configurations) {
-            try {
-                Prototype p = new Prototype(config);
-                pool.add(p);
-            } catch(YAMLException e) {
-                throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
-            }
+            Prototype p = new Prototype(config);
+            pool.add(p);
         }
         pool.loadAll();
 

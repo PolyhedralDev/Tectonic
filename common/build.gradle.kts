@@ -27,8 +27,6 @@ tasks.test {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:20.1.0")
-
-    implementation("org.yaml:snakeyaml:1.27")
     implementation("commons-io:commons-io:2.8.0")
 
     // JUnit.
