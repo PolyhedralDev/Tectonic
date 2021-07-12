@@ -1,7 +1,7 @@
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
-import com.dfsek.tectonic.config.YamlConfiguration;
+import com.dfsek.tectonic.yaml.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;

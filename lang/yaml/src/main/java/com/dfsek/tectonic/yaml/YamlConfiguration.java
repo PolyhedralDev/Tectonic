@@ -1,5 +1,6 @@
-package com.dfsek.tectonic.config;
+package com.dfsek.tectonic.yaml;
 
+import com.dfsek.tectonic.config.Configuration;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
