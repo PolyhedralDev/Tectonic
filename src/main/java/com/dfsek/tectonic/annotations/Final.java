@@ -9,16 +9,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Specified that a config value is abstractable.
+ * Specifies that a config value is <b>not</b> abstractable.
  * <p>
- * When a {@link Value} is marked as abstractable, an {@link AbstractConfigLoader} will
- * search parent configurations for the value, before using the default value/throwing a
- * {@link ValueMissingException}.
+ * When a {@link Value} is marked as final, an {@link AbstractConfigLoader} will not
+ * search parent configurations for the value, instead using the value in the base config.
  *
  * @see AbstractConfigLoader
  * @see Value
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Abstractable {
+public @interface Final {
 }

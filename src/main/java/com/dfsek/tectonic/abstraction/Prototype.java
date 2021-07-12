@@ -4,6 +4,7 @@ import com.dfsek.tectonic.abstraction.exception.AbstractionException;
 import com.dfsek.tectonic.abstraction.exception.CircularInheritanceException;
 import com.dfsek.tectonic.abstraction.exception.ParentNotFoundException;
 import com.dfsek.tectonic.annotations.Default;
+import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
@@ -31,13 +32,16 @@ public class Prototype implements ValidatedConfigTemplate {
 
 
     @Value("id")
+    @Final
     private String id;
     @SuppressWarnings("FieldMayBeFinal")
     @Value("extends")
+    @Final
     @Default
     private List<String> extend = Collections.emptyList();
     @SuppressWarnings("FieldMayBeFinal")
     @Value("abstract")
+    @Final
     @Default
     private boolean isAbstract = false;
 

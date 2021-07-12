@@ -3,7 +3,7 @@ package com.dfsek.tectonic.loading;
 import com.dfsek.tectonic.abstraction.AbstractValueProvider;
 import com.dfsek.tectonic.abstraction.TemplateProvider;
 import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
-import com.dfsek.tectonic.annotations.Abstractable;
+import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
@@ -29,7 +29,6 @@ import com.dfsek.tectonic.loading.loaders.primitives.ShortLoader;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
 import com.dfsek.tectonic.preprocessor.ValuePreprocessor;
-import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 import com.dfsek.tectonic.util.ReflectionUtil;
 import org.yaml.snakeyaml.error.YAMLException;
 
@@ -174,7 +173,7 @@ public class ConfigLoader implements TypeRegistry {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
             field.setAccessible(true); // Make field accessible so we can mess with it.
-            boolean abstractable = field.isAnnotationPresent(Abstractable.class);
+            boolean abstractable = !field.isAnnotationPresent(Final.class);
             boolean defaultable = field.isAnnotationPresent(Default.class);
             Value value = field.getAnnotation(Value.class);
             if(value == null) continue;

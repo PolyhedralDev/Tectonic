@@ -1,7 +1,7 @@
 package abstractconfig;
 
 import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
-import com.dfsek.tectonic.annotations.Abstractable;
+import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
@@ -37,15 +37,14 @@ public class AbstractTest {
     private static class Template implements ConfigTemplate {
 
         @Value("id")
+        @Final
         public String id;
-        @Abstractable
+
         @Value("a")
         public String a;
         @Value("b")
-        @Abstractable
         public String b;
         @Value("c")
-        @Abstractable
         public String c;
     }
 }
