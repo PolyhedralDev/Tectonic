@@ -9,7 +9,7 @@ import java.util.Map;
 public class ExampleConfig extends InheritTest implements ConfigTemplate {
     @Default
     @Value("value2")
-    private final String string = "test value";
+    private String string = "test value";
 
     @Value("number")
     private int number;

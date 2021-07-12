@@ -33,6 +33,10 @@ public class AbstractConfiguration implements Configuration {
         return null;
     }
 
+    public Object getBase(String key) {
+        return tree.get(0).items.get(0).getConfig().get(key); // First prototype in first layer is base config.
+    }
+
     @Override
     public boolean contains(String key) {
         return get(key) != null;

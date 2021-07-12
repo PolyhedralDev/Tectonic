@@ -10,6 +10,7 @@ import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.exception.InvalidTemplateException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.exception.ValueMissingException;
@@ -170,32 +171,52 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public void load(ConfigTemplate config, Configuration configuration, AbstractConfiguration provider) throws ConfigException {
+
+    }
+
+    private Object getFinal(Configuration configuration, String key) {
+        if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).getBase(key);
+        return configuration.get(key);
+    }
+
+    /**
+     * Load a {@link YamlConfiguration} to a ConfigTemplate object.
+     *
+     * @param config        ConfigTemplate to put config on.
+     * @param configuration Configuration to load from.
+     * @throws ConfigException If config cannot be loaded.
+     */
+    public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
         for(Field field : ReflectionUtil.getFields(config.getClass())) {
             int m = field.getModifiers();
-            if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.
-            field.setAccessible(true); // Make field accessible so we can mess with it.
-            boolean abstractable = !field.isAnnotationPresent(Final.class);
-            boolean defaultable = field.isAnnotationPresent(Default.class);
             Value value = field.getAnnotation(Value.class);
             if(value == null) continue;
+
+            if(Modifier.isFinal(m) || Modifier.isStatic(m)) {
+                throw new InvalidTemplateException("Field annotated @Value cannot be static or final: " + field.getName() + " of " + config.getClass().getCanonicalName());
+            }
+
+            field.setAccessible(true); // Make field accessible so we can mess with it.
+
+            boolean abstractable = !field.isAnnotationPresent(Final.class);
+            boolean defaultable = field.isAnnotationPresent(Default.class);
 
             AnnotatedType type = field.getAnnotatedType();
             Type raw = type.getType();
             if(type instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) type.getType()).getRawType();
 
-
             try {
                 if(configuration.contains(value.value())) { // If config contains value, load it.
-                    Object loadedObject = configuration.get(value.value()); // Assign raw config object retrieved.
+                    Object loadedObject = getFinal(configuration, value.value()); // Assign raw config object retrieved.
                     if(loaders.containsKey(raw)) {
                         loadedObject = loadType(type, loadedObject); // Re-assign if type is found in registry.
                     }
                     ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
                 } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
-                    if(provider == null) {
-                        throw new ProviderMissingException("Attempted to load abstract value with no abstract provider registered"); // Throw exception if value is abstract and no provider is registered.
+                    if(!(config instanceof AbstractConfiguration)) {
+                        throw new ProviderMissingException("Attempted to load abstract value in non-abstractable context.");
                     }
-                    Object abs = provider.get(value.value());
+                    Object abs = configuration.get(value.value());
                     if(abs == null) {
                         if(defaultable) continue;
                         throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents: " + configuration.getName()); // Throw exception if value is not provided, and isn't in parents.
@@ -209,22 +230,11 @@ public class ConfigLoader implements TypeRegistry {
                 throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\" in config \"" + configuration.getName() + "\": " + e.getMessage(), e);
             }
         }
+
         if(config instanceof ValidatedConfigTemplate
-                && provider == null // Validation is handled separately by AbstractConfigLoader.
                 && !((ValidatedConfigTemplate) config).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
         }
-    }
-
-    /**
-     * Load a {@link YamlConfiguration} to a ConfigTemplate object.
-     *
-     * @param config        ConfigTemplate to put config on.
-     * @param configuration Configuration to load from.
-     * @throws ConfigException If config cannot be loaded.
-     */
-    public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
-        load(config, configuration, null);
     }
 
     /**
