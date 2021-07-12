@@ -1,9 +1,9 @@
 package com.dfsek.tectonic.loading;
 
-import com.dfsek.tectonic.abstraction.TemplateProvider;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
 
 import java.lang.reflect.Type;
+import java.util.function.Supplier;
 
 /**
  * Implemented by classes that hold a registry of types, mapped to type adapters.
@@ -14,5 +14,5 @@ import java.lang.reflect.Type;
 public interface TypeRegistry {
     TypeRegistry registerLoader(Type t, TypeLoader<?> loader);
 
-    <T> TypeRegistry registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider);
+    <T> TypeRegistry registerLoader(Type t, Supplier<ObjectTemplate<T>> provider);
 }

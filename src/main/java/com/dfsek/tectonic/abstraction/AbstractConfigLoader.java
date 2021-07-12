@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +36,7 @@ public class AbstractConfigLoader implements TypeRegistry {
     }
 
     @Override
-    public <T> AbstractConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
+    public <T> AbstractConfigLoader registerLoader(Type t, Supplier<ObjectTemplate<T>> provider) {
         delegate.registerLoader(t, provider);
         return this;
     }
@@ -47,7 +48,7 @@ public class AbstractConfigLoader implements TypeRegistry {
      * @return List of loaded ConfigTemplates.
      * @throws ConfigException If configs contain errors.
      */
-    public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, TemplateProvider<E> provider) throws ConfigException {
+    public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, Supplier<E> provider) throws ConfigException {
         return loadConfigs(inputStreams.stream().map(YamlConfiguration::new).collect(Collectors.toList()), provider);
     }
 
@@ -58,7 +59,7 @@ public class AbstractConfigLoader implements TypeRegistry {
      * @return List of loaded ConfigTemplates.
      * @throws ConfigException If configs contain errors.
      */
-    public <E extends ConfigTemplate> List<E> loadConfigs(List<Configuration> configurations, TemplateProvider<E> provider) throws ConfigException {
+    public <E extends ConfigTemplate> List<E> loadConfigs(List<Configuration> configurations, Supplier<E> provider) throws ConfigException {
         AbstractPool pool = new AbstractPool();
         for(Configuration config : configurations) {
             try {
@@ -77,7 +78,7 @@ public class AbstractConfigLoader implements TypeRegistry {
                 continue; // Don't directly load abstract configs. They will be loaded indirectly via inheritance tree building.
             AbstractConfiguration valueProvider = new AbstractConfiguration();
             build(valueProvider, Collections.singletonList(p));
-            E template = provider.getInstance();
+            E template = provider.get();
             try {
                 delegate.load(template, p.getConfig(), valueProvider);
             } catch(ConfigException e) {

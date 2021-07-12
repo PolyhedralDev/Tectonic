@@ -1,15 +1,14 @@
 package com.dfsek.tectonic.loading;
 
 import com.dfsek.tectonic.abstraction.AbstractConfiguration;
-import com.dfsek.tectonic.abstraction.TemplateProvider;
 import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
-import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Default;
+import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
-import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.exception.ValidationException;
@@ -48,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Class to load a config using reflection magic.
@@ -120,7 +120,7 @@ public class ConfigLoader implements TypeRegistry {
         return this;
     }
 
-    public <T> ConfigLoader registerLoader(Type t, TemplateProvider<ObjectTemplate<T>> provider) {
+    public <T> ConfigLoader registerLoader(Type t, Supplier<ObjectTemplate<T>> provider) {
         loaders.put(t, new ObjectTemplateLoader<>(provider));
         return this;
     }
