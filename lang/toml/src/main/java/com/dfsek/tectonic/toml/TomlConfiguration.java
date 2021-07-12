@@ -9,6 +9,7 @@ import org.tomlj.TomlTable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 public class TomlConfiguration  implements Configuration {
@@ -40,9 +41,22 @@ public class TomlConfiguration  implements Configuration {
 
     @Override
     public Object get(String key) {
-        Object result = config.get(key);
-        if(result instanceof TomlArray) return ((TomlArray) result).toList();
-        if(result instanceof TomlTable) return  ((TomlTable) result).toMap();
+        return deepToObject(config.get(key));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object deepToObject(Object result) {
+        if(result instanceof TomlArray) return deepToObject(((TomlArray) result).toList());
+        if(result instanceof TomlTable) return deepToObject(((TomlTable) result).toMap());
+        if(result instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) result;
+            map.forEach((key, value) -> map.put(key, deepToObject(value))); // Wont throw CME because we're never adding or removing entries, only updating existing ones.
+        } else if(result instanceof List) {
+            List<Object> list = (List<Object>) result;
+            for(int i = 0; i < list.size(); i++) {
+                list.set(i, deepToObject(list.get(i)));
+            }
+        }
         return result;
     }
 
