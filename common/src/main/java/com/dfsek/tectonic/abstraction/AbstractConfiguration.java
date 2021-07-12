@@ -13,9 +13,11 @@ import java.util.List;
  */
 public class AbstractConfiguration implements Configuration {
     private final List<Layer> tree = new ArrayList<>();
+    private final Prototype base;
     private int layer = 0;
 
-    public AbstractConfiguration() {
+    public AbstractConfiguration(Prototype base) {
+        this.base = base;
         tree.add(new Layer());
     }
 
@@ -34,7 +36,15 @@ public class AbstractConfiguration implements Configuration {
     }
 
     public Object getBase(String key) {
-        return tree.get(0).items.get(0).getConfig().get(key); // First prototype in first layer is base config.
+        return base.getConfig().get(key);
+    }
+
+    public String getID() {
+        return base.getID();
+    }
+
+    public Prototype getBase() {
+        return base;
     }
 
     @Override
@@ -68,7 +78,7 @@ public class AbstractConfiguration implements Configuration {
     }
 
     public boolean containsBase(String key) {
-        return tree.get(0).items.get(0).getConfig().contains(key);
+        return base.getConfig().contains(key);
     }
 
     private static final class Layer {

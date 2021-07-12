@@ -57,7 +57,7 @@ public class AbstractConfigLoader implements TypeRegistry {
         for(Prototype p : pool.getPrototypes()) {
             if(p.isAbstract())
                 continue; // Don't directly load abstract configs. They will be loaded indirectly via inheritance tree building.
-            AbstractConfiguration valueProvider = new AbstractConfiguration();
+            AbstractConfiguration valueProvider = new AbstractConfiguration(p);
             build(valueProvider, Collections.singletonList(p));
             E template = provider.get();
             try {
