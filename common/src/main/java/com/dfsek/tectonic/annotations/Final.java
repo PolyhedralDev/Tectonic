@@ -1,7 +1,6 @@
 package com.dfsek.tectonic.annotations;
 
 import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
-import com.dfsek.tectonic.exception.ValueMissingException;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -4,7 +4,6 @@ import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Type;
 
 /**
  * Loads a class from an Object retrieved from a config.
