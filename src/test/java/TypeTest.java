@@ -6,7 +6,7 @@ import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Type;
+import java.lang.reflect.AnnotatedType;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +99,7 @@ public class TypeTest {
     public static class ExampleLoader implements TypeLoader<ExampleInterface> {
 
         @Override
-        public ExampleInterface load(Type t, Object c, ConfigLoader loader) throws LoadException {
+        public ExampleInterface load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException {
             System.out.println(c.getClass());
             Map<String, Object> map = (Map<String, Object>) c;
             switch((String) map.get("type")) {

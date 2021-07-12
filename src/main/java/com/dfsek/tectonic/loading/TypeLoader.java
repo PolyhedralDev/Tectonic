@@ -1,7 +1,9 @@
 package com.dfsek.tectonic.loading;
 
 import com.dfsek.tectonic.exception.LoadException;
+import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
 
 /**
@@ -10,5 +12,8 @@ import java.lang.reflect.Type;
  * @param <T> Type to load
  */
 public interface TypeLoader<T> {
-    T load(Type t, Object c, ConfigLoader loader) throws LoadException;
+    T load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException;
+    default T load(Class<T> t, Object c, ConfigLoader loader) throws LoadException {
+        return load(new ClassAnnotatedTypeImpl(t), c, loader);
+    }
 }

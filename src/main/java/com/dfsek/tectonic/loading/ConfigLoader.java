@@ -29,11 +29,14 @@ import com.dfsek.tectonic.loading.loaders.primitives.ShortLoader;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
 import com.dfsek.tectonic.preprocessor.ValuePreprocessor;
+import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 import com.dfsek.tectonic.util.ReflectionUtil;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -176,11 +179,10 @@ public class ConfigLoader implements TypeRegistry {
             Value value = field.getAnnotation(Value.class);
             if(value == null) continue;
 
-            Type type = field.getGenericType();
-            Type raw = type;
-            if(type instanceof ParameterizedType) {
-                raw = ((ParameterizedType) type).getRawType(); // If type is parameterized, get raw type to check loaders against.
-            }
+            AnnotatedType type = field.getAnnotatedType();
+            Type raw = type.getType();
+            if(type instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) type.getType()).getRawType();
+
 
             try {
                 if(configuration.contains(value.value())) { // If config contains value, load it.
@@ -233,10 +235,10 @@ public class ConfigLoader implements TypeRegistry {
      * @return Loaded object.
      * @throws LoadException If object could not be loaded.
      */
-    public Object loadType(Type t, Object o) throws LoadException {
+    public Object loadType(AnnotatedType t, Object o) throws LoadException {
         try {
-            Type raw = t;
-            if(t instanceof ParameterizedType) raw = ((ParameterizedType) t).getRawType();
+            Type raw = t.getType();
+            if(t instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) t.getType()).getRawType();
             if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
             else return o;
         } catch(LoadException e) { // Rethrow LoadExceptions.
@@ -246,9 +248,10 @@ public class ConfigLoader implements TypeRegistry {
         }
     }
 
-    public <T> T loadClass(Class<T> clazz, Object o) throws LoadException {
+    @SuppressWarnings("unchecked")
+    public <T> T loadType(Class<T> clazz, Object o) throws LoadException {
         try {
-            if(loaders.containsKey(clazz)) return ReflectionUtil.cast(clazz, loaders.get(clazz).load(clazz, o, this));
+            if(loaders.containsKey(clazz)) return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this));
             else return ReflectionUtil.cast(clazz, o);
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;

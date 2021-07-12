@@ -7,7 +7,7 @@ import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 
-import java.lang.reflect.Type;
+import java.lang.reflect.AnnotatedType;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
@@ -19,7 +19,7 @@ public class ObjectTemplateLoader<T> implements TypeLoader<T> {
     }
 
     @Override
-    public T load(Type t, Object c, ConfigLoader loader) throws LoadException {
+    public T load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException {
         ObjectTemplate<T> template = provider.getInstance();
         try {
             loader.load(template, new Configuration((Map<String, Object>) c));

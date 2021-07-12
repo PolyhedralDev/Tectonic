@@ -4,6 +4,8 @@ import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -17,11 +19,11 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class ArrayListLoader implements TypeLoader<ArrayList<Object>> {
     @Override
-    public ArrayList<Object> load(Type t, Object c, ConfigLoader loader) throws LoadException {
+    public ArrayList<Object> load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException {
         ArrayList<Object> list = new ArrayList<>();
-        if(t instanceof ParameterizedType) {
-            ParameterizedType pType = (ParameterizedType) t;
-            Type generic = pType.getActualTypeArguments()[0];
+        if(t instanceof AnnotatedParameterizedType) {
+            AnnotatedParameterizedType pType = (AnnotatedParameterizedType) t;
+            AnnotatedType generic = pType.getAnnotatedActualTypeArguments()[0];
             if(c instanceof List) {
                 List<Object> objectList = (List<Object>) c;
                 for(Object o : objectList) {
