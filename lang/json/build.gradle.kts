@@ -25,7 +25,7 @@ tasks.test {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:20.1.0")
-    implementation(project(":common"))
+    api(project(":common"))
 
     implementation("com.google.code.gson:gson:2.8.7")
 
