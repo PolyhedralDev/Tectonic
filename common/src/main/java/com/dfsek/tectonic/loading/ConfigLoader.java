@@ -7,7 +7,6 @@ import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
-import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.InvalidTemplateException;
 import com.dfsek.tectonic.exception.LoadException;
@@ -31,9 +30,7 @@ import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
 import com.dfsek.tectonic.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.util.ReflectionUtil;
-import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -134,50 +131,19 @@ public class ConfigLoader implements TypeRegistry {
         return this;
     }
 
-    /**
-     * Load a config from an InputStream to a ConfigTemplate object.
-     *
-     * @param config ConfigTemplate object to put the config on.
-     * @param i      InputStream to load from.
-     * @throws ConfigException If config cannot be loaded.
-     */
-    public void load(ConfigTemplate config, InputStream i) throws ConfigException {
-        try {
-            Configuration configuration = new YamlConfiguration(i);
-            load(config, configuration);
-        } catch(YAMLException e) {
-            throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Load a config from an InputStream to a ConfigTemplate object.
-     *
-     * @param config ConfigTemplate object to put the config on.
-     * @param yaml   YAML string to load from.
-     * @throws ConfigException If config cannot be loaded.
-     */
-    public void load(ConfigTemplate config, String yaml) throws ConfigException {
-        try {
-            Configuration configuration = new YamlConfiguration(yaml);
-            load(config, configuration);
-        } catch(YAMLException e) {
-            throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
-        }
-    }
-
     private Object getFinal(Configuration configuration, String key) {
         if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).getBase(key);
         return configuration.get(key);
     }
 
     private boolean containsFinal(Configuration configuration, String key) {
-        if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).containsBase(key);
+        if(configuration instanceof AbstractConfiguration)
+            return ((AbstractConfiguration) configuration).containsBase(key);
         return configuration.contains(key);
     }
 
     /**
-     * Load a {@link YamlConfiguration} to a ConfigTemplate object.
+     * Load a {@link Configuration} to a ConfigTemplate object.
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.
@@ -255,7 +221,8 @@ public class ConfigLoader implements TypeRegistry {
     @SuppressWarnings("unchecked")
     public <T> T loadType(Class<T> clazz, Object o) throws LoadException {
         try {
-            if(loaders.containsKey(clazz)) return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this));
+            if(loaders.containsKey(clazz))
+                return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this));
             else return ReflectionUtil.cast(clazz, o);
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;

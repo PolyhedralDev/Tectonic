@@ -12,6 +12,7 @@ import java.lang.reflect.AnnotatedType;
  */
 public interface TypeLoader<T> {
     T load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException;
+
     default T load(Class<T> t, Object c, ConfigLoader loader) throws LoadException {
         return load(new ClassAnnotatedTypeImpl(t), c, loader);
     }

@@ -2,7 +2,6 @@ package com.dfsek.tectonic.abstraction;
 
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
-import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
@@ -13,7 +12,6 @@ import com.dfsek.tectonic.loading.TypeRegistry;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Class to load several configs that may depend on each other.
@@ -39,17 +36,6 @@ public class AbstractConfigLoader implements TypeRegistry {
     public <T> AbstractConfigLoader registerLoader(Type t, Supplier<ObjectTemplate<T>> provider) {
         delegate.registerLoader(t, provider);
         return this;
-    }
-
-    /**
-     * @param inputStreams List of InputStreams to load configs from.
-     * @param provider     TemplateProvide to get ConfigTemplate instances from.
-     * @param <E>          ConfigTemplate type.
-     * @return List of loaded ConfigTemplates.
-     * @throws ConfigException If configs contain errors.
-     */
-    public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, Supplier<E> provider) throws ConfigException {
-        return loadConfigs(inputStreams.stream().map(YamlConfiguration::new).collect(Collectors.toList()), provider);
     }
 
     /**

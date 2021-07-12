@@ -1,3 +1,4 @@
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ public class ConfigTest {
         ConfigLoader loader = new ConfigLoader();
         loader.registerLoader(TestObject.class, new TestObjectLoader());
         ExampleConfig example = new ExampleConfig();
-        loader.load(example, this.getClass().getResourceAsStream("/test.yml"));
+        loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/test.yml")));
         System.out.println(example.getString1());
         System.out.println(example.getString());
         System.out.println(example.getNestedString());

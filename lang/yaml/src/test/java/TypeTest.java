@@ -1,5 +1,6 @@
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
@@ -19,7 +20,7 @@ public class TypeTest {
 
         Config config = new Config();
 
-        loader.load(config, TypeTest.class.getResourceAsStream("/test.yml"));
+        loader.load(config, new YamlConfiguration(TypeTest.class.getResourceAsStream("/test.yml")));
 
         for(ExampleInterface i : config.getNumbers()) {
             System.out.println(i.getNumber());

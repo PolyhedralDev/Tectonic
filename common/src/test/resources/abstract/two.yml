@@ -1,4 +1,4 @@
-id: "TWO"
-extends: "ONE"
-b: "value b (config 2)"
-c: "value c (config 2)"
+id : "TWO"
+extends : "ONE"
+b : "value b (config 2)"
+c : "value c (config 2)"

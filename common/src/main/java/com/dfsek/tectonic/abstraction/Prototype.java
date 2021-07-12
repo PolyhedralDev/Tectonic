@@ -7,7 +7,6 @@ import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.Configuration;
-import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.ValidationException;
@@ -60,7 +59,7 @@ public class Prototype implements ValidatedConfigTemplate {
     }
 
     /**
-     * Returns the {@link YamlConfiguration} assigned to this Prototype.
+     * Returns the {@link Configuration} assigned to this Prototype.
      *
      * @return Configuration.
      */

@@ -1,4 +1,5 @@
 import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
@@ -11,7 +12,7 @@ public class ObjectTemplateTest {
         loader.registerLoader(TestObject.class, TestTemplate::new);
 
         ExampleConfig example = new ExampleConfig();
-        loader.load(example, this.getClass().getResourceAsStream("/test.yml"));
+        loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/test.yml")));
 
         System.out.println(example.getTestObject());
     }

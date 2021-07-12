@@ -1,5 +1,6 @@
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.ValidationException;
 import com.dfsek.tectonic.loading.ConfigLoader;
@@ -12,10 +13,10 @@ public class ValidationTest {
     public void validate() throws ConfigException {
         ConfigLoader loader = new ConfigLoader();
         Validate example = new Validate();
-        loader.load(example, this.getClass().getResourceAsStream("/validate/valid.yml")); // This should validate
+        loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/validate/valid.yml"))); // This should validate
 
         try {
-            loader.load(example, this.getClass().getResourceAsStream("/validate/invalid.yml")); // This should NOT validate
+            loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/validate/invalid.yml"))); // This should NOT validate
             fail();
         } catch(ValidationException ignored) {
 

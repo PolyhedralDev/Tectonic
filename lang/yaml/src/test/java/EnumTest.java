@@ -14,7 +14,7 @@ public class EnumTest {
         System.out.println(enumTemplate.test.get(0).getThing());
     }
 
-    public static final class EnumTemplate implements ConfigTemplate  {
+    public static final class EnumTemplate implements ConfigTemplate {
         @Value("test")
         public List<TestEnum> test;
     }
