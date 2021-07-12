@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.loading;
 
-import com.dfsek.tectonic.abstraction.AbstractValueProvider;
+import com.dfsek.tectonic.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.abstraction.TemplateProvider;
 import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
 import com.dfsek.tectonic.annotations.Final;
@@ -169,7 +169,7 @@ public class ConfigLoader implements TypeRegistry {
      * @param configuration Configuration to load from.
      * @throws ConfigException If config cannot be loaded.
      */
-    public void load(ConfigTemplate config, Configuration configuration, AbstractValueProvider provider) throws ConfigException {
+    public void load(ConfigTemplate config, Configuration configuration, AbstractConfiguration provider) throws ConfigException {
         for(Field field : ReflectionUtil.getFields(config.getClass())) {
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) continue; // Don't mess with static/final fields.

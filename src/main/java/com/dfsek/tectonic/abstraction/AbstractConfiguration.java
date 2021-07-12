@@ -1,5 +1,6 @@
 package com.dfsek.tectonic.abstraction;
 
+import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.loading.ConfigLoader;
 
 import java.util.ArrayList;
@@ -10,11 +11,11 @@ import java.util.List;
  * <p>
  * This class holds an inheritance tree of {@link Prototype}s, and gets values from them, for loading.
  */
-public class AbstractValueProvider {
+public class AbstractConfiguration implements Configuration {
     private final List<Layer> tree = new ArrayList<>();
     private int layer = 0;
 
-    public AbstractValueProvider() {
+    public AbstractConfiguration() {
         tree.add(new Layer());
     }
 
@@ -29,6 +30,16 @@ public class AbstractValueProvider {
             Object l = p.get(key);
             if(l != null) return l;
         }
+        return null;
+    }
+
+    @Override
+    public boolean contains(String key) {
+        return get(key) != null;
+    }
+
+    @Override
+    public String getName() {
         return null;
     }
 
