@@ -1,0 +1,5 @@
+id: "ABS_2"
+abstract: true
+extends: "DIAMOND"
+#a: "doesnt matter"
+b: "fdsfsad"

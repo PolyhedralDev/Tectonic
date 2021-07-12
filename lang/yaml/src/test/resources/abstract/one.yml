@@ -1,0 +1,5 @@
+id: "ONE"
+extends:
+  - "ABS"
+  - "ABS_2"
+c: "value c (config 1)"

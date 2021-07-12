@@ -1,0 +1,8 @@
+thing: "non-annotated string!"
+annotated-thing: "annotated string!"
+annotated-list:
+  - "string 1"
+  - "string 2"
+overwritten-list:
+  - "base 1"
+  - "base 2"

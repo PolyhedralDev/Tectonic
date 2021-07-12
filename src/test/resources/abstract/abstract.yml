@@ -1,4 +1,0 @@
-id : "ABS"
-abstract : true
-extends : "DIAMOND"
-#a: "value a"
