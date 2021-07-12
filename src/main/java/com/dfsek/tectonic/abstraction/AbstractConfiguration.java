@@ -67,6 +67,10 @@ public class AbstractConfiguration implements Configuration {
         this.layer = layer;
     }
 
+    public boolean containsBase(String key) {
+        return tree.get(0).items.get(0).getConfig().contains(key);
+    }
+
     private static final class Layer {
         private final List<Prototype> items = new ArrayList<>();
 

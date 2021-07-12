@@ -166,20 +166,14 @@ public class ConfigLoader implements TypeRegistry {
         }
     }
 
-    /**
-     * Load a {@link YamlConfiguration} to a ConfigTemplate object.
-     *
-     * @param config        ConfigTemplate to put config on.
-     * @param configuration Configuration to load from.
-     * @throws ConfigException If config cannot be loaded.
-     */
-    public void load(ConfigTemplate config, Configuration configuration, AbstractConfiguration provider) throws ConfigException {
-
-    }
-
     private Object getFinal(Configuration configuration, String key) {
         if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).getBase(key);
         return configuration.get(key);
+    }
+
+    private boolean containsFinal(Configuration configuration, String key) {
+        if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).containsBase(key);
+        return configuration.contains(key);
     }
 
     /**
@@ -201,16 +195,16 @@ public class ConfigLoader implements TypeRegistry {
 
             field.setAccessible(true); // Make field accessible so we can mess with it.
 
-            boolean abstractable = !field.isAnnotationPresent(Final.class);
+            boolean isFinal = field.isAnnotationPresent(Final.class);
             boolean defaultable = field.isAnnotationPresent(Default.class);
 
             AnnotatedType type = field.getAnnotatedType();
 
             try {
-                if(configuration.contains(value.value())) { // If config contains value, load it.
+                if(containsFinal(configuration, value.value())) { // If config contains value, load it.
                     Object loadedObject = loadType(type, getFinal(configuration, value.value())); // Re-assign if type is found in registry.
                     ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
-                } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
+                } else if(!isFinal) { // If value is abstractable, try to get it from parent configs.
                     Object abs = configuration.get(value.value());
                     if(abs == null) {
                         if(defaultable) continue;

@@ -80,7 +80,7 @@ public class AbstractConfigLoader implements TypeRegistry {
             build(valueProvider, Collections.singletonList(p));
             E template = provider.get();
             try {
-                delegate.load(template, p.getConfig(), valueProvider);
+                delegate.load(template, valueProvider);
             } catch(ConfigException e) {
                 throw new LoadException("Failed to load config with ID \"" + p.getID() + "\": " + e.getMessage(), e);
             }
