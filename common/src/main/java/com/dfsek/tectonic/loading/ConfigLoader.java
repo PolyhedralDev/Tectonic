@@ -202,7 +202,19 @@ public class ConfigLoader implements TypeRegistry {
      * @return Loaded object.
      * @throws LoadException If object could not be loaded.
      */
+    @SuppressWarnings("unchecked")
     public Object loadType(AnnotatedType t, Object o) throws LoadException {
+        Object object = getObject(t, o);
+        for(Annotation annotation : t.getAnnotations()) {
+            if(preprocessors.containsKey(annotation.getClass())) {
+                for(ValuePreprocessor<?> preprocessor : preprocessors.get(annotation.getClass())) {
+                    object = ((ValuePreprocessor<Annotation>) preprocessor).process(t, o, this, annotation).apply(object);
+                }
+            }
+        }
+        return object;
+    }
+    private Object getObject(AnnotatedType t, Object o) throws LoadException {
         try {
             Type raw = t.getType();
             if(t instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) t.getType()).getRawType();
