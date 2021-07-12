@@ -1,45 +1,45 @@
-value1 : "test!"
-value2 : "fdsfsdf"
-number : 3
-object :
-  string : "hello"
-  number : 3
-a :
-  b :
-    c :
-      d :
-        e :
-          f : "poob"
-list :
+value1: "test!"
+value2: "fdsfsdf"
+number: 3
+object:
+  string: "hello"
+  number: 3
+a:
+  b:
+    c:
+      d:
+        e:
+          f: "poob"
+list:
   - "a"
   - "b"
   - "c"
   - "d"
-numbers :
-  - type : one
-    string : "hello"
-  - type : two
-    int : 4
-  - type : three
-    double : 2.3
-map :
-  a : "a value"
-  b : "another value"
-  c : "a third value"
-objectMap :
-  object :
-    string : "one"
-    number : 1
-  object2 :
-    string : "two"
-    number : 2
-  object3 :
-    string : "three"
-    number : 3
-  object4 :
-    string : "four"
-    number : 4
-aCollection :
-  A : 2
-  B : 1
-  C : 5
+numbers:
+  - type: one
+    string: "hello"
+  - type: two
+    int: 4
+  - type: three
+    double: 2.3
+map:
+  a: "a value"
+  b: "another value"
+  c: "a third value"
+objectMap:
+  object:
+    string: "one"
+    number: 1
+  object2:
+    string: "two"
+    number: 2
+  object3:
+    string: "three"
+    number: 3
+  object4:
+    string: "four"
+    number: 4
+aCollection:
+  A: 2
+  B: 1
+  C: 5

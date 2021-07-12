@@ -1,7 +1,7 @@
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
-import com.dfsek.tectonic.yaml.YamlConfiguration;
 import com.dfsek.tectonic.loading.ConfigLoader;
+import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,11 +12,6 @@ public class EnumTest {
         EnumTemplate enumTemplate = new EnumTemplate();
         new ConfigLoader().load(enumTemplate, new YamlConfiguration("test: [TWO]"));
         System.out.println(enumTemplate.test.get(0).getThing());
-    }
-
-    public static final class EnumTemplate implements ConfigTemplate {
-        @Value("test")
-        public List<TestEnum> test;
     }
 
     public enum TestEnum {
@@ -34,5 +29,10 @@ public class EnumTest {
         public String getThing() {
             return thing;
         }
+    }
+
+    public static final class EnumTemplate implements ConfigTemplate {
+        @Value("test")
+        public List<TestEnum> test;
     }
 }

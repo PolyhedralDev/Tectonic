@@ -2,7 +2,7 @@ package com.dfsek.tectonic.config;
 
 import java.util.Map;
 
-public class MapConfiguration  implements Configuration {
+public class MapConfiguration implements Configuration {
     private final Map<String, Object> config;
 
     private String name;

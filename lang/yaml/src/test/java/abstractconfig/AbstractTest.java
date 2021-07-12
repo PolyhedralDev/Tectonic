@@ -4,8 +4,8 @@ import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
 import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
-import com.dfsek.tectonic.yaml.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
