@@ -1,5 +1,3 @@
-import java.io.ByteArrayOutputStream
-
 plugins {
     java
     `maven-publish`

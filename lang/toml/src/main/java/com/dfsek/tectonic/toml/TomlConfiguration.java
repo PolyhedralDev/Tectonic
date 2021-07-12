@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-public class TomlConfiguration  implements Configuration {
+public class TomlConfiguration implements Configuration {
     private final TomlParseResult config;
 
     private String name;

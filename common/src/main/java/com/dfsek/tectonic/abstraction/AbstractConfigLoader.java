@@ -52,13 +52,13 @@ public class AbstractConfigLoader implements TypeRegistry {
         return abstractConfigs;
     }
 
-        /**
-         * @param configurations List of Configurations to load configs from.
-         * @param provider       TemplateProvide to get ConfigTemplate instances from.
-         * @param <E>            ConfigTemplate type.
-         * @return List of loaded ConfigTemplates.
-         * @throws ConfigException If configs contain errors.
-         */
+    /**
+     * @param configurations List of Configurations to load configs from.
+     * @param provider       TemplateProvide to get ConfigTemplate instances from.
+     * @param <E>            ConfigTemplate type.
+     * @return List of loaded ConfigTemplates.
+     * @throws ConfigException If configs contain errors.
+     */
     public <E extends ConfigTemplate> Set<E> loadTemplates(List<Configuration> configurations, Supplier<E> provider) throws ConfigException {
         Set<E> templates = new HashSet<>();
         loadConfigs(configurations).forEach(config -> templates.add(delegate.load(provider.get(), config)));

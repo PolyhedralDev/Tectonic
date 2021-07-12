@@ -1,5 +1,4 @@
 import com.dfsek.terra.getGitHash
-import java.io.ByteArrayOutputStream
 
 plugins {
     java
