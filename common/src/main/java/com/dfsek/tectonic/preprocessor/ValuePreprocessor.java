@@ -7,6 +7,5 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
 
 public interface ValuePreprocessor<A extends Annotation> {
-    @NotNull
-    <T> Result<T> process(AnnotatedType t, T c, ConfigLoader loader, A annotation);
+    @NotNull <T> Result<T> process(AnnotatedType t, T c, ConfigLoader loader, A annotation);
 }

@@ -11,9 +11,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
-import java.util.Arrays;
 import java.util.List;
 
 public class PreprocessorTest {
@@ -25,6 +23,18 @@ public class PreprocessorTest {
         TestConfig config = new TestConfig();
         loader.load(config, new YamlConfiguration(PreprocessorTest.class.getResourceAsStream("/preprocessor.yml")));
         System.out.println("overwritten things: " + config.overwritten);
+    }
+
+    @Target(ElementType.TYPE_USE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface TestAnnotation {
+
+    }
+
+    @Target(ElementType.TYPE_USE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface TestOverwrite {
+
     }
 
     private static final class TestConfig implements ConfigTemplate {
@@ -40,18 +50,6 @@ public class PreprocessorTest {
 
         @Value("overwritten-list")
         public List<@TestAnnotation @TestOverwrite String> overwritten;
-    }
-
-    @Target(ElementType.TYPE_USE)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface TestAnnotation {
-
-    }
-
-    @Target(ElementType.TYPE_USE)
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface TestOverwrite {
-
     }
 
     private static final class TestPreprocessor implements ValuePreprocessor<TestAnnotation> {

@@ -40,7 +40,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -214,6 +213,7 @@ public class ConfigLoader implements TypeRegistry {
         }
         return getObject(t, o);
     }
+
     private Object getObject(AnnotatedType t, Object o) throws LoadException {
         try {
             Type raw = t.getType();
