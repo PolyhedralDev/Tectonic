@@ -54,7 +54,7 @@ public class AbstractConfiguration implements Configuration {
 
     @Override
     public String getName() {
-        return null;
+        return getID();
     }
 
     /**
