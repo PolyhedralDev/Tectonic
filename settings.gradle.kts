@@ -5,3 +5,4 @@ include("common")
 
 include("lang:yaml")
 include("lang:toml")
+include("lang:json")
