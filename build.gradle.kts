@@ -7,55 +7,27 @@ plugins {
 
 val versionObj = Version("2", "0", "0", false)
 
-group = "com.dfsek"
-version = versionObj
+allprojects {
+    version = versionObj
+    group = "com.dfsek.tectonic"
 
-repositories {
-    mavenCentral()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-tasks.test {
-    useJUnitPlatform()
-
-    maxHeapSize = "4G"
-    ignoreFailures = false
-    failFast = true
-    maxParallelForks = 12
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    classifier = "sources"
-    from(sourceSets.main.get().allSource)
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            artifact(tasks["sourcesJar"])
-            artifact(tasks["jar"])
-        }
+    tasks.withType<JavaCompile>().configureEach {
+        options.isFork = true
+        options.isIncremental = true
     }
 
-    repositories {
-        val mavenUrl = "https://repo.codemc.io/repository/maven-releases/"
-        val mavenSnapshotUrl = "https://repo.codemc.io/repository/maven-snapshots/"
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
 
-        maven((if (versionObj.preRelease) mavenSnapshotUrl else mavenUrl)) {
-            val mavenUsername: String? by project
-            val mavenPassword: String? by project
-            if (mavenUsername != null && mavenPassword != null) {
-                credentials {
-                    username = mavenUsername
-                    password = mavenPassword
-                }
-            }
-        }
+        maxHeapSize = "2G"
+        ignoreFailures = false
+        failFast = true
+        maxParallelForks = (Runtime.getRuntime().availableProcessors() - 1).takeIf { it > 0 } ?: 1
+
+        reports.html.isEnabled = false
+        reports.junitXml.isEnabled = false
     }
+
 }
 
 /**
@@ -70,14 +42,5 @@ class Version(val major: String, val minor: String, val revision: String, val pr
         else //Only use git hash if it's a prerelease.
             "$major.$minor.$revision+${getGitHash()}"
     }
-}
-
-fun getGitHash(): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        commandLine = mutableListOf("git", "rev-parse", "--short", "HEAD")
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
 }
 
