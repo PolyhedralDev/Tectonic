@@ -1,4 +1,4 @@
-import com.dfsek.terra.getGitHash
+import com.dfsek.tectonic.getGitHash
 
 plugins {
     java

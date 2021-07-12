@@ -1,4 +1,4 @@
-rootProject.name = "Tectonic"
+rootProject.name = "tectonic"
 
 include("common")
 

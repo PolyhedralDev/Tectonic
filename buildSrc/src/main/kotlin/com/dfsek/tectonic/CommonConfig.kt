@@ -1,4 +1,4 @@
-package com.dfsek.terra
+package com.dfsek.tectonic
 
 import org.gradle.api.Project
 import java.io.ByteArrayOutputStream
