@@ -10,13 +10,12 @@ import java.util.Map;
  * Object representation of a YAML configuration.
  */
 public class YamlConfiguration implements Configuration {
-    private final Map<String, Object> config;
+    private final Object config;
 
-    private String name;
+    private final String name;
 
     public YamlConfiguration(InputStream is) {
-        this.name = is.toString();
-        config = new Yaml().load(is);
+        this(is, is.toString());
     }
 
     public YamlConfiguration(InputStream is, String name) {
@@ -25,7 +24,7 @@ public class YamlConfiguration implements Configuration {
     }
 
     public YamlConfiguration(String yaml) {
-        config = new Yaml().load(yaml);
+        this(yaml, null);
     }
 
     public YamlConfiguration(String yaml, String name) {
