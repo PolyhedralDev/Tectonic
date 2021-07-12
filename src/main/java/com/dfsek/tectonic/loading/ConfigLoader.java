@@ -248,7 +248,6 @@ public class ConfigLoader implements TypeRegistry {
      */
     public Object loadType(AnnotatedType t, Object o) throws LoadException {
         try {
-            System.out.println(t);
             Type raw = t.getType();
             if(t instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) t.getType()).getRawType();
             if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
