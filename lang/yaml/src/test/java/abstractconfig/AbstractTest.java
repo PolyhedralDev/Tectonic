@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AbstractTest {
@@ -24,7 +25,7 @@ public class AbstractTest {
         InputStream diamond = AbstractTest.class.getResourceAsStream("/abstract/diamond.yml");
         AbstractConfigLoader loader = new AbstractConfigLoader();
         System.out.println("building...");
-        List<Template> templateList = loader.loadConfigs(Arrays.asList(one, two, three, abs, abs2, diamond).stream().map(YamlConfiguration::new).collect(Collectors.toList()), Template::new);
+        Set<Template> templateList = loader.loadTemplates(Arrays.asList(one, two, three, abs, abs2, diamond).stream().map(YamlConfiguration::new).collect(Collectors.toList()), Template::new);
         System.out.println("built...");
 
         for(Template t : templateList) {
