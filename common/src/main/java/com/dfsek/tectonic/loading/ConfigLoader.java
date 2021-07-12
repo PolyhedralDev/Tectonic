@@ -147,9 +147,10 @@ public class ConfigLoader implements TypeRegistry {
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.
+     * @return The loaded configuration. <b>not</b> a new instance.
      * @throws ConfigException If config cannot be loaded.
      */
-    public void load(ConfigTemplate config, Configuration configuration) throws ConfigException {
+    public <T extends ConfigTemplate> T load(T config, Configuration configuration) throws ConfigException {
         for(Field field : ReflectionUtil.getFields(config.getClass())) {
             int m = field.getModifiers();
             Value value = field.getAnnotation(Value.class);
@@ -190,6 +191,7 @@ public class ConfigLoader implements TypeRegistry {
                 && !((ValidatedConfigTemplate) config).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
         }
+        return config;
     }
 
     /**
