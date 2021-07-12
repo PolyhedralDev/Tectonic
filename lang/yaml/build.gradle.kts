@@ -25,6 +25,7 @@ tasks.test {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:20.1.0")
+    testImplementation("org.jetbrains:annotations:20.1.0")
     implementation(project(":common"))
 
     implementation("org.yaml:snakeyaml:1.27")

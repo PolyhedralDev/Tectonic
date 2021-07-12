@@ -40,6 +40,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -204,15 +205,14 @@ public class ConfigLoader implements TypeRegistry {
      */
     @SuppressWarnings("unchecked")
     public Object loadType(AnnotatedType t, Object o) throws LoadException {
-        Object object = getObject(t, o);
         for(Annotation annotation : t.getAnnotations()) {
-            if(preprocessors.containsKey(annotation.getClass())) {
-                for(ValuePreprocessor<?> preprocessor : preprocessors.get(annotation.getClass())) {
-                    object = ((ValuePreprocessor<Annotation>) preprocessor).process(t, o, this, annotation).apply(object);
+            if(preprocessors.containsKey(annotation.annotationType())) {
+                for(ValuePreprocessor<?> preprocessor : preprocessors.get(annotation.annotationType())) {
+                    o = ((ValuePreprocessor<Annotation>) preprocessor).process(t, o, this, annotation).apply(o);
                 }
             }
         }
-        return object;
+        return getObject(t, o);
     }
     private Object getObject(AnnotatedType t, Object o) throws LoadException {
         try {
