@@ -33,15 +33,6 @@ public class YamlConfiguration implements Configuration {
         config = new Yaml().load(yaml);
     }
 
-    public YamlConfiguration(Map<String, Object> map) {
-        this.config = map;
-    }
-
-    public YamlConfiguration(Map<String, Object> map, String name) {
-        this.name = name;
-        this.config = map;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public Object get(String key) {
