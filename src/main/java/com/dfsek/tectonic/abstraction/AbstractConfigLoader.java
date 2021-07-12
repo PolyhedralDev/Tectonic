@@ -2,6 +2,7 @@ package com.dfsek.tectonic.abstraction;
 
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
@@ -47,7 +48,7 @@ public class AbstractConfigLoader implements TypeRegistry {
      * @throws ConfigException If configs contain errors.
      */
     public <E extends ConfigTemplate> List<E> load(List<InputStream> inputStreams, TemplateProvider<E> provider) throws ConfigException {
-        return loadConfigs(inputStreams.stream().map(Configuration::new).collect(Collectors.toList()), provider);
+        return loadConfigs(inputStreams.stream().map(YamlConfiguration::new).collect(Collectors.toList()), provider);
     }
 
     /**

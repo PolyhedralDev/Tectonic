@@ -1,6 +1,7 @@
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
@@ -11,7 +12,7 @@ public class ExtensionTest {
     public void load() throws ConfigException {
         ConfigLoader loader = new ConfigLoader();
         loader.registerLoader(Type.class, (TypeLoader<Type>) (t, c, loader1) -> Type.valueOf((String) c));
-        Configuration c = new Configuration(ExtensionTest.class.getResourceAsStream("/generic/one.yml"));
+        Configuration c = new YamlConfiguration(ExtensionTest.class.getResourceAsStream("/generic/one.yml"));
 
         Chooser chooser = new Chooser();
         loader.load(chooser, c);

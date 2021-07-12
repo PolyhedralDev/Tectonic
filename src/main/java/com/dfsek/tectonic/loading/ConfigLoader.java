@@ -8,6 +8,7 @@ import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Value;
 import com.dfsek.tectonic.config.ConfigTemplate;
 import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.config.YamlConfiguration;
 import com.dfsek.tectonic.config.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
@@ -138,7 +139,7 @@ public class ConfigLoader implements TypeRegistry {
      */
     public void load(ConfigTemplate config, InputStream i) throws ConfigException {
         try {
-            Configuration configuration = new Configuration(i);
+            Configuration configuration = new YamlConfiguration(i);
             load(config, configuration);
         } catch(YAMLException e) {
             throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
@@ -154,7 +155,7 @@ public class ConfigLoader implements TypeRegistry {
      */
     public void load(ConfigTemplate config, String yaml) throws ConfigException {
         try {
-            Configuration configuration = new Configuration(yaml);
+            Configuration configuration = new YamlConfiguration(yaml);
             load(config, configuration);
         } catch(YAMLException e) {
             throw new LoadException("Failed to parse YAML: " + e.getMessage(), e);
@@ -162,7 +163,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     /**
-     * Load a {@link Configuration} to a ConfigTemplate object.
+     * Load a {@link YamlConfiguration} to a ConfigTemplate object.
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.
@@ -216,7 +217,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     /**
-     * Load a {@link Configuration} to a ConfigTemplate object.
+     * Load a {@link YamlConfiguration} to a ConfigTemplate object.
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.
