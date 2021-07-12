@@ -18,7 +18,7 @@ public class HoconConfiguration implements Configuration {
 
     public HoconConfiguration(InputStream is, String name) {
         this.name = name;
-        this.config = ConfigFactory.parseReader(new InputStreamReader(is)).getValue(".").unwrapped();
+        this.config = ConfigFactory.parseReader(new InputStreamReader(is)).root().unwrapped();
     }
 
     public HoconConfiguration(String hocon) {
@@ -27,7 +27,7 @@ public class HoconConfiguration implements Configuration {
 
     public HoconConfiguration(String hocon, String name) {
         this.name = name;
-        this.config = ConfigFactory.parseString(hocon).getValue(".").unwrapped();
+        this.config = ConfigFactory.parseString(hocon).root().unwrapped();
     }
 
     @Override
