@@ -1,7 +1,6 @@
 package com.dfsek.tectonic.loading;
 
 import com.dfsek.tectonic.abstraction.AbstractConfiguration;
-import com.dfsek.tectonic.abstraction.exception.ProviderMissingException;
 import com.dfsek.tectonic.annotations.Default;
 import com.dfsek.tectonic.annotations.Final;
 import com.dfsek.tectonic.annotations.Value;
@@ -206,17 +205,12 @@ public class ConfigLoader implements TypeRegistry {
             boolean defaultable = field.isAnnotationPresent(Default.class);
 
             AnnotatedType type = field.getAnnotatedType();
-            Type raw = type.getType();
-            if(type instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) type.getType()).getRawType();
 
             try {
                 if(configuration.contains(value.value())) { // If config contains value, load it.
                     Object loadedObject = loadType(type, getFinal(configuration, value.value())); // Re-assign if type is found in registry.
                     ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
                 } else if(abstractable) { // If value is abstractable, try to get it from parent configs.
-                    if(!(config instanceof AbstractConfiguration)) {
-                        throw new ProviderMissingException("Attempted to load abstract value in non-abstractable context.");
-                    }
                     Object abs = configuration.get(value.value());
                     if(abs == null) {
                         if(defaultable) continue;
