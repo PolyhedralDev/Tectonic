@@ -10,6 +10,7 @@ import java.util.Map;
 public class HoconTest {
     @Test
     void hocon() {
+        /*
         ConfigLoader loader = new ConfigLoader();
         loader.registerLoader(Server.class, Server::new);
         JsonTemplate template = new JsonTemplate();
@@ -19,6 +20,8 @@ public class HoconTest {
         System.out.println("owner: " + template.ownerName);
         System.out.println("servers:");
         template.servers.forEach((name, server) -> System.out.println("  - " + name + ": [" + server.ip + ", " + server.role + "]"));
+
+         */
     }
 
     private static final class JsonTemplate implements ConfigTemplate {
