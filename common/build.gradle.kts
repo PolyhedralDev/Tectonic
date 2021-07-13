@@ -3,8 +3,6 @@ plugins {
     `maven-publish`
 }
 
-group = "com.dfsek"
-
 repositories {
     mavenCentral()
 }
