@@ -49,7 +49,10 @@ public class AbstractConfiguration implements Configuration {
 
     @Override
     public boolean contains(String key) {
-        return get(key) != null;
+        for(Layer p : tree) {
+            if(p.contains(key)) return true;
+        }
+        return false;
     }
 
     @Override
@@ -93,6 +96,13 @@ public class AbstractConfiguration implements Configuration {
                 if(p.getConfig().contains(key)) return p.getConfig().get(key);
             }
             return null;
+        }
+
+        public boolean contains(String key) {
+            for(Prototype p : items) {
+                if(p.getConfig().contains(key)) return true;
+            }
+            return false;
         }
     }
 }
