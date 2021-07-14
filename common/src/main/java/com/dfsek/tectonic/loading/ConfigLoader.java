@@ -171,7 +171,7 @@ public class ConfigLoader implements TypeRegistry {
                 if(containsFinal(configuration, value.value())) { // If config contains value, load it.
                     Object loadedObject = loadType(type, getFinal(configuration, value.value())); // Re-assign if type is found in registry.
                     ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
-                } else if(!isFinal) { // If value is abstractable, try to get it from parent configs.
+                } else if(!isFinal && (configuration instanceof AbstractConfiguration)) { // If value is abstractable, try to get it from parent configs.
                     Object abs = configuration.get(value.value());
                     if(abs == null) {
                         if(defaultable) continue;
@@ -224,7 +224,7 @@ public class ConfigLoader implements TypeRegistry {
                 return ENUM_LOADER.load(t, o, this); // Special enum loader if enum doesn't already have loader defined.
             }
 
-            return o;
+            throw new LoadException("No loaders are registered for type " + t.getType().getTypeName());
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
