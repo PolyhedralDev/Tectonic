@@ -217,8 +217,11 @@ public class ConfigLoader implements TypeRegistry {
     private Object getObject(AnnotatedType t, Object o) throws LoadException {
         try {
             Type raw = t.getType();
-            if(t instanceof AnnotatedParameterizedType) raw = ((ParameterizedType) t.getType()).getRawType();
             if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
+            if(t instanceof AnnotatedParameterizedType) {
+                raw = ((ParameterizedType) t.getType()).getRawType();
+                if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
+            }
 
             if(raw instanceof Class && ((Class<?>) raw).isEnum()) {
                 return ENUM_LOADER.load(t, o, this); // Special enum loader if enum doesn't already have loader defined.
