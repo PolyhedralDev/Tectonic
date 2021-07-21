@@ -5,7 +5,7 @@ plugins {
     `maven-publish`
 }
 
-val versionObj = Version("2", "1", "1", false)
+val versionObj = Version("2", "1", "2", false)
 
 allprojects {
     version = versionObj
