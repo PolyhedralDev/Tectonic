@@ -7,7 +7,9 @@ import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 import com.dfsek.tectonic.loading.TypeRegistry;
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
+import com.dfsek.tectonic.preprocessor.ValuePreprocessor;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,6 +32,11 @@ public class AbstractConfigLoader implements TypeRegistry {
     @Override
     public <T> AbstractConfigLoader registerLoader(Type t, Supplier<ObjectTemplate<T>> provider) {
         delegate.registerLoader(t, provider);
+        return this;
+    }
+
+    public <T extends Annotation> AbstractConfigLoader registerPreprocessor(Class<? extends T> clazz, ValuePreprocessor<T> processor) {
+        delegate.registerPreprocessor(clazz, processor);
         return this;
     }
 
