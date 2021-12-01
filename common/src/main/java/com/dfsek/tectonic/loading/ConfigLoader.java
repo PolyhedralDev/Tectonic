@@ -30,6 +30,7 @@ import com.dfsek.tectonic.loading.object.ObjectTemplate;
 import com.dfsek.tectonic.loading.object.ObjectTemplateLoader;
 import com.dfsek.tectonic.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.util.ReflectionUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -116,12 +117,12 @@ public class ConfigLoader implements TypeRegistry {
      * @param loader Loader to load type with
      * @return This config loader
      */
-    public ConfigLoader registerLoader(Type t, TypeLoader<?> loader) {
+    public @NotNull ConfigLoader registerLoader(@NotNull Type t, @NotNull TypeLoader<?> loader) {
         loaders.put(t, loader);
         return this;
     }
 
-    public <T> ConfigLoader registerLoader(Type t, Supplier<ObjectTemplate<T>> provider) {
+    public <T> @NotNull ConfigLoader registerLoader(@NotNull Type t, @NotNull Supplier<ObjectTemplate<T>> provider) {
         loaders.put(t, new ObjectTemplateLoader<>(provider));
         return this;
     }

@@ -2,6 +2,7 @@ package com.dfsek.tectonic.toml;
 
 import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.exception.ConfigParseException;
+import org.jetbrains.annotations.NotNull;
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
 import org.tomlj.TomlParseResult;
@@ -40,7 +41,7 @@ public class TomlConfiguration implements Configuration {
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(@NotNull String key) {
         return deepToObject(config.get(key));
     }
 
@@ -61,7 +62,7 @@ public class TomlConfiguration implements Configuration {
     }
 
     @Override
-    public boolean contains(String key) {
+    public boolean contains(@NotNull String key) {
         return config.contains(key);
     }
 

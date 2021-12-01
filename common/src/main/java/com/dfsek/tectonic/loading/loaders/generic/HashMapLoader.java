@@ -3,6 +3,7 @@ package com.dfsek.tectonic.loading.loaders.generic;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -12,7 +13,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class HashMapLoader implements TypeLoader<HashMap<Object, Object>> {
     @Override
-    public HashMap<Object, Object> load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException {
+    public HashMap<Object, Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader) throws LoadException {
         Map<String, Object> config = (Map<String, Object>) c;
         HashMap<Object, Object> map = new HashMap<>();
         if(t instanceof AnnotatedParameterizedType) {

@@ -5,6 +5,7 @@ import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedType;
@@ -100,7 +101,7 @@ public class TypeTest {
     public static class ExampleLoader implements TypeLoader<ExampleInterface> {
 
         @Override
-        public ExampleInterface load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException {
+        public ExampleInterface load(@NotNull AnnotatedType t, Object c, @NotNull ConfigLoader loader) throws LoadException {
             System.out.println(c.getClass());
             Map<String, Object> map = (Map<String, Object>) c;
             switch((String) map.get("type")) {

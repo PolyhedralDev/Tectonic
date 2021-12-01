@@ -2,6 +2,7 @@ package com.dfsek.tectonic.abstraction;
 
 import com.dfsek.tectonic.config.Configuration;
 import com.dfsek.tectonic.loading.ConfigLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class AbstractConfiguration implements Configuration {
      * @param key Key to get from the tree.
      * @return Object loaded from the key. (Raw config object, not type adapted!)
      */
-    public Object get(String key) {
+    public Object get(@NotNull String key) {
         for(Layer p : tree) {
             Object l = p.get(key);
             if(l != null) return l;
@@ -48,7 +49,7 @@ public class AbstractConfiguration implements Configuration {
     }
 
     @Override
-    public boolean contains(String key) {
+    public boolean contains(@NotNull String key) {
         for(Layer p : tree) {
             if(p.contains(key)) return true;
         }

@@ -2,6 +2,7 @@ package com.dfsek.tectonic.loading.loaders;
 
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 
@@ -10,7 +11,7 @@ import java.lang.reflect.AnnotatedType;
  */
 public class StringLoader implements TypeLoader<String> {
     @Override
-    public String load(AnnotatedType t, Object c, ConfigLoader loader) {
+    public String load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader) {
         return (String) c;
     }
 }

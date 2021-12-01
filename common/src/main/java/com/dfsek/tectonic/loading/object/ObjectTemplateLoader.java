@@ -5,6 +5,7 @@ import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import com.dfsek.tectonic.loading.TypeLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class ObjectTemplateLoader<T> implements TypeLoader<T> {
     }
 
     @Override
-    public T load(AnnotatedType t, Object c, ConfigLoader loader) throws LoadException {
+    public T load(@NotNull AnnotatedType t, @NotNull Object c, ConfigLoader loader) throws LoadException {
         ObjectTemplate<T> template = provider.get();
         try {
             loader.load(template, new MapConfiguration((Map<String, Object>) c));

@@ -1,6 +1,8 @@
 package com.dfsek.tectonic.loading;
 
 import com.dfsek.tectonic.loading.object.ObjectTemplate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
@@ -12,7 +14,11 @@ import java.util.function.Supplier;
  * @see com.dfsek.tectonic.abstraction.AbstractConfigLoader
  */
 public interface TypeRegistry {
-    TypeRegistry registerLoader(Type t, TypeLoader<?> loader);
+    @NotNull
+    @Contract("_, _ -> this")
+    TypeRegistry registerLoader(@NotNull Type t, @NotNull TypeLoader<?> loader);
 
-    <T> TypeRegistry registerLoader(Type t, Supplier<ObjectTemplate<T>> provider);
+    @NotNull
+    @Contract("_, _ -> this")
+    <T> TypeRegistry registerLoader(@NotNull Type t, @NotNull Supplier<ObjectTemplate<T>> provider);
 }
