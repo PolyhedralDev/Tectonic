@@ -7,5 +7,5 @@ import java.lang.reflect.AnnotatedType;
 import java.util.function.BiFunction;
 
 public interface TemplateLoader {
-    <T extends ConfigTemplate> T load(T config, Configuration configuration, BiFunction<AnnotatedType, Object, Object> loader);
+    <T extends ConfigTemplate> T load(T config, Configuration configuration, ValueLoader loader);
 }

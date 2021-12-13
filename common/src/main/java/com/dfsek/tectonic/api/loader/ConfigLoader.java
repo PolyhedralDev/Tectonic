@@ -8,8 +8,10 @@ import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.exception.ValidationException;
+import com.dfsek.tectonic.api.exception.ValueMissingException;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
+import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.impl.loading.loaders.EnumLoader;
 import com.dfsek.tectonic.impl.loading.loaders.StringLoader;
 import com.dfsek.tectonic.impl.loading.loaders.generic.ArrayListLoader;
@@ -135,12 +137,37 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public <T extends ConfigTemplate> T load(T config, Configuration configuration) throws ConfigException {
-        T result = config.loader().load(config, configuration, this::loadType);
+        T result = config.loader().load(config, configuration, this::loadValue);
         if(result instanceof ValidatedConfigTemplate
                 && !((ValidatedConfigTemplate) result).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
         }
         return result;
+    }
+
+    private Object loadValue(String value, AnnotatedType type, Configuration configuration, boolean isFinal) {
+        if(containsFinal(configuration, value)) { // If config contains value, load it.
+            return loadType(type, getFinal(configuration, value)); // Re-assign if type is found in registry.
+        } else if(!isFinal && (configuration instanceof AbstractConfiguration)) { // If value is abstractable, try to get it from parent configs.
+            Object abs = configuration.get(value);
+            if(abs == null) {
+                throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config, or its parents: " + configuration.getName()); // Throw exception if value is not provided, and isn't in parents.
+            }
+            return loadType(type, abs);
+
+        }
+        throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config: " + configuration.getName()); // Throw exception if value is not provided, and isn't abstractable
+    }
+
+    private Object getFinal(Configuration configuration, String key) {
+        if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).getBase(key);
+        return configuration.get(key);
+    }
+
+    private boolean containsFinal(Configuration configuration, String key) {
+        if(configuration instanceof AbstractConfiguration)
+            return ((AbstractConfiguration) configuration).containsBase(key);
+        return configuration.contains(key);
     }
 
     /**
