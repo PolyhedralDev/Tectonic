@@ -5,7 +5,7 @@ plugins {
     `maven-publish`
 }
 
-val versionObj = Version("2", "2", "0", false)
+val versionObj = Version("3", "0", "0", false)
 
 allprojects {
     version = versionObj
@@ -24,8 +24,8 @@ allprojects {
         failFast = true
         maxParallelForks = (Runtime.getRuntime().availableProcessors() - 1).takeIf { it > 0 } ?: 1
 
-        reports.html.isEnabled = false
-        reports.junitXml.isEnabled = false
+        reports.html.required.set(false)
+        reports.junitXml.required.set(false)
     }
 
 }
