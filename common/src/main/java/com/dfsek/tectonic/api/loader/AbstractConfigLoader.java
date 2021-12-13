@@ -1,13 +1,15 @@
-package com.dfsek.tectonic.impl.abstraction;
+package com.dfsek.tectonic.api.loader;
 
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.exception.ConfigException;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
-import com.dfsek.tectonic.api.loader.TypeLoader;
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import com.dfsek.tectonic.api.TypeRegistry;
 import com.dfsek.tectonic.api.ObjectTemplate;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
+import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
+import com.dfsek.tectonic.impl.abstraction.AbstractPool;
+import com.dfsek.tectonic.impl.abstraction.Prototype;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;

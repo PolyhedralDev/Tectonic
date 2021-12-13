@@ -1,7 +1,7 @@
 package com.dfsek.tectonic.impl.abstraction;
 
 import com.dfsek.tectonic.api.config.Configuration;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -66,18 +66,18 @@ public class AbstractConfiguration implements Configuration {
      *
      * @param prototype Prototype to add
      */
-    protected void add(Prototype prototype) {
+    public void add(Prototype prototype) {
         tree.get(layer).add(prototype);
     }
 
-    protected int next() {
+    public int next() {
         int l0 = layer;
         layer++;
         tree.add(new Layer());
         return l0;
     }
 
-    protected void reset(int layer) {
+    public void reset(int layer) {
         this.layer = layer;
     }
 

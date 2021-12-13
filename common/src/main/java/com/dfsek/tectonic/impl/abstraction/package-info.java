@@ -15,6 +15,6 @@
  *     from the current.</li>
  * </ul>
  *
- * @see com.dfsek.tectonic.impl.abstraction.AbstractConfigLoader
+ * @see com.dfsek.tectonic.api.loader.AbstractConfigLoader
  */
 package com.dfsek.tectonic.impl.abstraction;

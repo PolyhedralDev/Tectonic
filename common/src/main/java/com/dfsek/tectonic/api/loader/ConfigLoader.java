@@ -1,11 +1,11 @@
-package com.dfsek.tectonic.impl.loading;
+package com.dfsek.tectonic.api.loader;
 
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.api.config.template.annotations.Default;
 import com.dfsek.tectonic.api.config.template.annotations.Final;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.TypeRegistry;
-import com.dfsek.tectonic.api.loader.TypeLoader;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;

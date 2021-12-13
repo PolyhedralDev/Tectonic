@@ -4,8 +4,8 @@ import com.dfsek.tectonic.api.ObjectTemplate;
 import com.dfsek.tectonic.impl.MapConfiguration;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
-import com.dfsek.tectonic.api.loader.TypeLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;

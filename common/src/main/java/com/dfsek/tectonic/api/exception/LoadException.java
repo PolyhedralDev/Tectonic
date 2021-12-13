@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.api.exception;
 
-import com.dfsek.tectonic.api.loader.TypeLoader;
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
 
 /**
  * Exception thrown when a {@link TypeLoader} fails to load a config

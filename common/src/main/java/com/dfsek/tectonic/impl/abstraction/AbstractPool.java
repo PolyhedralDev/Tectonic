@@ -43,7 +43,7 @@ public class AbstractPool {
      *
      * @return Set of Prototypes.
      */
-    Set<Prototype> getPrototypes() {
+    public Set<Prototype> getPrototypes() {
         return new HashSet<>(pool.values());
     }
 }

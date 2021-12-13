@@ -1,6 +1,6 @@
 package abstractconfig;
 
-import com.dfsek.tectonic.impl.abstraction.AbstractConfigLoader;
+import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
 import com.dfsek.tectonic.api.config.template.annotations.Final;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;

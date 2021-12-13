@@ -1,8 +1,8 @@
 package com.dfsek.tectonic.api;
 
-import com.dfsek.tectonic.impl.abstraction.AbstractConfigLoader;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
-import com.dfsek.tectonic.api.loader.TypeLoader;
+import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

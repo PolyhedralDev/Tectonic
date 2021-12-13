@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.api.preprocessor;
 
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;

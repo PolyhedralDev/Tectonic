@@ -1,7 +1,7 @@
-package com.dfsek.tectonic.api.loader;
+package com.dfsek.tectonic.api.loader.type;
 
 import com.dfsek.tectonic.api.exception.LoadException;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.api.config.template.annotations;
 
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

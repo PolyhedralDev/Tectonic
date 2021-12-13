@@ -1,7 +1,7 @@
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.json.JsonConfiguration;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.ObjectTemplate;
 import org.junit.jupiter.api.Test;
 

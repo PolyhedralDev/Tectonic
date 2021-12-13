@@ -10,7 +10,7 @@ import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.ValidationException;
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

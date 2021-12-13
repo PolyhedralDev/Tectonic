@@ -1,7 +1,7 @@
 package com.dfsek.tectonic.impl.loading.loaders;
 
-import com.dfsek.tectonic.impl.loading.ConfigLoader;
-import com.dfsek.tectonic.api.loader.TypeLoader;
+import com.dfsek.tectonic.api.loader.ConfigLoader;
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
