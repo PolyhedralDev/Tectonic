@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.impl.loading;
+package com.dfsek.tectonic.impl.loading.template;
 
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;

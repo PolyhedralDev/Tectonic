@@ -4,7 +4,7 @@ import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.loader.TemplateLoader;
-import com.dfsek.tectonic.impl.loading.ReflectiveTemplateLoader;
+import com.dfsek.tectonic.impl.loading.template.ReflectiveTemplateLoader;
 
 /**
  * Interface to be implemented by classes containing annotated fields to be loaded by
