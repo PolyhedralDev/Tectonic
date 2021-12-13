@@ -2,8 +2,8 @@ package com.dfsek.tectonic.impl.loading.object;
 
 import com.dfsek.tectonic.api.ObjectTemplate;
 import com.dfsek.tectonic.impl.MapConfiguration;
-import com.dfsek.tectonic.exception.ConfigException;
-import com.dfsek.tectonic.exception.LoadException;
+import com.dfsek.tectonic.api.exception.ConfigException;
+import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import com.dfsek.tectonic.api.loader.TypeLoader;
 import org.jetbrains.annotations.NotNull;

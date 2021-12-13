@@ -1,5 +1,6 @@
 package com.dfsek.tectonic.api;
 
+import com.dfsek.tectonic.impl.abstraction.AbstractConfigLoader;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import com.dfsek.tectonic.api.loader.TypeLoader;
 import org.jetbrains.annotations.Contract;
@@ -12,7 +13,7 @@ import java.util.function.Supplier;
  * Implemented by classes that hold a registry of types, mapped to type adapters.
  *
  * @see ConfigLoader
- * @see com.dfsek.tectonic.abstraction.AbstractConfigLoader
+ * @see AbstractConfigLoader
  */
 public interface TypeRegistry {
     @NotNull

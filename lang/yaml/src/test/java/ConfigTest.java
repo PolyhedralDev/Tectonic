@@ -1,4 +1,4 @@
-import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;

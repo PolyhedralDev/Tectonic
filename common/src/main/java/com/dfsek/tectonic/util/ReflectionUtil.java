@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.util;
 
-import com.dfsek.tectonic.exception.ReflectiveAccessException;
+import com.dfsek.tectonic.api.exception.ReflectiveAccessException;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;

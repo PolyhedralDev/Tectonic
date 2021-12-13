@@ -1,4 +1,4 @@
-import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 
 public class InheritTest implements ConfigTemplate {

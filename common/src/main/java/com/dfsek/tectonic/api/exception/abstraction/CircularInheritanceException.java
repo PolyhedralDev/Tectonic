@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.abstraction.exception;
+package com.dfsek.tectonic.api.exception.abstraction;
 
 /**
  * Thrown when circular inheritance is detected.

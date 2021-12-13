@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.exception;
+package com.dfsek.tectonic.api.exception;
 
 public class ConfigParseException extends ConfigException {
     public ConfigParseException(String message) {

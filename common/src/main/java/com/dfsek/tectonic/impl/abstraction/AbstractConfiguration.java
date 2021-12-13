@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.abstraction;
+package com.dfsek.tectonic.impl.abstraction;
 
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;

@@ -1,7 +1,7 @@
 package com.dfsek.tectonic.api.config.template;
 
-import com.dfsek.tectonic.abstraction.AbstractConfigLoader;
-import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.impl.abstraction.AbstractConfigLoader;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;
 
 /**

@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.exception;
+package com.dfsek.tectonic.api.exception;
 
 public abstract class ConfigException extends RuntimeException {
     private static final long serialVersionUID = 1316896835740257026L;

@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.exception;
+package com.dfsek.tectonic.api.exception;
 
 /**
  * ConfigException wrapper for a reflective access exception.

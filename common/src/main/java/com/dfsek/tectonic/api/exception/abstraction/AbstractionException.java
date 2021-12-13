@@ -1,6 +1,6 @@
-package com.dfsek.tectonic.abstraction.exception;
+package com.dfsek.tectonic.api.exception.abstraction;
 
-import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.api.exception.ConfigException;
 
 public abstract class AbstractionException extends ConfigException {
     private static final long serialVersionUID = 7100586270889588394L;

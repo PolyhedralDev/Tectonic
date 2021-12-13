@@ -1,5 +1,5 @@
-import com.dfsek.tectonic.annotations.Default;
-import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.api.config.template.annotations.Default;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 
 import java.util.List;

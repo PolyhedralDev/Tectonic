@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.abstraction.exception;
+package com.dfsek.tectonic.api.exception.abstraction;
 
 /**
  * Thrown when a parent (super) config cannot be found.

@@ -1,15 +1,15 @@
-package com.dfsek.tectonic.abstraction;
+package com.dfsek.tectonic.impl.abstraction;
 
-import com.dfsek.tectonic.abstraction.exception.AbstractionException;
-import com.dfsek.tectonic.abstraction.exception.CircularInheritanceException;
-import com.dfsek.tectonic.abstraction.exception.ParentNotFoundException;
-import com.dfsek.tectonic.annotations.Default;
-import com.dfsek.tectonic.annotations.Final;
-import com.dfsek.tectonic.annotations.Value;
+import com.dfsek.tectonic.api.exception.abstraction.AbstractionException;
+import com.dfsek.tectonic.api.exception.abstraction.CircularInheritanceException;
+import com.dfsek.tectonic.api.exception.abstraction.ParentNotFoundException;
+import com.dfsek.tectonic.api.config.template.annotations.Default;
+import com.dfsek.tectonic.api.config.template.annotations.Final;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
-import com.dfsek.tectonic.exception.ConfigException;
-import com.dfsek.tectonic.exception.ValidationException;
+import com.dfsek.tectonic.api.exception.ConfigException;
+import com.dfsek.tectonic.api.exception.ValidationException;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 

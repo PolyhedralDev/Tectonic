@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.exception;
+package com.dfsek.tectonic.api.exception;
 
 import com.dfsek.tectonic.api.loader.TypeLoader;
 

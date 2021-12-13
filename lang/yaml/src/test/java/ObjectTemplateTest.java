@@ -1,5 +1,5 @@
-import com.dfsek.tectonic.annotations.Value;
-import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
+import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import com.dfsek.tectonic.api.ObjectTemplate;
 import com.dfsek.tectonic.yaml.YamlConfiguration;

@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.annotations;
+package com.dfsek.tectonic.api.config.template.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

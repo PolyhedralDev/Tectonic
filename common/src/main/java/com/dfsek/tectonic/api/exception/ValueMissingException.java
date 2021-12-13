@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.exception;
+package com.dfsek.tectonic.api.exception;
 
 /**
  * Exception thrown when a value is missing from a configuration, and no default value is present.

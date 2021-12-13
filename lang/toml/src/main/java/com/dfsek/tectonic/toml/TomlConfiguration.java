@@ -1,7 +1,7 @@
 package com.dfsek.tectonic.toml;
 
 import com.dfsek.tectonic.api.config.Configuration;
-import com.dfsek.tectonic.exception.ConfigParseException;
+import com.dfsek.tectonic.api.exception.ConfigParseException;
 import org.jetbrains.annotations.NotNull;
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
