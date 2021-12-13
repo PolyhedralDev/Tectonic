@@ -1,22 +1,17 @@
 package com.dfsek.tectonic.api.loader;
 
-import com.dfsek.tectonic.api.loader.type.TypeLoader;
-import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
-import com.dfsek.tectonic.api.config.template.annotations.Default;
-import com.dfsek.tectonic.api.config.template.annotations.Final;
-import com.dfsek.tectonic.api.config.template.annotations.Value;
+import com.dfsek.tectonic.api.ObjectTemplate;
 import com.dfsek.tectonic.api.TypeRegistry;
-import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
-import com.dfsek.tectonic.api.exception.InvalidTemplateException;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.exception.ValidationException;
-import com.dfsek.tectonic.api.exception.ValueMissingException;
-import com.dfsek.tectonic.impl.loading.loaders.StringLoader;
-import com.dfsek.tectonic.impl.loading.loaders.primitives.LongLoader;
+import com.dfsek.tectonic.api.loader.type.TypeLoader;
+import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.impl.loading.loaders.EnumLoader;
+import com.dfsek.tectonic.impl.loading.loaders.StringLoader;
 import com.dfsek.tectonic.impl.loading.loaders.generic.ArrayListLoader;
 import com.dfsek.tectonic.impl.loading.loaders.generic.HashMapLoader;
 import com.dfsek.tectonic.impl.loading.loaders.generic.HashSetLoader;
@@ -27,18 +22,15 @@ import com.dfsek.tectonic.impl.loading.loaders.primitives.CharLoader;
 import com.dfsek.tectonic.impl.loading.loaders.primitives.DoubleLoader;
 import com.dfsek.tectonic.impl.loading.loaders.primitives.FloatLoader;
 import com.dfsek.tectonic.impl.loading.loaders.primitives.IntLoader;
+import com.dfsek.tectonic.impl.loading.loaders.primitives.LongLoader;
 import com.dfsek.tectonic.impl.loading.loaders.primitives.ShortLoader;
-import com.dfsek.tectonic.api.ObjectTemplate;
 import com.dfsek.tectonic.impl.loading.object.ObjectTemplateLoader;
-import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.util.ReflectionUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
@@ -134,17 +126,6 @@ public class ConfigLoader implements TypeRegistry {
         return this;
     }
 
-    private Object getFinal(Configuration configuration, String key) {
-        if(configuration instanceof AbstractConfiguration) return ((AbstractConfiguration) configuration).getBase(key);
-        return configuration.get(key);
-    }
-
-    private boolean containsFinal(Configuration configuration, String key) {
-        if(configuration instanceof AbstractConfiguration)
-            return ((AbstractConfiguration) configuration).containsBase(key);
-        return configuration.contains(key);
-    }
-
     /**
      * Load a {@link Configuration} to a ConfigTemplate object.
      *
@@ -154,47 +135,12 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public <T extends ConfigTemplate> T load(T config, Configuration configuration) throws ConfigException {
-        for(Field field : ReflectionUtil.getFields(config.getClass())) {
-            int m = field.getModifiers();
-            Value value = field.getAnnotation(Value.class);
-            if(value == null) continue;
-
-            if(Modifier.isFinal(m) || Modifier.isStatic(m)) {
-                throw new InvalidTemplateException("Field annotated @Value cannot be static or final: " + field.getName() + " of " + config.getClass().getCanonicalName());
-            }
-
-            field.setAccessible(true); // Make field accessible so we can mess with it.
-
-            boolean isFinal = field.isAnnotationPresent(Final.class);
-            boolean defaultable = field.isAnnotationPresent(Default.class);
-
-            AnnotatedType type = field.getAnnotatedType();
-
-            try {
-                if(containsFinal(configuration, value.value())) { // If config contains value, load it.
-                    Object loadedObject = loadType(type, getFinal(configuration, value.value())); // Re-assign if type is found in registry.
-                    ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loadedObject)); // Set the field to the loaded value.
-                } else if(!isFinal && (configuration instanceof AbstractConfiguration)) { // If value is abstractable, try to get it from parent configs.
-                    Object abs = configuration.get(value.value());
-                    if(abs == null) {
-                        if(defaultable) continue;
-                        throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config, or its parents: " + configuration.getName()); // Throw exception if value is not provided, and isn't in parents.
-                    }
-                    abs = loadType(type, abs);
-                    ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), abs));
-                } else if(!defaultable) {
-                    throw new ValueMissingException("Value \"" + value.value() + "\" was not found in the provided config: " + configuration.getName()); // Throw exception if value is not provided, and isn't abstractable
-                }
-            } catch(Exception e) {
-                throw new LoadException("Failed to load value \"" + value.value() + "\" to field \"" + field.getName() + "\" in config \"" + configuration.getName() + "\": " + e.getMessage(), e);
-            }
-        }
-
-        if(config instanceof ValidatedConfigTemplate
-                && !((ValidatedConfigTemplate) config).validate()) {
+        T result = config.loader().load(config, configuration, this::loadType);
+        if(result instanceof ValidatedConfigTemplate
+                && !((ValidatedConfigTemplate) result).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
         }
-        return config;
+        return result;
     }
 
     /**
