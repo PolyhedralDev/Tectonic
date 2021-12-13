@@ -1,7 +1,8 @@
 package com.dfsek.tectonic;
 
-import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.api.config.Configuration;
 import com.typesafe.config.ConfigFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,7 +33,7 @@ public class HoconConfiguration implements Configuration {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object get(String key) {
+    public Object get(@NotNull String key) {
         String[] levels = key.split("\\.");
         Object level = config;
         for(String keyLevel : levels) {
@@ -44,7 +45,7 @@ public class HoconConfiguration implements Configuration {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean contains(String key) {
+    public boolean contains(@NotNull String key) {
         String[] levels = key.split("\\.");
         Object level = config;
         for(String keyLevel : levels) {

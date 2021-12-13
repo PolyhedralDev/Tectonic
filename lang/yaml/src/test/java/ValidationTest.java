@@ -1,8 +1,8 @@
 import com.dfsek.tectonic.annotations.Value;
-import com.dfsek.tectonic.config.ValidatedConfigTemplate;
+import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.exception.ConfigException;
 import com.dfsek.tectonic.exception.ValidationException;
-import com.dfsek.tectonic.loading.ConfigLoader;
+import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,9 @@
 package com.dfsek.tectonic.exception;
 
+import com.dfsek.tectonic.api.loader.TypeLoader;
+
 /**
- * Exception thrown when a {@link com.dfsek.tectonic.loading.TypeLoader} fails to load a config
+ * Exception thrown when a {@link TypeLoader} fails to load a config
  */
 public class LoadException extends ConfigException {
     private static final long serialVersionUID = -186956854213945799L;

@@ -1,6 +1,7 @@
 package com.dfsek.tectonic.yaml;
 
-import com.dfsek.tectonic.config.Configuration;
+import com.dfsek.tectonic.api.config.Configuration;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -34,7 +35,7 @@ public class YamlConfiguration implements Configuration {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object get(String key) {
+    public Object get(@NotNull String key) {
         String[] levels = key.split("\\.");
         Object level = config;
         for(String keyLevel : levels) {
@@ -46,7 +47,7 @@ public class YamlConfiguration implements Configuration {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean contains(String key) {
+    public boolean contains(@NotNull String key) {
         String[] levels = key.split("\\.");
         Object level = config;
         for(String keyLevel : levels) {

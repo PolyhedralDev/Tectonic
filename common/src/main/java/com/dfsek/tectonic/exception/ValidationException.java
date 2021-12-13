@@ -1,7 +1,9 @@
 package com.dfsek.tectonic.exception;
 
+import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
+
 /**
- * Thrown when validation fails on a {@link com.dfsek.tectonic.config.ValidatedConfigTemplate}.
+ * Thrown when validation fails on a {@link ValidatedConfigTemplate}.
  */
 public class ValidationException extends ConfigException {
     private static final long serialVersionUID = 2913531776381159021L;

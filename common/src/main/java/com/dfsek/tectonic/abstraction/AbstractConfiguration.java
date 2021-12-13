@@ -1,7 +1,7 @@
 package com.dfsek.tectonic.abstraction;
 
-import com.dfsek.tectonic.config.Configuration;
-import com.dfsek.tectonic.loading.ConfigLoader;
+import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.impl.loading.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

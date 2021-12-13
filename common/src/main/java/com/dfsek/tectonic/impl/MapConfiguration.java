@@ -1,34 +1,22 @@
-package com.dfsek.tectonic.json;
+package com.dfsek.tectonic.impl;
 
 import com.dfsek.tectonic.api.config.Configuration;
-import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Map;
 
-public class JsonConfiguration implements Configuration {
-    private final Object config;
+public class MapConfiguration implements Configuration {
+    private final Map<String, Object> config;
 
-    private final String name;
+    private String name;
 
-    public JsonConfiguration(InputStream is) {
-        this(is, is.toString());
+    public MapConfiguration(Map<String, Object> map) {
+        this.config = map;
     }
 
-    public JsonConfiguration(InputStream is, String name) {
+    public MapConfiguration(Map<String, Object> map, String name) {
         this.name = name;
-        this.config = new Gson().fromJson(new InputStreamReader(is), Object.class);
-    }
-
-    public JsonConfiguration(String json) {
-        this(json, null);
-    }
-
-    public JsonConfiguration(String json, String name) {
-        this.name = name;
-        this.config = new Gson().fromJson(json, Object.class);
+        this.config = map;
     }
 
     @Override
