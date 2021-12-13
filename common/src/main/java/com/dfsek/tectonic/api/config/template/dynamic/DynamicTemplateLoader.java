@@ -22,7 +22,7 @@ public class DynamicTemplateLoader implements TemplateLoader {
 
         dynamicTemplate.getValues().forEach((id, value) -> {
             try {
-                computed.put(id, loader.load(id, new ClassAnnotatedTypeImpl(value.getType()), configuration, value.isFinal()));
+                computed.put(id, loader.load(value.getKey(), new ClassAnnotatedTypeImpl(value.getType()), configuration, value.isFinal()));
             } catch(ValueMissingException e) {
                 if(value.isDefault()) {
                     computed.put(id, value.getDefaultValue());
