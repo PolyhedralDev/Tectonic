@@ -5,7 +5,6 @@ import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.exception.ValueMissingException;
 import com.dfsek.tectonic.api.loader.TemplateLoader;
 import com.dfsek.tectonic.api.loader.ValueLoader;
-import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public class DynamicTemplateLoader implements TemplateLoader {
 
         dynamicTemplate.getValues().forEach((id, value) -> {
             try {
-                computed.put(id, loader.load(value.getKey(), new ClassAnnotatedTypeImpl(value.getType()), configuration, value.isFinal()));
+                computed.put(id, loader.load(value.getKey(), value.getAnnotatedType(), configuration, value.isFinal()));
             } catch(ValueMissingException e) {
                 if(value.isDefault()) {
                     computed.put(id, value.getDefaultValue());
