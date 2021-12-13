@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.impl.loading.object;
 
-import com.dfsek.tectonic.api.ObjectTemplate;
+import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.impl.MapConfiguration;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;

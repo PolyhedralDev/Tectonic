@@ -5,7 +5,7 @@ import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import com.dfsek.tectonic.api.TypeRegistry;
-import com.dfsek.tectonic.api.ObjectTemplate;
+import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.impl.abstraction.AbstractPool;

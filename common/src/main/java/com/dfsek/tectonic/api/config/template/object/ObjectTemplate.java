@@ -1,4 +1,4 @@
-package com.dfsek.tectonic.api;
+package com.dfsek.tectonic.api.config.template.object;
 
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 

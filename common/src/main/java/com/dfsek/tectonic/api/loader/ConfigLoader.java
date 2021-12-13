@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.api.loader;
 
-import com.dfsek.tectonic.api.ObjectTemplate;
+import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.TypeRegistry;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
