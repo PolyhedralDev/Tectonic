@@ -128,6 +128,10 @@ public class ConfigLoader implements TypeRegistry {
         return this;
     }
 
+    public boolean hasLoader(Type t) {
+        return loaders.containsKey(t);
+    }
+
     /**
      * Load a {@link Configuration} to a ConfigTemplate object.
      *
