@@ -4,6 +4,18 @@ number: 3
 object:
   string: "hello"
   number: 3
+  nested:
+    - string: "aaa"
+      number: 4
+    - string: "b"
+      number: 5
+      nested:
+        - string: "dgdsfg"
+          number: 4f
+        - string: "dfgdsfg"
+          number: 5
+    - string: "b"
+      number: 5
 a:
   b:
     c:

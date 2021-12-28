@@ -1,5 +1,6 @@
 package com.dfsek.tectonic.impl.loading.loaders.generic;
 
+import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
@@ -18,18 +19,19 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class ArrayListLoader implements TypeLoader<ArrayList<Object>> {
     @Override
-    public ArrayList<Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader) throws LoadException {
+    public ArrayList<Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
         ArrayList<Object> list = new ArrayList<>();
         if(t instanceof AnnotatedParameterizedType) {
             AnnotatedParameterizedType pType = (AnnotatedParameterizedType) t;
             AnnotatedType generic = pType.getAnnotatedActualTypeArguments()[0];
             if(c instanceof List) {
                 List<Object> objectList = (List<Object>) c;
-                for(Object o : objectList) {
-                    list.add(loader.loadType(generic, o));
+                for(int i = 0; i < objectList.size(); i++) {
+                    Object o = objectList.get(i);
+                    list.add(loader.loadType(generic, o, depthTracker.index(i)));
                 }
-            } else return new ArrayList<>(Collections.singleton(loader.loadType(generic, c))); // Singleton
-        } else throw new LoadException("Unable to load config");
+            } else return new ArrayList<>(Collections.singleton(loader.loadType(generic, c, depthTracker.index(0)))); // Singleton
+        } else throw new LoadException("Unable to load config", depthTracker);
         return list;
     }
 }

@@ -11,7 +11,7 @@ public class ExtensionTest {
     @Test
     public void load() throws ConfigException {
         ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(Type.class, (TypeLoader<Type>) (t, c, loader1) -> Type.valueOf((String) c));
+        loader.registerLoader(Type.class, (TypeLoader<Type>) (t, c, loader1, depthTracker) -> Type.valueOf((String) c));
         Configuration c = new YamlConfiguration(ExtensionTest.class.getResourceAsStream("/generic/one.yml"));
 
         Chooser chooser = new Chooser();

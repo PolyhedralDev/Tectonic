@@ -1,5 +1,6 @@
 package com.dfsek.tectonic.api.depth;
 
+import com.dfsek.tectonic.api.config.Configuration;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
@@ -7,14 +8,16 @@ import java.util.List;
 
 public final class DepthTracker {
     private final List<Level> levels;
+    private final Configuration configuration;
 
     @ApiStatus.Internal
-    public DepthTracker(List<Level> levels) {
+    public DepthTracker(List<Level> levels, Configuration configuration) {
         this.levels = levels;
+        this.configuration = configuration;
     }
 
     public DepthTracker with(Level level) {
-        DepthTracker that = new DepthTracker(new ArrayList<>(levels));
+        DepthTracker that = new DepthTracker(new ArrayList<>(levels), configuration);
         that.levels.add(level);
         return that;
     }
@@ -27,7 +30,7 @@ public final class DepthTracker {
         return with(new EntryLevel(entry));
     }
 
-    public String descriptor() {
+    public String pathDescriptor() {
         StringBuilder builder = new StringBuilder();
 
         for(int depth = 0; depth < levels.size(); depth++) {
@@ -38,5 +41,13 @@ public final class DepthTracker {
             builder.append(level.identify());
         }
         return builder.toString();
+    }
+
+    public String getConfigurationName() {
+        if(configuration.getName() == null) {
+            return "Anonymous Configuration";
+        } else {
+            return configuration.getName();
+        }
     }
 }

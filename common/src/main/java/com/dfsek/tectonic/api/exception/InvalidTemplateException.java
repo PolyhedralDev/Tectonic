@@ -1,11 +1,9 @@
 package com.dfsek.tectonic.api.exception;
 
-public class InvalidTemplateException extends ConfigException {
-    public InvalidTemplateException(String message) {
-        super(message);
-    }
+import com.dfsek.tectonic.api.depth.DepthTracker;
 
-    public InvalidTemplateException(String message, Throwable cause) {
-        super(message, cause);
+public class InvalidTemplateException extends ConfigException {
+    public InvalidTemplateException(String message, DepthTracker tracker) {
+        super(message, tracker);
     }
 }

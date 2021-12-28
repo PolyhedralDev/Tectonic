@@ -14,7 +14,7 @@ public class HoconConfiguration implements Configuration {
     private final String name;
 
     public HoconConfiguration(InputStream is) {
-        this(is, is.toString());
+        this(is, null);
     }
 
     public HoconConfiguration(InputStream is, String name) {

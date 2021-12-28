@@ -16,7 +16,7 @@ public class YamlConfiguration implements Configuration {
     private final String name;
 
     public YamlConfiguration(InputStream is) {
-        this(is, is.toString());
+        this(is, null);
     }
 
     public YamlConfiguration(InputStream is, String name) {

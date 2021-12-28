@@ -1,5 +1,6 @@
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
@@ -101,7 +102,7 @@ public class TypeTest {
     public static class ExampleLoader implements TypeLoader<ExampleInterface> {
 
         @Override
-        public ExampleInterface load(@NotNull AnnotatedType t, Object c, @NotNull ConfigLoader loader) throws LoadException {
+        public ExampleInterface load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
             System.out.println(c.getClass());
             Map<String, Object> map = (Map<String, Object>) c;
             switch((String) map.get("type")) {

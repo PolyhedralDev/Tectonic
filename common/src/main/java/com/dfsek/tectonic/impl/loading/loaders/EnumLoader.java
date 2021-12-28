@@ -1,5 +1,6 @@
 package com.dfsek.tectonic.impl.loading.loaders;
 
+import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
@@ -12,7 +13,7 @@ import java.lang.reflect.Type;
 public class EnumLoader implements TypeLoader<Enum<?>> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public Enum<?> load(AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader) throws LoadException {
+    public Enum<?> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
         Class<Enum> enumClass;
 
         Type base = t.getType();

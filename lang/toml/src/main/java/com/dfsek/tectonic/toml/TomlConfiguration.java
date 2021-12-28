@@ -1,7 +1,6 @@
 package com.dfsek.tectonic.toml;
 
 import com.dfsek.tectonic.api.config.Configuration;
-import com.dfsek.tectonic.api.exception.ConfigParseException;
 import org.jetbrains.annotations.NotNull;
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
@@ -10,6 +9,7 @@ import org.tomlj.TomlTable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public class TomlConfiguration implements Configuration {
     private String name;
 
     public TomlConfiguration(InputStream is) {
-        this(is, is.toString());
+        this(is, null);
     }
 
     public TomlConfiguration(InputStream is, String name) {
@@ -27,7 +27,7 @@ public class TomlConfiguration implements Configuration {
         try {
             this.config = Toml.parse(is);
         } catch(IOException e) {
-            throw new ConfigParseException("Failed to parse TOML: ", e);
+            throw new UncheckedIOException(e);
         }
     }
 

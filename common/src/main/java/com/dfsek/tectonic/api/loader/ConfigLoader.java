@@ -5,6 +5,7 @@ import com.dfsek.tectonic.api.TypeRegistry;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
+import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.exception.ValidationException;
@@ -37,6 +38,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -141,7 +143,11 @@ public class ConfigLoader implements TypeRegistry {
      * @throws ConfigException If config cannot be loaded.
      */
     public <T extends ConfigTemplate> T load(T config, Configuration configuration) throws ConfigException {
-        T result = config.loader().load(config, configuration, this::loadValue);
+        return load(config, configuration, new DepthTracker(Collections.emptyList(), configuration));
+    }
+
+    public <T extends ConfigTemplate> T load(T config, Configuration configuration, DepthTracker depthTracker) throws ConfigException {
+        T result = config.loader().load(config, configuration, this::loadValue, depthTracker);
         if(result instanceof ValidatedConfigTemplate
                 && !((ValidatedConfigTemplate) result).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
@@ -149,18 +155,18 @@ public class ConfigLoader implements TypeRegistry {
         return result;
     }
 
-    private Object loadValue(String value, AnnotatedType type, Configuration configuration, boolean isFinal) {
+    private Object loadValue(String value, AnnotatedType type, Configuration configuration, DepthTracker depthTracker, boolean isFinal) {
         if(containsFinal(configuration, value)) { // If config contains value, load it.
-            return loadType(type, getFinal(configuration, value)); // Re-assign if type is found in registry.
+            return loadType(type, getFinal(configuration, value), depthTracker); // Re-assign if type is found in registry.
         } else if(!isFinal && (configuration instanceof AbstractConfiguration)) { // If value is abstractable, try to get it from parent configs.
             Object abs = configuration.get(value);
             if(abs == null) {
-                throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config, or its parents: " + configuration.getName()); // Throw exception if value is not provided, and isn't in parents.
+                throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config, or its parents: " + configuration.getName(), depthTracker); // Throw exception if value is not provided, and isn't in parents.
             }
-            return loadType(type, abs);
+            return loadType(type, abs, depthTracker);
 
         }
-        throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config: " + configuration.getName()); // Throw exception if value is not provided, and isn't abstractable
+        throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config: " + configuration.getName(), depthTracker); // Throw exception if value is not provided, and isn't abstractable
     }
 
     private Object getFinal(Configuration configuration, String key) {
@@ -183,7 +189,7 @@ public class ConfigLoader implements TypeRegistry {
      * @throws LoadException If object could not be loaded.
      */
     @SuppressWarnings("unchecked")
-    public Object loadType(AnnotatedType t, Object o) throws LoadException {
+    public Object loadType(AnnotatedType t, Object o, DepthTracker depthTracker) throws LoadException {
         for(Annotation annotation : t.getAnnotations()) {
             if(preprocessors.containsKey(annotation.annotationType())) {
                 for(ValuePreprocessor<?> preprocessor : preprocessors.get(annotation.annotationType())) {
@@ -191,40 +197,40 @@ public class ConfigLoader implements TypeRegistry {
                 }
             }
         }
-        return getObject(t, o);
+        return getObject(t, o, depthTracker);
     }
 
-    private Object getObject(AnnotatedType t, Object o) throws LoadException {
+    private Object getObject(AnnotatedType t, Object o, DepthTracker depthTracker) throws LoadException {
         try {
             Type raw = t.getType();
-            if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
+            if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this, depthTracker);
             if(t instanceof AnnotatedParameterizedType) {
                 raw = ((ParameterizedType) t.getType()).getRawType();
-                if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this);
+                if(loaders.containsKey(raw)) return loaders.get(raw).load(t, o, this, depthTracker);
             }
 
             if(raw instanceof Class && ((Class<?>) raw).isEnum()) {
-                return ENUM_LOADER.load(t, o, this); // Special enum loader if enum doesn't already have loader defined.
+                return ENUM_LOADER.load(t, o, this, depthTracker); // Special enum loader if enum doesn't already have loader defined.
             }
-
-            throw new LoadException("No loaders are registered for type " + t.getType().getTypeName());
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
-            throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e);
+            throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e, depthTracker);
         }
+
+        throw new LoadException("No loaders are registered for type " + t.getType().getTypeName(), depthTracker);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T loadType(Class<T> clazz, Object o) throws LoadException {
+    public <T> T loadType(Class<T> clazz, Object o, DepthTracker depthTracker) throws LoadException {
         try {
             if(loaders.containsKey(clazz))
-                return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this));
+                return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this, depthTracker));
             else return ReflectionUtil.cast(clazz, o);
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;
         } catch(Exception e) { // Catch, wrap, and rethrow exception.
-            throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e);
+            throw new LoadException("Unexpected exception thrown during type loading: " + e.getMessage(), e, depthTracker);
         }
     }
 }
