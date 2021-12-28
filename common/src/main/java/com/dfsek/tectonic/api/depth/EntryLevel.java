@@ -24,4 +24,8 @@ class EntryLevel implements Level {
     public String verboseDescriptor() {
         return "In entry \"" + name + "\"";
     }
+
+    public String getName() {
+        return name;
+    }
 }
