@@ -1,5 +1,6 @@
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.preprocessor.Result;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
@@ -55,7 +56,7 @@ public class PreprocessorTest {
     private static final class TestPreprocessor implements ValuePreprocessor<TestAnnotation> {
         @Override
         @NotNull
-        public <T> Result<T> process(AnnotatedType t, T c, ConfigLoader loader, TestAnnotation annotation) {
+        public <T> Result<T> process(AnnotatedType t, T c, ConfigLoader loader, TestAnnotation annotation, DepthTracker tracker) {
             System.out.println("Transforming value: " + c + " of type " + t.getType().getTypeName());
             return Result.noOp();
         }
@@ -65,8 +66,8 @@ public class PreprocessorTest {
         @SuppressWarnings("unchecked")
         @Override
         @NotNull
-        public <T> Result<T> process(AnnotatedType t, T c, ConfigLoader loader, TestOverwrite annotation) {
-            return (Result<T>) Result.overwrite(c + ":overwritten");
+        public <T> Result<T> process(AnnotatedType t, T c, ConfigLoader loader, TestOverwrite annotation, DepthTracker tracker) {
+            return (Result<T>) Result.overwrite(c + ":overwritten", tracker.intrinsic("Overwritten"));
         }
     }
 }

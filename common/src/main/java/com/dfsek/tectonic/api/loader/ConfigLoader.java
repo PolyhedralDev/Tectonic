@@ -11,6 +11,7 @@ import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.exception.ValidationException;
 import com.dfsek.tectonic.api.exception.ValueMissingException;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
+import com.dfsek.tectonic.api.preprocessor.Result;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.impl.loading.loaders.EnumLoader;
@@ -193,7 +194,10 @@ public class ConfigLoader implements TypeRegistry {
         for(Annotation annotation : t.getAnnotations()) {
             if(preprocessors.containsKey(annotation.annotationType())) {
                 for(ValuePreprocessor<?> preprocessor : preprocessors.get(annotation.annotationType())) {
-                    o = ((ValuePreprocessor<Annotation>) preprocessor).process(t, o, this, annotation).apply(o);
+                    Result<Object> result = ((ValuePreprocessor<Annotation>) preprocessor)
+                            .process(t, o, this, annotation, depthTracker);
+                    o = result.apply(o);
+                    depthTracker = result.getTracker(depthTracker);
                 }
             }
         }
