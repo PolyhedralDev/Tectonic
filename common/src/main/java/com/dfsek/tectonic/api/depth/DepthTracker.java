@@ -8,6 +8,7 @@ import java.util.List;
 
 public final class DepthTracker {
     private final List<Level> levels;
+    private final List<InjectingIntrinsicLevel> intrinsicLevels = new ArrayList<>();
     private final Configuration configuration;
 
     @ApiStatus.Internal
@@ -19,7 +20,12 @@ public final class DepthTracker {
     public DepthTracker with(Level level) {
         DepthTracker that = new DepthTracker(new ArrayList<>(levels), configuration);
         that.levels.add(level);
+        intrinsicLevels.forEach(intrinsicLevel -> intrinsicLevel.inject(level).ifPresent(s -> that.levels.add(new IntrinsicLevel(s))));
         return that;
+    }
+
+    public void addIntrinsicLevel(InjectingIntrinsicLevel intrinsicLevel) {
+        intrinsicLevels.add(intrinsicLevel);
     }
 
     public DepthTracker index(int index) {
