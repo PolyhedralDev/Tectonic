@@ -3,7 +3,7 @@ package com.dfsek.tectonic.api.depth;
 /**
  * An entry in a map.
  */
-class EntryLevel implements Level {
+public class EntryLevel implements Level {
     private final String name;
 
     public EntryLevel(String name) {

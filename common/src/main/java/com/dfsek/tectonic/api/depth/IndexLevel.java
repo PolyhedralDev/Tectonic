@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.api.depth;
 
-class IndexLevel implements Level {
+public class IndexLevel implements Level {
     private final int index;
 
     public IndexLevel(int index) {
