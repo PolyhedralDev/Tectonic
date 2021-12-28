@@ -21,4 +21,8 @@ class IndexLevel implements Level {
     public String verboseDescriptor() {
         return "At index " + index;
     }
+
+    public int getIndex() {
+        return index;
+    }
 }
