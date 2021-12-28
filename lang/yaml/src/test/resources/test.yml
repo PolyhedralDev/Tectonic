@@ -11,7 +11,7 @@ object:
       number: 5
       nested:
         - string: "dgdsfg"
-          number: 4f
+          number: 4
         - string: "dfgdsfg"
           number: 5
     - string: "b"

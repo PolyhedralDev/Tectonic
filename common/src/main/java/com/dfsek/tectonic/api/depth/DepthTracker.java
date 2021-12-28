@@ -30,6 +30,10 @@ public final class DepthTracker {
         return with(new EntryLevel(entry));
     }
 
+    public DepthTracker intrinsic(String intrinsicInfo) {
+        return with(new IntrinsicLevel(intrinsicInfo));
+    }
+
     public String pathDescriptor() {
         StringBuilder builder = new StringBuilder();
 
