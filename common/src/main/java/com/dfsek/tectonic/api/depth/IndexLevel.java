@@ -8,12 +8,17 @@ public class IndexLevel implements Level {
     }
 
     @Override
-    public String identify() {
+    public String descriptor() {
         return "[" + index + "]";
     }
 
     @Override
     public String joinDescriptor() {
         return "";
+    }
+
+    @Override
+    public String verboseDescriptor() {
+        return "At index " + index;
     }
 }

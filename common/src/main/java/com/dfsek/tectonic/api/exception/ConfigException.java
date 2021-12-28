@@ -12,8 +12,9 @@ public abstract class ConfigException extends RuntimeException {
     private static String createMessage(String message, DepthTracker tracker) {
         return "Failed to load configuration:" +
                 "\n\n\tConfiguration: " + tracker.getConfigurationName() +
-                "\n\tFailed to load path: " + tracker.pathDescriptor() +
                 "\n\tMessage: " + message +
+                "\n\tPath: " + tracker.pathDescriptor().replace("\n", "\n\t") +
+                "\n\tFull Path: " + tracker.verbosePathDescriptor().replace("\n", "\n\t") +
                 "\n";
     }
 

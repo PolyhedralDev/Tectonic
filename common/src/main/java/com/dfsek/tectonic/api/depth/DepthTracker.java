@@ -38,7 +38,16 @@ public final class DepthTracker {
             if(depth > 0) {
                 builder.append(level.joinDescriptor());
             }
-            builder.append(level.identify());
+            builder.append(level.descriptor());
+        }
+        return builder.toString();
+    }
+
+    public String verbosePathDescriptor() {
+        StringBuilder builder = new StringBuilder("\n\t").append("From configuration \"").append(getConfigurationName()).append('\"');
+
+        for(Level level : levels) {
+            builder.append("\n\t").append(level.verboseDescriptor());
         }
         return builder.toString();
     }

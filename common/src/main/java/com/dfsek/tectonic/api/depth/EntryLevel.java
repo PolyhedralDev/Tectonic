@@ -11,12 +11,17 @@ public class EntryLevel implements Level {
     }
 
     @Override
-    public String identify() {
+    public String descriptor() {
         return name;
     }
 
     @Override
     public String joinDescriptor() {
         return ".";
+    }
+
+    @Override
+    public String verboseDescriptor() {
+        return "In entry \"" + name + "\"";
     }
 }
