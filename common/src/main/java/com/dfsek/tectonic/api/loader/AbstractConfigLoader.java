@@ -24,23 +24,28 @@ import java.util.function.Supplier;
  * Class to load several configs that may depend on each other.
  */
 public class AbstractConfigLoader implements TypeRegistry {
-    private final ConfigLoader delegate = new ConfigLoader();
+    private final ConfigLoader delegate;
+
+    public AbstractConfigLoader() {
+        this.delegate  = new ConfigLoader();
+    }
+
+    public AbstractConfigLoader(ConfigLoader loader) {
+        this.delegate = loader;
+    }
 
     @Override
     public @NotNull AbstractConfigLoader registerLoader(@NotNull Type t, @NotNull TypeLoader<?> loader) {
-        delegate.registerLoader(t, loader);
-        return this;
+        return new AbstractConfigLoader(delegate.registerLoader(t, loader));
     }
 
     @Override
     public <T> @NotNull AbstractConfigLoader registerLoader(@NotNull Type t, @NotNull Supplier<ObjectTemplate<T>> provider) {
-        delegate.registerLoader(t, provider);
-        return this;
+        return new AbstractConfigLoader(delegate.registerLoader(t, provider));
     }
 
     public <T extends Annotation> AbstractConfigLoader registerPreprocessor(Class<? extends T> clazz, ValuePreprocessor<T> processor) {
-        delegate.registerPreprocessor(clazz, processor);
-        return this;
+        return new AbstractConfigLoader(delegate.registerPreprocessor(clazz, processor));
     }
 
     public Set<AbstractConfiguration> loadConfigs(List<Configuration> configurations) throws ConfigException {
