@@ -18,10 +18,10 @@ import java.util.function.Supplier;
  */
 public interface TypeRegistry {
     @NotNull
-    @Contract("_, _ -> this")
+    @Contract("_, _ -> new")
     TypeRegistry registerLoader(@NotNull Type t, @NotNull TypeLoader<?> loader);
 
     @NotNull
-    @Contract("_, _ -> this")
+    @Contract("_, _ -> new")
     <T> TypeRegistry registerLoader(@NotNull Type t, @NotNull Supplier<ObjectTemplate<T>> provider);
 }

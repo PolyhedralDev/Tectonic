@@ -52,61 +52,75 @@ import java.util.function.Supplier;
  */
 public class ConfigLoader implements TypeRegistry {
     private static final EnumLoader ENUM_LOADER = new EnumLoader();
-    private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
-    private final Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> preprocessors = new HashMap<>();
 
-    public ConfigLoader() {
+    private static final Map<Type, TypeLoader<?>> DEFAULT_LOADERS;
+    private final Map<Type, TypeLoader<?>> loaders;
+
+    static {
         // Default primitive/wrapper loaders
+        Map<Type, TypeLoader<?>> loaderMap = new HashMap<>();
         BooleanLoader booleanLoader = new BooleanLoader();
-        registerLoader(boolean.class, booleanLoader);
-        registerLoader(Boolean.class, booleanLoader);
+        loaderMap.put(boolean.class, booleanLoader);
+        loaderMap.put(Boolean.class, booleanLoader);
 
         ByteLoader byteLoader = new ByteLoader();
-        registerLoader(byte.class, byteLoader);
-        registerLoader(Byte.class, byteLoader);
+        loaderMap.put(byte.class, byteLoader);
+        loaderMap.put(Byte.class, byteLoader);
 
         ShortLoader shortLoader = new ShortLoader();
-        registerLoader(short.class, shortLoader);
-        registerLoader(Short.class, shortLoader);
+        loaderMap.put(short.class, shortLoader);
+        loaderMap.put(Short.class, shortLoader);
 
         CharLoader charLoader = new CharLoader();
-        registerLoader(char.class, charLoader);
-        registerLoader(Character.class, charLoader);
+        loaderMap.put(char.class, charLoader);
+        loaderMap.put(Character.class, charLoader);
 
         IntLoader intLoader = new IntLoader();
-        registerLoader(int.class, intLoader);
-        registerLoader(Integer.class, intLoader);
+        loaderMap.put(int.class, intLoader);
+        loaderMap.put(Integer.class, intLoader);
 
         LongLoader longLoader = new LongLoader();
-        registerLoader(long.class, longLoader);
-        registerLoader(Long.class, longLoader);
+        loaderMap.put(long.class, longLoader);
+        loaderMap.put(Long.class, longLoader);
 
         FloatLoader floatLoader = new FloatLoader();
-        registerLoader(float.class, floatLoader);
-        registerLoader(Float.class, floatLoader);
+        loaderMap.put(float.class, floatLoader);
+        loaderMap.put(Float.class, floatLoader);
 
         DoubleLoader doubleLoader = new DoubleLoader();
-        registerLoader(double.class, doubleLoader);
-        registerLoader(Double.class, doubleLoader);
+        loaderMap.put(double.class, doubleLoader);
+        loaderMap.put(Double.class, doubleLoader);
 
         // Default class loaders
-        registerLoader(String.class, new StringLoader());
+        loaderMap.put(String.class, new StringLoader());
 
         ArrayListLoader arrayListLoader = new ArrayListLoader();
-        registerLoader(ArrayList.class, arrayListLoader);
-        registerLoader(List.class, arrayListLoader); // Lists will default to ArrayList.
+        loaderMap.put(ArrayList.class, arrayListLoader);
+        loaderMap.put(List.class, arrayListLoader); // Lists will default to ArrayList.
 
         HashMapLoader hashMapLoader = new HashMapLoader();
-        registerLoader(HashMap.class, hashMapLoader);
-        registerLoader(Map.class, hashMapLoader); // Maps will default to HashMap.
+        loaderMap.put(HashMap.class, hashMapLoader);
+        loaderMap.put(Map.class, hashMapLoader); // Maps will default to HashMap.
 
         HashSetLoader hashSetLoader = new HashSetLoader();
-        registerLoader(HashSet.class, hashSetLoader);
-        registerLoader(Set.class, hashSetLoader); // Sets will default to HashSet.
+        loaderMap.put(HashSet.class, hashSetLoader);
+        loaderMap.put(Set.class, hashSetLoader); // Sets will default to HashSet.
 
-        registerLoader(Duration.class, new DurationLoader());
+        loaderMap.put(Duration.class, new DurationLoader());
 
-        registerLoader(Enum.class, ENUM_LOADER);
+        loaderMap.put(Enum.class, ENUM_LOADER);
+
+        DEFAULT_LOADERS = Collections.unmodifiableMap(loaderMap);
+    }
+    private final Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> preprocessors;
+
+    public ConfigLoader() {
+        loaders = Collections.unmodifiableMap(new HashMap<>(DEFAULT_LOADERS));
+        this.preprocessors = Collections.emptyMap();
+    }
+    private ConfigLoader(Map<Type, TypeLoader<?>> loaders, Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> preprocessors) {
+        this.loaders = Collections.unmodifiableMap(loaders);
+        this.preprocessors = Collections.unmodifiableMap(preprocessors);
     }
 
     /**
@@ -117,18 +131,19 @@ public class ConfigLoader implements TypeRegistry {
      * @return This config loader
      */
     public @NotNull ConfigLoader registerLoader(@NotNull Type t, @NotNull TypeLoader<?> loader) {
-        loaders.put(t, loader);
-        return this;
+        HashMap<Type, TypeLoader<?>> map = new HashMap<>(loaders);
+        map.put(t, loader);
+        return new ConfigLoader(map, preprocessors);
     }
 
     public <T> @NotNull ConfigLoader registerLoader(@NotNull Type t, @NotNull Supplier<ObjectTemplate<T>> provider) {
-        loaders.put(t, new ObjectTemplateLoader<>(provider));
-        return this;
+        return registerLoader(t, new ObjectTemplateLoader<>(provider));
     }
 
     public <T extends Annotation> ConfigLoader registerPreprocessor(Class<? extends T> clazz, ValuePreprocessor<T> processor) {
-        preprocessors.computeIfAbsent(clazz, c -> new ArrayList<>()).add(processor);
-        return this;
+        Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> map = new HashMap<>(preprocessors);
+        map.computeIfAbsent(clazz, c -> new ArrayList<>()).add(processor);
+        return new ConfigLoader(loaders, map);
     }
 
     public boolean hasLoader(Type t) {
