@@ -10,8 +10,8 @@ import java.util.Map;
 public class TomlTest {
     @Test
     void toml() {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(Server.class, Server::new);
+        ConfigLoader loader = new ConfigLoader()
+                .registerLoader(Server.class, Server::new);
         TomlTemplate template = new TomlTemplate();
         loader.load(template, new TomlConfiguration(TomlTest.class.getResourceAsStream("/test.toml")));
 

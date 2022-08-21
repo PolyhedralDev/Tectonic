@@ -17,8 +17,8 @@ public class TypeTest {
 
     @Test
     public void test() throws ConfigException {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(ExampleInterface.class, new ExampleLoader());
+        ConfigLoader loader = new ConfigLoader()
+                .registerLoader(ExampleInterface.class, new ExampleLoader());
 
         Config config = new Config();
 

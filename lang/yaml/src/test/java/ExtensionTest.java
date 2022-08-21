@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 public class ExtensionTest {
     @Test
     public void load() throws ConfigException {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(Type.class, (TypeLoader<Type>) (t, c, loader1, depthTracker) -> Type.valueOf((String) c));
+        ConfigLoader loader = new ConfigLoader()
+                .registerLoader(Type.class, (TypeLoader<Type>) (t, c, loader1, depthTracker) -> Type.valueOf((String) c));
         Configuration c = new YamlConfiguration(ExtensionTest.class.getResourceAsStream("/generic/one.yml"));
 
         Chooser chooser = new Chooser();

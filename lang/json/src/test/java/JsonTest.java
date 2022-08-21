@@ -10,8 +10,8 @@ import java.util.Map;
 public class JsonTest {
     @Test
     void json() {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(Server.class, Server::new);
+        ConfigLoader loader = new ConfigLoader()
+                .registerLoader(Server.class, Server::new);
         JsonTemplate template = new JsonTemplate();
         loader.load(template, new JsonConfiguration(JsonTest.class.getResourceAsStream("/test.json")));
 

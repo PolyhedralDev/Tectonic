@@ -18,9 +18,9 @@ import java.util.List;
 public class PreprocessorTest {
     @Test
     public void preprocessor() {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerPreprocessor(TestAnnotation.class, new TestPreprocessor());
-        loader.registerPreprocessor(TestOverwrite.class, new TestOverwritePreprocessor());
+        ConfigLoader loader = new ConfigLoader()
+                .registerPreprocessor(TestAnnotation.class, new TestPreprocessor())
+                .registerPreprocessor(TestOverwrite.class, new TestOverwritePreprocessor());
         TestConfig config = new TestConfig();
         loader.load(config, new YamlConfiguration(PreprocessorTest.class.getResourceAsStream("/preprocessor.yml")));
         System.out.println("overwritten things: " + config.overwritten);

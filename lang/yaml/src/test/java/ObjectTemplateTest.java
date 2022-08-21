@@ -12,8 +12,8 @@ import java.util.List;
 public class ObjectTemplateTest {
     @Test
     public void test() throws ConfigException {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(TestObject.class, TestTemplate::new);
+        ConfigLoader loader = new ConfigLoader()
+                .registerLoader(TestObject.class, TestTemplate::new);
 
         ExampleConfig example = new ExampleConfig();
         loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/test.yml"), "test.yml"));

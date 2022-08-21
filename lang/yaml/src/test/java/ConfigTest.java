@@ -8,8 +8,8 @@ import java.util.Map;
 public class ConfigTest {
     @Test
     public void config() throws ConfigException {
-        ConfigLoader loader = new ConfigLoader();
-        loader.registerLoader(TestObject.class, new TestObjectLoader());
+        ConfigLoader loader = new ConfigLoader()
+                .registerLoader(TestObject.class, new TestObjectLoader());
         ExampleConfig example = new ExampleConfig();
         loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/test.yml")));
         System.out.println(example.getString1());
