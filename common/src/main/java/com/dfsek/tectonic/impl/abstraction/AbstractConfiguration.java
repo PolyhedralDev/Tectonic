@@ -2,6 +2,7 @@ package com.dfsek.tectonic.impl.abstraction;
 
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
+import com.dfsek.tectonic.api.loader.Prototype;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

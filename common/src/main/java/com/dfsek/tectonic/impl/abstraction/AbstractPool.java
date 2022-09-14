@@ -1,6 +1,7 @@
 package com.dfsek.tectonic.impl.abstraction;
 
 import com.dfsek.tectonic.api.exception.abstraction.AbstractionException;
+import com.dfsek.tectonic.api.loader.Prototype;
 
 import java.util.Collections;
 import java.util.HashMap;

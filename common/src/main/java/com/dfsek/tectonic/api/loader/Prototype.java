@@ -1,20 +1,17 @@
-package com.dfsek.tectonic.impl.abstraction;
+package com.dfsek.tectonic.api.loader;
 
 import com.dfsek.tectonic.api.exception.abstraction.AbstractionException;
 import com.dfsek.tectonic.api.exception.abstraction.CircularInheritanceException;
 import com.dfsek.tectonic.api.exception.abstraction.ParentNotFoundException;
-import com.dfsek.tectonic.api.config.template.annotations.Default;
-import com.dfsek.tectonic.api.config.template.annotations.Final;
-import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.ValidationException;
-import com.dfsek.tectonic.api.loader.ConfigLoader;
+import com.dfsek.tectonic.impl.abstraction.AbstractPool;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,26 +21,12 @@ import java.util.Set;
  * abstraction) loaded, and nothing more.
  */
 @SuppressWarnings("unused")
-public class Prototype implements ValidatedConfigTemplate {
+public abstract class Prototype implements ValidatedConfigTemplate {
     private final List<Prototype> children = new ArrayList<>();
     private final Configuration config;
     private final List<Prototype> parents = new ArrayList<>();
     private boolean isRoot = false;
 
-
-    @Value("id")
-    @Final
-    private String id;
-    @SuppressWarnings("FieldMayBeFinal")
-    @Value("extends")
-    @Final
-    @Default
-    private List<String> extend = Collections.emptyList();
-    @SuppressWarnings("FieldMayBeFinal")
-    @Value("abstract")
-    @Final
-    @Default
-    private boolean isAbstract = false;
 
     /**
      * Instantiate a Prototype with a configuration. This will load the prototype using a freshly constructed
@@ -73,9 +56,7 @@ public class Prototype implements ValidatedConfigTemplate {
      *
      * @return True if this Prototype is abstract.
      */
-    public boolean isAbstract() {
-        return isAbstract;
-    }
+    public abstract boolean isAbstract();
 
     /**
      * Build this Prototype's inheritance from an AbstractPool
@@ -84,9 +65,13 @@ public class Prototype implements ValidatedConfigTemplate {
      * @param parents Set of parents, to check for circular inheritance.
      * @throws AbstractionException if invalid abstraction data is found.
      */
-    protected void build(AbstractPool pool, Set<Prototype> parents) throws AbstractionException {
+    @ApiStatus.Internal
+    public void build(AbstractPool pool, Set<Prototype> parents) throws AbstractionException {
+        String id = getID();
+        List<String> extend = getExtends();
+
         if(parents.contains(this))
-            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getID() + "\", extending \"" + extend + "\"");
+            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + id + "\", extending \"" + extend + "\"");
 
         Set<Prototype> newParents = new HashSet<>(parents);
         newParents.add(this);
@@ -110,9 +95,10 @@ public class Prototype implements ValidatedConfigTemplate {
      * @return ID of Prototype.
      */
     @NotNull
-    public String getID() {
-        return id;
-    }
+    public abstract String getID();
+
+    @NotNull
+    public abstract List<String> getExtends();
 
     /**
      * Get this Prototype's parent, if it exists.
@@ -136,6 +122,7 @@ public class Prototype implements ValidatedConfigTemplate {
 
     @Override
     public boolean validate() throws ValidationException {
+        String id = getID();
         if(!id.matches("^[a-zA-Z0-9_-]*$"))
             throw new ValidationException("ID must only contain alphanumeric characters, hyphens, and underscores. \"" + id + "\" is not a valid ID.");
         return true;

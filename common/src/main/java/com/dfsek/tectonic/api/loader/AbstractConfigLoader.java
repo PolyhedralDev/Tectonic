@@ -9,7 +9,7 @@ import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.impl.abstraction.AbstractPool;
-import com.dfsek.tectonic.impl.abstraction.Prototype;
+import com.dfsek.tectonic.impl.abstraction.proto.ConfigPrototype;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Class to load several configs that may depend on each other.
@@ -48,10 +49,13 @@ public class AbstractConfigLoader implements TypeRegistry {
         return new AbstractConfigLoader(delegate.registerPreprocessor(clazz, processor));
     }
 
-    public Set<AbstractConfiguration> loadConfigs(List<Configuration> configurations) throws ConfigException {
+    public Set<AbstractConfiguration> loadWithConfig(List<Configuration> configurations) {
+        return loadConfigs(configurations.stream().map(ConfigPrototype::new).collect(Collectors.toList()));
+    }
+
+    public Set<AbstractConfiguration> loadConfigs(List<Prototype> configurations) throws ConfigException {
         AbstractPool pool = new AbstractPool();
-        for(Configuration config : configurations) {
-            Prototype p = new Prototype(config);
+        for(Prototype p : configurations) {
             pool.add(p);
         }
         pool.loadAll();
@@ -76,7 +80,7 @@ public class AbstractConfigLoader implements TypeRegistry {
      */
     public <E extends ConfigTemplate> Set<E> loadTemplates(List<Configuration> configurations, Supplier<E> provider) throws ConfigException {
         Set<E> templates = new HashSet<>();
-        loadConfigs(configurations).forEach(config -> templates.add(delegate.load(provider.get(), config)));
+        loadWithConfig(configurations).forEach(config -> templates.add(delegate.load(provider.get(), config)));
         return templates;
     }
 

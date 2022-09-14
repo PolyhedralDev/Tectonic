@@ -24,7 +24,10 @@ public class AbstractTest {
         InputStream diamond = AbstractTest.class.getResourceAsStream("/abstract/diamond.yml");
         AbstractConfigLoader loader = new AbstractConfigLoader();
         System.out.println("building...");
-        Set<Template> templateList = loader.loadTemplates(Arrays.asList(one, two, three, abs, abs2, diamond).stream().map(YamlConfiguration::new).collect(Collectors.toList()), Template::new);
+        Set<Template> templateList = loader.loadTemplates(Arrays.asList(one, two, three, abs, abs2, diamond)
+                .stream()
+                .map(YamlConfiguration::new)
+                .collect(Collectors.toList()), Template::new);
         System.out.println("built...");
 
         for(Template t : templateList) {
