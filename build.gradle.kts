@@ -5,7 +5,7 @@ plugins {
     `maven-publish`
 }
 
-val versionObj = Version("4", "2", "0", false)
+val versionObj = Version("4", "2", "1", false)
 
 allprojects {
     version = versionObj
@@ -36,10 +36,10 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:22.0.0")
-        testCompileOnly("org.jetbrains:annotations:22.0.0")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+        compileOnly("org.jetbrains:annotations:24.0.1")
+        testCompileOnly("org.jetbrains:annotations:24.0.1")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
     }
 
     java {

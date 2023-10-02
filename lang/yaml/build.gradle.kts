@@ -1,5 +1,5 @@
 dependencies {
     api(project(":common"))
 
-    api("org.yaml:snakeyaml:1.27")
+    api("org.yaml:snakeyaml:2.2")
 }
