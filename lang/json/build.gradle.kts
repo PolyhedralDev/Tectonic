@@ -1,6 +1,12 @@
-dependencies {
-    api(project(":common"))
+plugins {
+    `tectonic-common`
+    `tectonic-testing`
+    `tectonic-publishing`
+}
 
-    api("com.google.code.gson:gson:2.10.1")
+dependencies {
+    api(projects.common)
+
+    api(libs.gson)
 }
 

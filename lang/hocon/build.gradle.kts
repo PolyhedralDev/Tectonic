@@ -1,5 +1,11 @@
-dependencies {
-    api(project(":common"))
+plugins {
+    `tectonic-common`
+    `tectonic-testing`
+    `tectonic-publishing`
+}
 
-    api("com.typesafe:config:1.4.2")
+dependencies {
+    api(projects.common)
+
+    api(libs.lightbend.config)
 }

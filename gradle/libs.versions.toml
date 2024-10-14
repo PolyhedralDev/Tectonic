@@ -1,0 +1,48 @@
+[versions]
+nyx = "0.2.3"
+
+axion-release = "1.18.12"
+
+jetbrains-annotations = "24.0.1"
+
+commons-io = "2.11.0"
+
+lightbend-config = "1.4.3"
+
+gson = "2.10.1"
+
+tomlj = "1.1.0"
+
+snakeyaml = "2.2"
+
+junit-jupiter = "5.10.3"
+
+[plugins]
+
+nyx = { id = "ca.solo-studios.nyx", version.ref = "nyx" }
+
+axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion-release" }
+
+[libraries]
+jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
+
+commons-io = { group = "commons-io", name = "commons-io", version.ref = "commons-io" }
+
+lightbend-config = { group = "com.typesafe", name = "config", version.ref = "lightbend-config" }
+
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+tomlj = { group = "org.tomlj", name = "tomlj", version.ref = "tomlj" }
+
+snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
+
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit-jupiter" }
+
+[bundles]
+junit = [
+    "junit-jupiter-api",
+    "junit-jupiter-engine",
+    "junit-jupiter-params"
+]
