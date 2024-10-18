@@ -1,5 +1,11 @@
-dependencies {
-    api(project(":common"))
+plugins {
+    `tectonic-common`
+    `tectonic-testing`
+    `tectonic-publishing`
+}
 
-    api("org.yaml:snakeyaml:2.2")
+dependencies {
+    api(projects.common)
+
+    api(libs.snakeyaml)
 }

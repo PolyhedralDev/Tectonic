@@ -1,7 +1,13 @@
-dependencies {
-    api(project(":common"))
+plugins {
+    `tectonic-common`
+    `tectonic-testing`
+    `tectonic-publishing`
+}
 
-    api("org.tomlj:tomlj:1.1.0")
+dependencies {
+    api(projects.common)
+
+    api(libs.tomlj)
 }
 
 
