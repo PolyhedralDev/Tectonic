@@ -14,10 +14,5 @@ tasks {
         ignoreFailures = false
         failFast = true
         maxParallelForks = (Runtime.getRuntime().availableProcessors() - 1).coerceAtLeast(1)
-
-        reports {
-            html.required = false
-            junitXml.required = false
-        }
     }
 }
