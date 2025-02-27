@@ -1,3 +1,5 @@
+import ca.solostudios.nyx.util.reposiliteMaven
+
 plugins {
     java
     `maven-publish`
@@ -25,11 +27,13 @@ nyx {
                 name = "CodeMC"
                 credentials(PasswordCredentials::class)
             }
-            maven("https://maven.solo-studios.ca/releases/") {
+            reposiliteMaven("https://maven.solo-studios.ca/releases/") {
+                name = "SoloStudiosReleases"
                 credentials(PasswordCredentials::class)
-                authentication { // publishing doesn't work without this for some reason
-                    create<BasicAuthentication>("basic")
-                }
+            }
+            reposiliteMaven("https://maven.solo-studios.ca/snapshots/") {
+                name = "SoloStudiosSnapshots"
+                credentials(PasswordCredentials::class)
             }
         }
     }
