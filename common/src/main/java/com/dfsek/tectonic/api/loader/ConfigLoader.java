@@ -1,10 +1,10 @@
 package com.dfsek.tectonic.api.loader;
 
-import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.TypeRegistry;
 import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
+import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;
@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+
 
 /**
  * Class to load a config using reflection magic.
@@ -114,6 +115,7 @@ public class ConfigLoader implements TypeRegistry {
      *
      * @param t      Type
      * @param loader Loader to load type with
+     *
      * @return This config loader
      */
     public @NotNull ConfigLoader registerLoader(@NotNull Type t, @NotNull TypeLoader<?> loader) {
@@ -140,7 +142,9 @@ public class ConfigLoader implements TypeRegistry {
      *
      * @param config        ConfigTemplate to put config on.
      * @param configuration Configuration to load from.
+     *
      * @return The loaded configuration. <b>not</b> a new instance.
+     *
      * @throws ConfigException If config cannot be loaded.
      */
     public <T extends ConfigTemplate> T load(T config, Configuration configuration) throws ConfigException {
@@ -150,7 +154,7 @@ public class ConfigLoader implements TypeRegistry {
     public <T extends ConfigTemplate> T load(T config, Configuration configuration, DepthTracker depthTracker) throws ConfigException {
         T result = config.loader().load(config, configuration, this::loadValue, depthTracker);
         if(result instanceof ValidatedConfigTemplate
-                && !((ValidatedConfigTemplate) result).validate()) {
+           && !((ValidatedConfigTemplate) result).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
         }
         return result;
@@ -159,15 +163,19 @@ public class ConfigLoader implements TypeRegistry {
     private Object loadValue(String value, AnnotatedType type, Configuration configuration, DepthTracker depthTracker, boolean isFinal) {
         if(containsFinal(configuration, value)) { // If config contains value, load it.
             return loadType(type, getFinal(configuration, value), depthTracker); // Re-assign if type is found in registry.
-        } else if(!isFinal && (configuration instanceof AbstractConfiguration)) { // If value is abstractable, try to get it from parent configs.
+        } else if(!isFinal &&
+                  (configuration instanceof AbstractConfiguration)) { // If value is abstractable, try to get it from parent configs.
             Object abs = configuration.get(value);
             if(abs == null) {
-                throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config, or its parents: " + configuration.getName(), depthTracker); // Throw exception if value is not provided, and isn't in parents.
+                throw new ValueMissingException(
+                    "Value \"" + value + "\" was not found in the provided config, or its parents: " + configuration.getName(),
+                    depthTracker); // Throw exception if value is not provided, and isn't in parents.
             }
             return loadType(type, abs, depthTracker);
 
         }
-        throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config: " + configuration.getName(), depthTracker); // Throw exception if value is not provided, and isn't abstractable
+        throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config: " + configuration.getName(),
+            depthTracker); // Throw exception if value is not provided, and isn't abstractable
     }
 
     private Object getFinal(Configuration configuration, String key) {
@@ -186,7 +194,9 @@ public class ConfigLoader implements TypeRegistry {
      *
      * @param t Type of object to load
      * @param o Object to pass to TypeLoader
+     *
      * @return Loaded object.
+     *
      * @throws LoadException If object could not be loaded.
      */
     @SuppressWarnings("unchecked")
@@ -195,7 +205,7 @@ public class ConfigLoader implements TypeRegistry {
             if(preprocessors.containsKey(annotation.annotationType())) {
                 for(ValuePreprocessor<?> preprocessor : preprocessors.get(annotation.annotationType())) {
                     Result<Object> result = ((ValuePreprocessor<Annotation>) preprocessor)
-                            .process(t, o, this, annotation, depthTracker);
+                        .process(t, o, this, annotation, depthTracker);
                     o = result.apply(o);
                     depthTracker = result.getTracker(depthTracker);
                 }
@@ -229,7 +239,8 @@ public class ConfigLoader implements TypeRegistry {
     public <T> T loadType(Class<T> clazz, Object o, DepthTracker depthTracker) throws LoadException {
         try {
             if(loaders.containsKey(clazz))
-                return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this, depthTracker));
+                return ReflectionUtil.cast(clazz, ((TypeLoader<Object>) loaders.get(clazz)).load((Class<Object>) clazz, o, this,
+                    depthTracker));
             else return ReflectionUtil.cast(clazz, o);
         } catch(LoadException e) { // Rethrow LoadExceptions.
             throw e;

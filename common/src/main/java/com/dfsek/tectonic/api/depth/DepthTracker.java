@@ -6,6 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public final class DepthTracker {
     private final List<Level> levels;
     private final List<InjectingIntrinsicLevel> intrinsicLevels = new ArrayList<>();

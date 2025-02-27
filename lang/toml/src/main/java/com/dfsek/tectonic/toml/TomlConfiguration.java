@@ -13,6 +13,7 @@ import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 
+
 public class TomlConfiguration implements Configuration {
     private final TomlParseResult config;
 
@@ -51,7 +52,8 @@ public class TomlConfiguration implements Configuration {
         if(result instanceof TomlTable) return deepToObject(((TomlTable) result).toMap());
         if(result instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) result;
-            map.forEach((key, value) -> map.put(key, deepToObject(value))); // Wont throw CME because we're never adding or removing entries, only updating existing ones.
+            map.forEach((key, value) -> map.put(key,
+                deepToObject(value))); // Wont throw CME because we're never adding or removing entries, only updating existing ones.
         } else if(result instanceof List) {
             List<Object> list = (List<Object>) result;
             for(int i = 0; i < list.size(); i++) {

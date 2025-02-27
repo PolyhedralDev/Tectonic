@@ -1,10 +1,10 @@
 package abstractconfig;
 
-import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
+import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.template.annotations.Final;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
-import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
+import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 public class AbstractTest {
     @Test
@@ -24,7 +25,10 @@ public class AbstractTest {
         InputStream diamond = AbstractTest.class.getResourceAsStream("/abstract/diamond.yml");
         AbstractConfigLoader loader = new AbstractConfigLoader();
         System.out.println("building...");
-        Set<Template> templateList = loader.loadTemplates(Arrays.asList(one, two, three, abs, abs2, diamond).stream().map(YamlConfiguration::new).collect(Collectors.toList()), Template::new);
+        Set<Template> templateList = loader.loadTemplates(Arrays.asList(one, two, three, abs, abs2, diamond)
+            .stream()
+            .map(YamlConfiguration::new)
+            .collect(Collectors.toList()), Template::new);
         System.out.println("built...");
 
         for(Template t : templateList) {

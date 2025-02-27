@@ -5,6 +5,7 @@ import com.dfsek.tectonic.api.depth.DepthTracker;
 
 import java.lang.reflect.AnnotatedType;
 
+
 @FunctionalInterface
 public interface ValueLoader {
     default Object load(String key, AnnotatedType type, Configuration configuration, DepthTracker depthTracker) {

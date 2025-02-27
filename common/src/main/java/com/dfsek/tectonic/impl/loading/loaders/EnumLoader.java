@@ -10,10 +10,12 @@ import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+
 public class EnumLoader implements TypeLoader<Enum<?>> {
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Enum<?> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
+    public Enum<?> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker)
+    throws LoadException {
         Class<Enum> enumClass;
 
         Type base = t.getType();

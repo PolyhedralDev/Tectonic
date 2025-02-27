@@ -1,10 +1,11 @@
-import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
 
 public class EnumTest {
     @Test
@@ -30,6 +31,7 @@ public class EnumTest {
             return thing;
         }
     }
+
 
     public static final class EnumTemplate implements ConfigTemplate {
         @Value("test")

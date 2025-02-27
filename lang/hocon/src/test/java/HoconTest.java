@@ -1,9 +1,10 @@
-import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+
 
 public class HoconTest {
     @Test
@@ -32,6 +33,7 @@ public class HoconTest {
         @Value("servers")
         public Map<String, Server> servers;
     }
+
 
     private static final class Server implements ObjectTemplate<Server> {
         @Value("ip")

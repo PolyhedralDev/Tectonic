@@ -1,9 +1,10 @@
+import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.template.annotations.Default;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
-import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 
 import java.util.List;
 import java.util.Map;
+
 
 @SuppressWarnings("unused")
 public class ExampleConfig extends InheritTest implements ConfigTemplate {

@@ -1,15 +1,15 @@
 package com.dfsek.tectonic.impl.abstraction;
 
-import com.dfsek.tectonic.api.exception.abstraction.AbstractionException;
-import com.dfsek.tectonic.api.exception.abstraction.CircularInheritanceException;
-import com.dfsek.tectonic.api.exception.abstraction.ParentNotFoundException;
+import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.config.template.annotations.Default;
 import com.dfsek.tectonic.api.config.template.annotations.Final;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
-import com.dfsek.tectonic.api.config.Configuration;
-import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.ValidationException;
+import com.dfsek.tectonic.api.exception.abstraction.AbstractionException;
+import com.dfsek.tectonic.api.exception.abstraction.CircularInheritanceException;
+import com.dfsek.tectonic.api.exception.abstraction.ParentNotFoundException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * Represents a partially loaded config. A Prototype config has its ID, Abstract, and Extension keys (required by
@@ -51,6 +52,7 @@ public class Prototype implements ValidatedConfigTemplate {
      * pollution.
      *
      * @param config Config to load Prototype from
+     *
      * @throws ConfigException If the config contains invalid data.
      */
     public Prototype(Configuration config) throws ConfigException {
@@ -82,11 +84,13 @@ public class Prototype implements ValidatedConfigTemplate {
      *
      * @param pool    AbstractPool to search for parent configs.
      * @param parents Set of parents, to check for circular inheritance.
+     *
      * @throws AbstractionException if invalid abstraction data is found.
      */
     protected void build(AbstractPool pool, Set<Prototype> parents) throws AbstractionException {
         if(parents.contains(this))
-            throw new CircularInheritanceException("Circular inheritance detected in config: \"" + getID() + "\", extending \"" + extend + "\"");
+            throw new CircularInheritanceException(
+                "Circular inheritance detected in config: \"" + getID() + "\", extending \"" + extend + "\"");
 
         Set<Prototype> newParents = new HashSet<>(parents);
         newParents.add(this);
@@ -94,7 +98,8 @@ public class Prototype implements ValidatedConfigTemplate {
         for(String parentID : extend) {
             Prototype parent = pool.get(parentID);
             if(parent == null)
-                throw new ParentNotFoundException("No such config \"" + parentID + "\". Specified as parent of \"" + id + "\" at index " + index);
+                throw new ParentNotFoundException(
+                    "No such config \"" + parentID + "\". Specified as parent of \"" + id + "\" at index " + index);
             this.parents.add(parent);
             parent.build(pool, newParents); // Build the parent, to recursively build the entire tree.
             index++;
@@ -118,6 +123,7 @@ public class Prototype implements ValidatedConfigTemplate {
      * Get this Prototype's parent, if it exists.
      *
      * @return This Prototype's parent. {@code null} if the parent does not exist, or has not been loaded.
+     *
      * @see #build
      */
     @NotNull
@@ -137,7 +143,8 @@ public class Prototype implements ValidatedConfigTemplate {
     @Override
     public boolean validate() throws ValidationException {
         if(!id.matches("^[a-zA-Z0-9_-]*$"))
-            throw new ValidationException("ID must only contain alphanumeric characters, hyphens, and underscores. \"" + id + "\" is not a valid ID.");
+            throw new ValidationException(
+                "ID must only contain alphanumeric characters, hyphens, and underscores. \"" + id + "\" is not a valid ID.");
         return true;
     }
 }

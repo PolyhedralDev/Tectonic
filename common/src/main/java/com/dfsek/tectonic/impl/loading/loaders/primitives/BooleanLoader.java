@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 
+
 public class BooleanLoader implements TypeLoader<Boolean> {
     @Override
     public Boolean load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) {

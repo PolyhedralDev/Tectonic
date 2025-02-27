@@ -1,6 +1,6 @@
 package com.dfsek.tectonic.api.depth;
 
-class IntrinsicLevel implements Level{
+class IntrinsicLevel implements Level {
     private final String verbose;
 
     public IntrinsicLevel(String verbose) {

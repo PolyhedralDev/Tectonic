@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
 
+
 /**
  * Implemented by classes that hold a registry of types, mapped to type adapters.
  *

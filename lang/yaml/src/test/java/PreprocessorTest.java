@@ -1,5 +1,5 @@
-import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.preprocessor.Result;
@@ -14,6 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedType;
 import java.util.List;
+
 
 public class PreprocessorTest {
     @Test
@@ -32,11 +33,13 @@ public class PreprocessorTest {
 
     }
 
+
     @Target(ElementType.TYPE_USE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface TestOverwrite {
 
     }
+
 
     private static final class TestConfig implements ConfigTemplate {
         @Value("thing")
@@ -53,6 +56,7 @@ public class PreprocessorTest {
         public List<@TestAnnotation @TestOverwrite String> overwritten;
     }
 
+
     private static final class TestPreprocessor implements ValuePreprocessor<TestAnnotation> {
         @Override
         @NotNull
@@ -61,6 +65,7 @@ public class PreprocessorTest {
             return Result.noOp();
         }
     }
+
 
     private static final class TestOverwritePreprocessor implements ValuePreprocessor<TestOverwrite> {
         @SuppressWarnings("unchecked")

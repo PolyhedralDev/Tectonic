@@ -2,6 +2,7 @@ package com.dfsek.tectonic.api.exception;
 
 import com.dfsek.tectonic.api.depth.DepthTracker;
 
+
 /**
  * Exception thrown when a value is missing from a configuration, and no default value is present.
  */

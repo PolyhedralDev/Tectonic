@@ -17,6 +17,7 @@ import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+
 public class ReflectiveTemplateLoader implements TemplateLoader {
     @Override
     public <T extends ConfigTemplate> T load(T config, Configuration configuration, ValueLoader loader, DepthTracker depthTracker) {
@@ -28,7 +29,9 @@ public class ReflectiveTemplateLoader implements TemplateLoader {
 
             int m = field.getModifiers();
             if(Modifier.isFinal(m) || Modifier.isStatic(m)) {
-                throw new InvalidTemplateException("Field annotated @Value cannot be static or final: " + field.getName() + " of " + config.getClass().getCanonicalName(), depthTracker);
+                throw new InvalidTemplateException(
+                    "Field annotated @Value cannot be static or final: " + field.getName() + " of " + config.getClass().getCanonicalName(),
+                    depthTracker);
             }
 
             field.setAccessible(true); // Make field accessible so we can mess with it.
@@ -39,7 +42,8 @@ public class ReflectiveTemplateLoader implements TemplateLoader {
             AnnotatedType type = field.getAnnotatedType();
 
             try {
-                ReflectionUtil.setField(field, config, ReflectionUtil.cast(field.getType(), loader.load(value.value(), type, configuration, valueTracker, isFinal)));
+                ReflectionUtil.setField(field, config,
+                    ReflectionUtil.cast(field.getType(), loader.load(value.value(), type, configuration, valueTracker, isFinal)));
             } catch(ValueMissingException e) {
                 if(!isDefault) { // if it's default, we don't care.
                     throw e; // rethrow if it's not default

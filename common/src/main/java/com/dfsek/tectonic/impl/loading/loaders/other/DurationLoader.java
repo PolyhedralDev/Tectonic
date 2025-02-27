@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.AnnotatedType;
 import java.time.Duration;
 
+
 public class DurationLoader implements TypeLoader<Duration> {
     @Override
     public Duration load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) {

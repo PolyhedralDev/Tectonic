@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 
+
 public class ShortLoader implements TypeLoader<Short> {
     @Override
     public Short load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) {

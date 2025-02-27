@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
  * ClassLoader for ArrayLists. Permits any type parameters, and will use the ConfigLoader's registered type loader for
  * any parameters.
@@ -19,7 +20,8 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class ArrayListLoader implements TypeLoader<ArrayList<Object>> {
     @Override
-    public ArrayList<Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
+    public ArrayList<Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker)
+    throws LoadException {
         ArrayList<Object> list = new ArrayList<>();
         if(t instanceof AnnotatedParameterizedType) {
             AnnotatedParameterizedType pType = (AnnotatedParameterizedType) t;

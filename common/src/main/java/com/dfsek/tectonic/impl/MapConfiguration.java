@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+
 public class MapConfiguration implements Configuration {
     private final Map<String, Object> config;
 

@@ -1,7 +1,7 @@
 package com.dfsek.tectonic.api.exception;
 
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
-import com.dfsek.tectonic.api.depth.DepthTracker;
+
 
 /**
  * Thrown when validation fails on a {@link ValidatedConfigTemplate}.

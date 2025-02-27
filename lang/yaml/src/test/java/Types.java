@@ -8,6 +8,7 @@ import java.lang.reflect.AnnotatedParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class Types {
     @TypeAnnotation1
     private List<@TypeAnnotation1 @TypeAnnotation2 String> stringList;
@@ -31,6 +32,7 @@ public class Types {
     public @interface TypeAnnotation1 {
 
     }
+
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE_USE)

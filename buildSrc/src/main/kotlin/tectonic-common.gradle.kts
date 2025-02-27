@@ -1,5 +1,3 @@
-import ca.solostudios.nyx.util.codeMC
-
 plugins {
     id("ca.solo-studios.nyx")
 }

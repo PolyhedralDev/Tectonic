@@ -1,11 +1,11 @@
 package com.dfsek.tectonic.api.loader;
 
-import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.TypeRegistry;
 import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
-import com.dfsek.tectonic.api.TypeRegistry;
-import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.preprocessor.ValuePreprocessor;
 import com.dfsek.tectonic.impl.abstraction.AbstractConfiguration;
 import com.dfsek.tectonic.impl.abstraction.AbstractPool;
@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+
 
 /**
  * Class to load several configs that may depend on each other.
@@ -66,10 +67,13 @@ public class AbstractConfigLoader implements TypeRegistry {
      * @param configurations List of Configurations to load configs from.
      * @param provider       TemplateProvide to get ConfigTemplate instances from.
      * @param <E>            ConfigTemplate type.
+     *
      * @return List of loaded ConfigTemplates.
+     *
      * @throws ConfigException If configs contain errors.
      */
-    public <E extends ConfigTemplate> Set<E> loadTemplates(List<Configuration> configurations, Supplier<E> provider) throws ConfigException {
+    public <E extends ConfigTemplate> Set<E> loadTemplates(List<Configuration> configurations, Supplier<E> provider)
+    throws ConfigException {
         Set<E> templates = new HashSet<>();
         loadConfigs(configurations).forEach(config -> templates.add(delegate.load(provider.get(), config)));
         return templates;

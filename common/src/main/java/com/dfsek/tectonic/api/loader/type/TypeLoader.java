@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 
+
 /**
  * Loads a class from an Object retrieved from a config.
  *

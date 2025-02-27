@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.util.Map;
 
+
 /**
  * Object representation of a YAML configuration.
  */

@@ -4,27 +4,28 @@ import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class DynamicConfigTest {
     @Test
     public void testDynamicConfig() {
         DynamicTemplate template = DynamicTemplate
-                .builder()
-                .value("val1", DynamicValue
-                        .builder("value1", String.class)
-                        .setFinal()
-                        .build())
-                .value("val2", DynamicValue
-                        .builder("number", double.class)
-                        .setFinal()
-                        .build())
-                .value("default", DynamicValue
-                        .builder("nonexistent-value", int.class)
-                        .setFinal()
-                        .setDefault(5)
-                        .build())
-                .build();
+            .builder()
+            .value("val1", DynamicValue
+                .builder("value1", String.class)
+                .setFinal()
+                .build())
+            .value("val2", DynamicValue
+                .builder("number", double.class)
+                .setFinal()
+                .build())
+            .value("default", DynamicValue
+                .builder("nonexistent-value", int.class)
+                .setFinal()
+                .setDefault(5)
+                .build())
+            .build();
 
         ConfigLoader loader = new ConfigLoader();
         loader.load(template, new YamlConfiguration(TypeTest.class.getResourceAsStream("/test.yml")));

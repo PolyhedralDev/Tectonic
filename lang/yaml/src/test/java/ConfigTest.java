@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+
 public class ConfigTest {
     @Test
     public void config() throws ConfigException {

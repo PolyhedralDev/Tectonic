@@ -1,11 +1,12 @@
-import com.dfsek.tectonic.api.config.template.annotations.Value;
-import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.api.loader.type.TypeLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
+
 
 public class ExtensionTest {
     @Test
@@ -39,12 +40,14 @@ public class ExtensionTest {
             public ConfigTemplate getConfig() {
                 return new OneConfig();
             }
-        }, TWO {
+        },
+        TWO {
             @Override
             public ConfigTemplate getConfig() {
                 return new TwoConfig();
             }
-        }, THREE {
+        },
+        THREE {
             @Override
             public ConfigTemplate getConfig() {
                 return new ThreeConfig();
@@ -53,6 +56,7 @@ public class ExtensionTest {
 
         public abstract ConfigTemplate getConfig();
     }
+
 
     public static class Chooser implements ConfigTemplate {
         @Value("type")
@@ -63,6 +67,7 @@ public class ExtensionTest {
         }
     }
 
+
     public static class OneConfig implements ConfigTemplate {
         @Value("string")
         private String string;
@@ -72,6 +77,7 @@ public class ExtensionTest {
         }
     }
 
+
     public static class TwoConfig implements ConfigTemplate {
         @Value("int")
         private int integer;
@@ -80,6 +86,7 @@ public class ExtensionTest {
             return integer;
         }
     }
+
 
     public static class ThreeConfig implements ConfigTemplate {
         @Value("double")

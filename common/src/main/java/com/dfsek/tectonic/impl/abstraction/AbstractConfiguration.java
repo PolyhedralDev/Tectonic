@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Class to provide abstracted values to a {@link ConfigLoader}.
  * <p>
@@ -26,6 +27,7 @@ public class AbstractConfiguration implements Configuration {
      * Get a value from its lowest point in the inheritance tree.
      *
      * @param key Key to get from the tree.
+     *
      * @return Object loaded from the key. (Raw config object, not type adapted!)
      */
     public Object get(@NotNull String key) {

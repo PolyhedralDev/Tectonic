@@ -11,10 +11,12 @@ import java.lang.reflect.AnnotatedType;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @SuppressWarnings("unchecked")
 public class HashMapLoader implements TypeLoader<HashMap<Object, Object>> {
     @Override
-    public HashMap<Object, Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
+    public HashMap<Object, Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader,
+                                        DepthTracker depthTracker) throws LoadException {
         Map<String, Object> config = (Map<String, Object>) c;
         HashMap<Object, Object> map = new HashMap<>();
         if(t instanceof AnnotatedParameterizedType) {

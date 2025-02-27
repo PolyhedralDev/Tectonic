@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 
+
 public class LongLoader implements TypeLoader<Long> {
     @Override
     public Long load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) {

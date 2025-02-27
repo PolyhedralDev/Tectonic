@@ -12,10 +12,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+
 @SuppressWarnings("unchecked")
 public class HashSetLoader implements TypeLoader<HashSet<Object>> {
     @Override
-    public HashSet<Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
+    public HashSet<Object> load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker)
+    throws LoadException {
         HashSet<Object> set = new HashSet<>();
         if(t instanceof AnnotatedParameterizedType) {
             AnnotatedParameterizedType pType = (AnnotatedParameterizedType) t;

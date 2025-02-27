@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AnnotatedType;
 
+
 public class ByteLoader implements TypeLoader<Byte> {
     @Override
     public Byte load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) {

@@ -4,6 +4,7 @@ import com.dfsek.tectonic.util.ClassAnnotatedTypeImpl;
 
 import java.lang.reflect.AnnotatedType;
 
+
 public class DynamicValue<T> {
     private final boolean isFinal;
 
@@ -20,6 +21,10 @@ public class DynamicValue<T> {
         this.type = type;
         this.annotatedType = annotatedType;
         this.key = key;
+    }
+
+    public static <T> Builder<T> builder(String key, Class<T> type) {
+        return new Builder<>(type, key);
     }
 
     public Class<T> getType() {
@@ -46,19 +51,15 @@ public class DynamicValue<T> {
         return key;
     }
 
-    public static <T> Builder<T> builder(String key, Class<T> type) {
-        return new Builder<>(type, key);
-    }
 
     public static final class Builder<T> {
         private final Class<T> clazz;
-
+        private final String key;
         private AnnotatedType annotatedType;
         private boolean isFinal = false;
         private boolean isDefault = false;
         private T defaultValue = null;
 
-        private final String key;
         private Builder(Class<T> clazz, String key) {
             this.clazz = clazz;
             this.key = key;

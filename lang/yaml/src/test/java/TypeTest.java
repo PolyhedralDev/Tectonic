@@ -1,5 +1,5 @@
-import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.LoadException;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.AnnotatedType;
 import java.util.List;
 import java.util.Map;
+
 
 public class TypeTest {
 
@@ -36,6 +37,7 @@ public class TypeTest {
         int getNumber();
     }
 
+
     public static class Config implements ConfigTemplate {
         @Value("numbers")
         private List<ExampleInterface> numbers;
@@ -44,6 +46,7 @@ public class TypeTest {
             return numbers;
         }
     }
+
 
     public static class One implements ExampleInterface {
         private final String a;
@@ -62,6 +65,7 @@ public class TypeTest {
         }
     }
 
+
     public static class Two implements ExampleInterface {
         private final int a;
 
@@ -78,6 +82,7 @@ public class TypeTest {
             return 2;
         }
     }
+
 
     public static class Three implements ExampleInterface {
         private final double a;
@@ -98,11 +103,13 @@ public class TypeTest {
 
     // Type loader
 
+
     @SuppressWarnings("unchecked")
     public static class ExampleLoader implements TypeLoader<ExampleInterface> {
 
         @Override
-        public ExampleInterface load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker) throws LoadException {
+        public ExampleInterface load(@NotNull AnnotatedType t, @NotNull Object c, @NotNull ConfigLoader loader, DepthTracker depthTracker)
+        throws LoadException {
             System.out.println(c.getClass());
             Map<String, Object> map = (Map<String, Object>) c;
             switch((String) map.get("type")) {

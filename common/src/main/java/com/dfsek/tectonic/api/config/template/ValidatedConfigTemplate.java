@@ -1,8 +1,9 @@
 package com.dfsek.tectonic.api.config.template;
 
-import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
 import com.dfsek.tectonic.api.exception.ValidationException;
+import com.dfsek.tectonic.api.loader.AbstractConfigLoader;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
+
 
 /**
  * {@link ConfigTemplate} implementation that supports validation of config values directly after loading.
@@ -22,6 +23,7 @@ public interface ValidatedConfigTemplate extends ConfigTemplate {
      * configs, after they have all finished loading.
      *
      * @return Whether config is valid.
+     *
      * @throws ValidationException If validation fails.
      * @see ConfigTemplate
      */

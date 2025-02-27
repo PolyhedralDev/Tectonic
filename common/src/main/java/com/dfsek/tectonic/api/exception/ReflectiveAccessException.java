@@ -1,7 +1,5 @@
 package com.dfsek.tectonic.api.exception;
 
-import com.dfsek.tectonic.api.depth.DepthTracker;
-
 /**
  * ConfigException wrapper for a reflective access exception.
  */

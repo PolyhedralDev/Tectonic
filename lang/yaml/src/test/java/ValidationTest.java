@@ -1,12 +1,13 @@
-import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
+import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.exception.ValidationException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ValidationTest {
     @Test
@@ -16,7 +17,8 @@ public class ValidationTest {
         loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/validate/valid.yml"))); // This should validate
 
         try {
-            loader.load(example, new YamlConfiguration(this.getClass().getResourceAsStream("/validate/invalid.yml"))); // This should NOT validate
+            loader.load(example,
+                new YamlConfiguration(this.getClass().getResourceAsStream("/validate/invalid.yml"))); // This should NOT validate
             fail();
         } catch(ValidationException ignored) {
 

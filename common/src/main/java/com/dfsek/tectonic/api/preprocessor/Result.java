@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
+
 public class Result<T> implements UnaryOperator<T> {
     private final TransformType type;
     private final T overwritten;

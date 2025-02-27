@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+
 public class ReflectionUtil {
     private static final Map<Class<?>, Class<?>> PRIMITIVES = new HashMap<>(); // Map of primitives to their wrapper classes.
 
@@ -38,6 +39,7 @@ public class ReflectionUtil {
      *
      * @param clazz  Class to cast to
      * @param object Object to cast
+     *
      * @return Cast object.
      */
     @SuppressWarnings("unchecked")

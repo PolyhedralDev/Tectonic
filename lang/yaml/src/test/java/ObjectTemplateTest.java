@@ -1,13 +1,14 @@
 import com.dfsek.tectonic.api.config.template.annotations.Default;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
+import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.exception.ConfigException;
 import com.dfsek.tectonic.api.loader.ConfigLoader;
-import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+
 
 public class ObjectTemplateTest {
     @Test

@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
 
+
 public class ClassAnnotatedTypeImpl implements AnnotatedType {
     private final Class<?> clazz;
 

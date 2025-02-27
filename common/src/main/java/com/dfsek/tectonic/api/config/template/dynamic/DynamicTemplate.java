@@ -7,19 +7,24 @@ import com.dfsek.tectonic.impl.annotations.Generated;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public final class DynamicTemplate implements ConfigTemplate {
     private final Map<String, DynamicValue<?>> values;
 
     @Generated
     private final Map<String, ?> computed = new HashMap<>();
 
+    private DynamicTemplate(Map<String, DynamicValue<?>> values) {
+        this.values = values;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public TemplateLoader loader() {
         return new DynamicTemplateLoader();
-    }
-
-    private DynamicTemplate(Map<String, DynamicValue<?>> values) {
-        this.values = values;
     }
 
     @SuppressWarnings("unchecked")
@@ -39,12 +44,10 @@ public final class DynamicTemplate implements ConfigTemplate {
         return values;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
 
     public static final class Builder {
         private final Map<String, DynamicValue<?>> values = new HashMap<>();
+
         private Builder() {
 
         }

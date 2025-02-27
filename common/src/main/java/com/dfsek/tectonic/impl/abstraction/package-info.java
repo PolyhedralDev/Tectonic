@@ -17,4 +17,5 @@
  *
  * @see com.dfsek.tectonic.api.loader.AbstractConfigLoader
  */
+
 package com.dfsek.tectonic.impl.abstraction;
