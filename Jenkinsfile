@@ -35,9 +35,9 @@ pipeline {
 
             post {
                 success {
-                    archiveArtifacts artifacts: 'common/build/libs/*.jar,lang/build/*/libs/*.jar', fingerprint: true, onlyIfSuccessful: true
+                    archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true, onlyIfSuccessful: true
 
-                    javadoc javadocDir: 'common/build/docs/javadoc/,lang/build/*/docs/javadoc/', keepAll: true
+                    javadoc javadocDir: 'build/docs/javadoc/', keepAll: true
                 }
             }
         }
