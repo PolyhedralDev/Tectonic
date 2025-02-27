@@ -6,7 +6,9 @@ plugins {
 
 nyx {
     info {
-        group = "com.dfsek.tectonic"
+        name = "Tectonic"
+        group = "com.dfsek"
+        module = "tectonic"
         version = rootProject.version.toString()
         description = """
             Tectonic is a powerful **read-only** Java configuration library for data-driven applications.
@@ -17,6 +19,8 @@ nyx {
 
         repository.fromGithub("PolyhedralDev", "Tectonic")
 
+        license.useMIT()
+
         developer {
             id = "dfsek"
             name = "dfsek"
@@ -24,10 +28,10 @@ nyx {
             url = "https://dfsek.com/"
         }
         developer {
-            id = "duplexsys"
+            id = "duplexsystem"
             name = "Zoë Gidiere"
             email = "duplexsys@protonmail.com"
-            url = "https://solonovamax.gay"
+            url = "https://duplexsystem.org/"
         }
     }
 }

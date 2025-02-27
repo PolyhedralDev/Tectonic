@@ -8,7 +8,7 @@ plugins {
 
 nyx {
     compile {
-        jvmTarget = 8
+        jvmTarget = 21
 
         javadocJar = true
         sourcesJar = true
@@ -17,6 +17,12 @@ nyx {
         distributeLicense = true
         buildDependsOnJar = true
         reproducibleBuilds = true
+
+        java {
+            allJavadocWarnings = true
+            noMissingJavadocWarnings = true
+            javadocWarningsAsErrors = true
+        }
     }
 }
 
