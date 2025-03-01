@@ -5,6 +5,10 @@ plugins {
     `tectonic-publishing`
 }
 
+nyx.info {
+    name = "Tectonic TOML"
+}
+
 dependencies {
     api(projects.common)
 
