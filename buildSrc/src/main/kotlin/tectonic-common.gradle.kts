@@ -4,9 +4,7 @@ plugins {
 
 nyx {
     info {
-        name = "Tectonic"
-        group = "com.dfsek"
-        module = "tectonic"
+        group = "com.dfsek.tectonic"
         version = rootProject.version.toString()
         description = """
             Tectonic is a powerful **read-only** Java configuration library for data-driven applications.

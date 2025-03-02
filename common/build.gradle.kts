@@ -5,6 +5,10 @@ plugins {
     `tectonic-publishing`
 }
 
+nyx.info {
+    name = "Tectonic Common"
+}
+
 dependencies {
     implementation(libs.commons.io)
 }
