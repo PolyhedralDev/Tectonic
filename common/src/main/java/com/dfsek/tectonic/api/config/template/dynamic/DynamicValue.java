@@ -7,6 +7,7 @@ import java.lang.reflect.AnnotatedType;
 
 public class DynamicValue<T> {
     private final boolean isFinal;
+    private final boolean isMerge;
 
     private final boolean isDefault;
     private final T defaultValue;
@@ -15,7 +16,20 @@ public class DynamicValue<T> {
     private final String key;
 
     public DynamicValue(boolean isFinal, boolean isDefault, T defaultValue, Class<T> type, AnnotatedType annotatedType, String key) {
+        this(isFinal, false, isDefault, defaultValue, type, annotatedType, key);
+    }
+
+    /**
+     * @param isMerge Whether an inherited value is merged across the inheritance tree, like
+     *                {@link com.dfsek.tectonic.api.config.template.annotations.Merge}.
+     *
+     * @throws IllegalStateException if both {@code isFinal} and {@code isMerge} are set.
+     */
+    public DynamicValue(boolean isFinal, boolean isMerge, boolean isDefault, T defaultValue, Class<T> type, AnnotatedType annotatedType,
+                        String key) {
+        if(isFinal && isMerge) throw new IllegalStateException("Dynamic value \"" + key + "\" cannot be both merge and final");
         this.isFinal = isFinal;
+        this.isMerge = isMerge;
         this.isDefault = isDefault;
         this.defaultValue = defaultValue;
         this.type = type;
@@ -47,6 +61,10 @@ public class DynamicValue<T> {
         return isFinal;
     }
 
+    public boolean isMerge() {
+        return isMerge;
+    }
+
     public String getKey() {
         return key;
     }
@@ -57,6 +75,7 @@ public class DynamicValue<T> {
         private final String key;
         private AnnotatedType annotatedType;
         private boolean isFinal = false;
+        private boolean isMerge = false;
         private boolean isDefault = false;
         private T defaultValue = null;
 
@@ -75,6 +94,18 @@ public class DynamicValue<T> {
             return this;
         }
 
+        /**
+         * Merge an inherited value across the inheritance tree, like
+         * {@link com.dfsek.tectonic.api.config.template.annotations.Merge}. The value's type must be a
+         * {@link java.util.Map} or a {@link java.util.List}, and it cannot also be final.
+         *
+         * @return This builder.
+         */
+        public Builder<T> merge() {
+            this.isMerge = true;
+            return this;
+        }
+
         public Builder<T> setDefault(T defaultValue) {
             this.defaultValue = defaultValue;
             this.isDefault = true;
@@ -85,7 +116,7 @@ public class DynamicValue<T> {
             if(annotatedType == null) {
                 annotatedType = new ClassAnnotatedTypeImpl(clazz);
             }
-            return new DynamicValue<>(isFinal, isDefault, defaultValue, clazz, annotatedType, key);
+            return new DynamicValue<>(isFinal, isMerge, isDefault, defaultValue, clazz, annotatedType, key);
         }
     }
 }

@@ -24,7 +24,7 @@ public class DynamicTemplateLoader implements TemplateLoader {
         dynamicTemplate.getValues().forEach((id, value) -> {
             try {
                 computed.put(id, loader.load(value.getKey(), value.getAnnotatedType(), configuration, depthTracker.entry(value.getKey()),
-                    value.isFinal()));
+                    value.isFinal(), value.isMerge()));
             } catch(ValueMissingException e) {
                 if(value.isDefault()) {
                     computed.put(id, value.getDefaultValue());
