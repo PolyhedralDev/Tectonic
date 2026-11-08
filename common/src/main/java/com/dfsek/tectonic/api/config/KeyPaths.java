@@ -64,8 +64,11 @@ public final class KeyPaths {
             }
         }
         segments.add(current.toString());
+        // Mirror String.split("\\."): trailing empty segments are dropped, so "a." and "a.." are ["a"].
         int end = segments.size();
         while(end > 1 && segments.get(end - 1).isEmpty()) end--;
+        // String.split also returns an empty array when the path is nothing but dots ("." or ".."), yet "" itself
+        // splits to [""]. A lone remaining empty segment is therefore dropped only for a non-empty path.
         if(end == 1 && segments.get(0).isEmpty() && !path.isEmpty()) end = 0;
         return segments.subList(0, end);
     }

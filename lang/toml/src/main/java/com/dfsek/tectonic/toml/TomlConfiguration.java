@@ -1,6 +1,7 @@
 package com.dfsek.tectonic.toml;
 
 import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.KeyPaths;
 import org.jetbrains.annotations.NotNull;
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
@@ -43,7 +44,7 @@ public class TomlConfiguration implements Configuration {
 
     @Override
     public Object get(@NotNull String key) {
-        return deepToObject(config.get(key));
+        return deepToObject(config.get(KeyPaths.split(key)));
     }
 
     @SuppressWarnings("unchecked")
@@ -65,7 +66,7 @@ public class TomlConfiguration implements Configuration {
 
     @Override
     public boolean contains(@NotNull String key) {
-        return config.contains(key);
+        return config.contains(KeyPaths.split(key));
     }
 
     @Override
