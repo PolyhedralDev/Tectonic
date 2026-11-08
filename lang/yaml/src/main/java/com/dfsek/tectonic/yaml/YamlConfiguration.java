@@ -1,10 +1,12 @@
 package com.dfsek.tectonic.yaml;
 
 import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.KeyPaths;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,7 +39,7 @@ public class YamlConfiguration implements Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public Object get(@NotNull String key) {
-        String[] levels = key.split("\\.");
+        List<String> levels = KeyPaths.split(key);
         Object level = config;
         for(String keyLevel : levels) {
             if(!(level instanceof Map)) throw new IllegalArgumentException();
@@ -49,7 +51,7 @@ public class YamlConfiguration implements Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public boolean contains(@NotNull String key) {
-        String[] levels = key.split("\\.");
+        List<String> levels = KeyPaths.split(key);
         Object level = config;
         for(String keyLevel : levels) {
             if(!(level instanceof Map)) return false;
