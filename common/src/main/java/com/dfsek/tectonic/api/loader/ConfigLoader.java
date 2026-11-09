@@ -7,6 +7,7 @@ import com.dfsek.tectonic.api.config.template.ValidatedConfigTemplate;
 import com.dfsek.tectonic.api.config.template.object.ObjectTemplate;
 import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.ConfigException;
+import com.dfsek.tectonic.api.exception.InvalidTemplateException;
 import com.dfsek.tectonic.api.exception.LoadException;
 import com.dfsek.tectonic.api.exception.ValidationException;
 import com.dfsek.tectonic.api.exception.ValueMissingException;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +58,18 @@ public class ConfigLoader implements TypeRegistry {
     private static final EnumLoader ENUM_LOADER = new EnumLoader();
     private final Map<Type, TypeLoader<?>> loaders = new HashMap<>();
     private final Map<Class<? extends Annotation>, List<ValuePreprocessor<?>>> preprocessors = new HashMap<>();
+    private final ValueLoader valueLoader = new ValueLoader() {
+        @Override
+        public Object load(String key, AnnotatedType type, Configuration configuration, DepthTracker depthTracker, boolean isFinal) {
+            return loadValue(key, type, configuration, depthTracker, isFinal, false);
+        }
+
+        @Override
+        public Object load(String key, AnnotatedType type, Configuration configuration, DepthTracker depthTracker, boolean isFinal,
+                           boolean merge) {
+            return loadValue(key, type, configuration, depthTracker, isFinal, merge);
+        }
+    };
 
     public ConfigLoader() {
         // Default primitive/wrapper loaders
@@ -152,7 +167,7 @@ public class ConfigLoader implements TypeRegistry {
     }
 
     public <T extends ConfigTemplate> T load(T config, Configuration configuration, DepthTracker depthTracker) throws ConfigException {
-        T result = config.loader().load(config, configuration, this::loadValue, depthTracker);
+        T result = config.loader().load(config, configuration, valueLoader, depthTracker);
         if(result instanceof ValidatedConfigTemplate
            && !((ValidatedConfigTemplate) result).validate()) {
             throw new ValidationException("Failed to validate config. Reason unspecified:" + configuration.getName());
@@ -160,7 +175,18 @@ public class ConfigLoader implements TypeRegistry {
         return result;
     }
 
-    private Object loadValue(String value, AnnotatedType type, Configuration configuration, DepthTracker depthTracker, boolean isFinal) {
+    private Object loadValue(String value, AnnotatedType type, Configuration configuration, DepthTracker depthTracker, boolean isFinal,
+                             boolean merge) {
+        if(merge) {
+            if(isFinal) throw new InvalidTemplateException("Value \"" + value + "\" cannot be both @Merge and @Final", depthTracker);
+            Class<?> raw = rawClass(type);
+            if(!Map.class.isAssignableFrom(raw) && !List.class.isAssignableFrom(raw))
+                throw new InvalidTemplateException(
+                    "Value \"" + value + "\" is @Merge, but its type is not a Map or List: " + type.getType().getTypeName(),
+                    depthTracker);
+            if(configuration instanceof AbstractConfiguration abstractConfiguration)
+                return loadMerged(value, type, abstractConfiguration, depthTracker);
+        }
         if(containsFinal(configuration, value)) { // If config contains value, load it.
             return loadType(type, getFinal(configuration, value), depthTracker); // Re-assign if type is found in registry.
         } else if(!isFinal &&
@@ -176,6 +202,60 @@ public class ConfigLoader implements TypeRegistry {
         }
         throw new ValueMissingException("Value \"" + value + "\" was not found in the provided config: " + configuration.getName(),
             depthTracker); // Throw exception if value is not provided, and isn't abstractable
+    }
+
+    /**
+     * Load every layer's value for a {@link com.dfsek.tectonic.api.config.template.annotations.Merge} map or list with
+     * {@link #loadType(AnnotatedType, Object, DepthTracker)}, so preprocessors run per layer, then merge them: maps with
+     * nearer layers winning per key, lists concatenated farthest layer first.
+     */
+    @SuppressWarnings("unchecked")
+    private Object loadMerged(String value, AnnotatedType type, AbstractConfiguration configuration, DepthTracker depthTracker) {
+        List<Object> layers = configuration.getAll(value);
+        if(layers.isEmpty()) {
+            throw new ValueMissingException(
+                "Value \"" + value + "\" was not found in the provided config, or its parents: " + configuration.getName(),
+                depthTracker);
+        }
+        Object merged = newMerged(type, depthTracker);
+        for(int i = 0; i < layers.size(); i++) {
+            // Own tracker per layer: preprocessors may add intrinsic levels to it, which must not leak to other layers.
+            DepthTracker layerTracker = layers.size() == 1
+                                        ? depthTracker
+                                        : depthTracker.intrinsic("In inherited layer " + (i + 1) + " of " + layers.size()
+                                                                 + " (farthest ancestor first)");
+            Object loaded = loadType(type, layers.get(i), layerTracker);
+            if(merged instanceof Map<?, ?> && loaded instanceof Map<?, ?> map) {
+                ((Map<Object, Object>) merged).putAll(map);
+            } else if(merged instanceof List<?> && loaded instanceof List<?> list) {
+                ((List<Object>) merged).addAll(list);
+            } else {
+                throw new LoadException("@Merge value \"" + value + "\" did not load to a " + (merged instanceof Map ? "Map" : "List") +
+                                        ", got " + (loaded == null ? "null" : loaded.getClass().getCanonicalName()), layerTracker);
+            }
+        }
+        return merged;
+    }
+
+    private static Object newMerged(AnnotatedType type, DepthTracker depthTracker) {
+        Class<?> raw = rawClass(type);
+        if(raw.isInterface() || Modifier.isAbstract(raw.getModifiers())) {
+            if(raw.isAssignableFrom(LinkedHashMap.class)) return new LinkedHashMap<>();
+            if(raw.isAssignableFrom(ArrayList.class)) return new ArrayList<>();
+            throw new LoadException("Cannot create a merged value for abstract type " + type.getType().getTypeName(), depthTracker);
+        }
+        try {
+            return raw.getDeclaredConstructor().newInstance();
+        } catch(ReflectiveOperationException e) {
+            throw new LoadException("Cannot create a merged value of type " + type.getType().getTypeName() +
+                                    "; it needs an accessible no-argument constructor", e, depthTracker);
+        }
+    }
+
+    private static Class<?> rawClass(AnnotatedType type) {
+        Type t = type.getType();
+        if(t instanceof ParameterizedType parameterized) t = parameterized.getRawType();
+        return t instanceof Class<?> clazz ? clazz : Object.class;
     }
 
     private Object getFinal(Configuration configuration, String key) {

@@ -1,11 +1,13 @@
 package com.dfsek.tectonic;
 
 import com.dfsek.tectonic.api.config.Configuration;
+import com.dfsek.tectonic.api.config.KeyPaths;
 import com.typesafe.config.ConfigFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,7 +37,7 @@ public class HoconConfiguration implements Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public Object get(@NotNull String key) {
-        String[] levels = key.split("\\.");
+        List<String> levels = KeyPaths.split(key);
         Object level = config;
         for(String keyLevel : levels) {
             if(!(level instanceof Map)) throw new IllegalArgumentException();
@@ -47,7 +49,7 @@ public class HoconConfiguration implements Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public boolean contains(@NotNull String key) {
-        String[] levels = key.split("\\.");
+        List<String> levels = KeyPaths.split(key);
         Object level = config;
         for(String keyLevel : levels) {
             if(!(level instanceof Map)) return false;

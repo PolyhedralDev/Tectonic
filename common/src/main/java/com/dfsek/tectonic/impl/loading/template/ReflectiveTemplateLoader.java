@@ -4,6 +4,7 @@ import com.dfsek.tectonic.api.config.Configuration;
 import com.dfsek.tectonic.api.config.template.ConfigTemplate;
 import com.dfsek.tectonic.api.config.template.annotations.Default;
 import com.dfsek.tectonic.api.config.template.annotations.Final;
+import com.dfsek.tectonic.api.config.template.annotations.Merge;
 import com.dfsek.tectonic.api.config.template.annotations.Value;
 import com.dfsek.tectonic.api.depth.DepthTracker;
 import com.dfsek.tectonic.api.exception.InvalidTemplateException;
@@ -16,6 +17,8 @@ import com.dfsek.tectonic.util.ReflectionUtil;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.Map;
 
 
 public class ReflectiveTemplateLoader implements TemplateLoader {
@@ -38,12 +41,26 @@ public class ReflectiveTemplateLoader implements TemplateLoader {
 
             boolean isFinal = field.isAnnotationPresent(Final.class);
             boolean isDefault = field.isAnnotationPresent(Default.class);
+            boolean isMerge = field.isAnnotationPresent(Merge.class);
+
+            if(isMerge) {
+                if(isFinal) {
+                    throw new InvalidTemplateException(
+                        "Field annotated @Merge cannot be @Final: " + field.getName() + " of " + config.getClass().getCanonicalName(),
+                        depthTracker);
+                }
+                if(!Map.class.isAssignableFrom(field.getType()) && !List.class.isAssignableFrom(field.getType())) {
+                    throw new InvalidTemplateException(
+                        "Field annotated @Merge must be a Map or List: " + field.getName() + " of " + config.getClass().getCanonicalName(),
+                        depthTracker);
+                }
+            }
 
             AnnotatedType type = field.getAnnotatedType();
 
             try {
                 ReflectionUtil.setField(field, config,
-                    ReflectionUtil.cast(field.getType(), loader.load(value.value(), type, configuration, valueTracker, isFinal)));
+                    ReflectionUtil.cast(field.getType(), loader.load(value.value(), type, configuration, valueTracker, isFinal, isMerge)));
             } catch(ValueMissingException e) {
                 if(!isDefault) { // if it's default, we don't care.
                     throw e; // rethrow if it's not default
