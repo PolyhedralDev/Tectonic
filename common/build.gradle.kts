@@ -8,7 +8,3 @@ plugins {
 nyx.info {
     name = "Tectonic Common"
 }
-
-dependencies {
-    implementation(libs.commons.io)
-}

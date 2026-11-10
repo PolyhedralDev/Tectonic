@@ -7,8 +7,6 @@ axion-release = "1.18.12"
 
 jetbrains-annotations = "24.0.1"
 
-commons-io = "2.11.0"
-
 lightbend-config = "1.4.3"
 
 gson = "2.10.1"
@@ -29,8 +27,6 @@ axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axi
 
 [libraries]
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
-
-commons-io = { group = "commons-io", name = "commons-io", version.ref = "commons-io" }
 
 lightbend-config = { group = "com.typesafe", name = "config", version.ref = "lightbend-config" }
 
